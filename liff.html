@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ミモザ堂｜ご予約</title>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 80px 20px; color: #333; }
+    .brand { color: #E8B923; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+    p { margin-top: 16px; color: #888; }
+    .dbg { font-size: 12px; color: #ccc; margin-top: 24px; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <div class="brand">ミモザ堂</div>
+  <p>予約フォームを準備しています…</p>
+  <div id="dbg" class="dbg">[LIFF] 初期化開始…</div>
+
+  <script>
+    // ===== 設定 =====
+    const LIFF_ID = '2010368593-Lf0XsIMt';
+    const GAS_EXEC_URL = 'https://script.google.com/macros/s/AKfycby87hwxX74TEkqruv6UcRCpFsaqhfkFAaTtGu4_mw8ypXhmVzddZWX1PeiJnDwg2eGLTg/exec';
+
+    const dbg = document.getElementById('dbg');
+    function setDbg(t){ if (dbg) dbg.textContent = t; }
+
+    // plan を取得：通常の ?plan= と、LIFFの ?liff.state=?plan= の両対応
+    function getPlan() {
+      const sp = new URLSearchParams(location.search);
+      let plan = sp.get('plan');
+      if (!plan) {
+        const st = sp.get('liff.state');
+        if (st) {
+          const m = decodeURIComponent(st).match(/plan=([^&]+)/);
+          if (m) plan = m[1];
+        }
+      }
+      return (plan === 'paid') ? 'paid' : 'free';
+    }
+
+    const PLAN = getPlan();
+
+    liff.init({ liffId: LIFF_ID })
+      .then(async () => {
+        setDbg('[LIFF] 初期化OK');
+        let uid = '', lname = '';
+        try {
+          if (liff.isLoggedIn && !liff.isLoggedIn()) {
+            liff.login();          // 未ログインならログイン（戻ってくると再度ここを通る）
+            return;
+          }
+          const profile = await liff.getProfile();
+          uid = profile.userId || '';
+          lname = profile.displayName || '';
+        } catch (e) {
+          // プロフィール取得に失敗しても予約は通す（uid空のまま）
+        }
+        // GASフォームへ遷移（plan・uid・lname を渡す）
+        const url = GAS_EXEC_URL
+          + '?plan=' + encodeURIComponent(PLAN)
+          + '&uid='  + encodeURIComponent(uid)
+          + '&lname=' + encodeURIComponent(lname);
+        location.replace(url);
+      })
+      .catch((err) => {
+        setDbg('[LIFF] init失敗: ' + (err && err.message ? err.message : err));
+        // 初期化に失敗しても、最低限フォームには進ませる（uidなし）
+        const url = GAS_EXEC_URL + '?plan=' + encodeURIComponent(PLAN);
+        setTimeout(() => location.replace(url), 1500);
+      });
+  </script>
+</body>
+</html>
