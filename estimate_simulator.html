@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>書籍出版 お見積｜ミモザ堂</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fdf8ee; color: #1a1a1a; padding: 2rem 1rem; }
+  .container { max-width: 680px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 2rem; }
+  h1 { font-size: 22px; font-weight: 500; color: #2a2a2a; }
+  .subtitle { font-size: 14px; color: #888; margin-top: 4px; }
+  .section { background: #fff; border: 0.5px solid #e8e0c8; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .section-title { font-size: 12px; font-weight: 500; color: #b09040; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+  .section-title::after { content: ''; flex: 1; height: 0.5px; background: #e8d89a; }
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 14px; color: #666; margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 9px 12px; border: 0.5px solid #d8cfa8; border-radius: 8px;
+    font-size: 15px; background: #fffef8; color: #1a1a1a;
+    outline: none; transition: border-color 0.15s; font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: #e0b800; box-shadow: 0 0 0 3px rgba(224,184,0,0.12); }
+  .field input[readonly] { background: #f5f0e8; color: #888; cursor: default; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .plan-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;}
+  .plan-tab { padding: 10px 8px; border: 1.5px solid #e0d8b0; border-radius: 10px; cursor: pointer; transition: all 0.15s; background: #fff; text-align: center; }
+  .plan-tab:hover { background: #fdf8e8; }
+  .plan-tab.active { border-color: #c8a000; background: #fff9d0; }
+  .plan-tab-name { font-size: 13px; font-weight: 500; color: #555; }
+  .plan-tab.active .plan-tab-name { color: #7a5e00; }
+  .plan-tab-desc { font-size: 10px; color: #aaa; margin-top: 3px; line-height: 1.4; }
+  .plan-tab.active .plan-tab-desc { color: #a07800; }
+  .plan-note { font-size: 12px; color: #aaa; background: #f8f5ea; border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; }
+  .genre-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .genre-tag { padding: 6px 14px; border: 0.5px solid #d8cfa8; border-radius: 999px; font-size: 13px; cursor: pointer; background: #fff; color: #666; transition: all 0.15s; }
+  .genre-tag:hover { background: #fdf3c0; border-color: #e0c84a; }
+  .genre-tag.selected { border-color: #d4a800; background: #fff3a0; color: #7a5e00; font-weight: 500; }
+  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .option-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0.5px solid #e0d8b0; border-radius: 8px; cursor: pointer; transition: all 0.15s; background: #fff; }
+  .option-item:hover { background: #fdf8e8; }
+  .option-item.checked { border-color: #d4a800; background: #fff9d0; }
+  .option-item input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; accent-color: #c8a000; }
+  .option-label { font-size: 13px; flex: 1; color: #333; }
+  .option-price { font-size: 12px; color: #aaa; white-space: nowrap; }
+  .option-item.checked .option-price { color: #a07800; }
+  .estimate-card { background: linear-gradient(135deg, #fff9e0 0%, #fdf3c0 100%); border: 0.5px solid #e8d060; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .est-section { margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #e8d88a; }
+  .est-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .est-section-title { font-size: 11px; font-weight: 500; color: #b09040; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .estimate-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 13px; color: #777; }
+  .estimate-row.subtotal { font-size: 13px; color: #555; font-weight: 500; margin-top: 4px; }
+  .estimate-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #d4b800; }
+  .total-label { font-size: 15px; font-weight: 500; color: #5a4400; }
+  .total-amount { font-size: 30px; font-weight: 500; color: #2a1a00; }
+  .tax-note { font-size: 12px; color: #999; text-align: right; margin-top: 4px; }
+  .submit-btn{width:auto;min-width:240px;padding:14px 48px;background:#c8a000;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.15s;}
+  .submit-btn:hover { background: #a07800; }
+  .submit-btn:disabled { opacity: 0.7; cursor: default; }
+  .note { font-size: 12px; color: #bbb; text-align: center; }
+  @media (max-width: 480px) { .row, .option-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>書籍出版 お見積</h1>
+    <p class="subtitle">必要項目を入力すると、概算費用が自動で表示されます</p>
+  </div>
+
+  <div class="section">
+    <p class="section-title">プランを選択</p>
+    <div class="plan-tabs">
+      <div class="plan-tab active" id="tab-undecided" onclick="selectPlan('undecided')">
+        <div class="plan-tab-name">まだ決めていない</div>
+        <div class="plan-tab-desc">まずは相談したい</div>
+      </div>
+      <div class="plan-tab" id="tab-start" onclick="selectPlan('start')">
+        <div class="plan-tab-name">スタートプラン</div>
+        <div class="plan-tab-desc">300〜1,000部<br>小部数・低コスト</div>
+      </div>
+      <div class="plan-tab" id="tab-standard" onclick="selectPlan('standard')">
+        <div class="plan-tab-name">スタンダードプラン</div>
+        <div class="plan-tab-desc">1,000〜3,000部（お渡し：100冊〜）<br>書店流通あり</div>
+      </div>
+      <div class="plan-tab" id="tab-premium" onclick="selectPlan('premium')">
+        <div class="plan-tab-name">プレミアムプラン</div>
+        <div class="plan-tab-desc">1,000〜3,000部（お渡し：200冊〜）<br>書店流通あり<br>イラスト４点・ライター費込</div>
+      </div>
+    </div>
+    <div class="plan-note">📌 表示金額はすべて概算です。正式見積もりは別途ご提案します。</div>
+  </div>
+
+  <div class="section" id="spec-section">
+    <p class="section-title">書籍の仕様</p>
+
+    <div id="start-fields" style="display:none;">
+      <div class="row">
+        <div class="field">
+          <label>仕様</label>
+          <select id="start-size" onchange="calc()">
+            <option value="mono">四六判 モノクロ 無線綴じ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>部数</label>
+          <select id="start-copies" onchange="calc()">
+            <option value="300">300部</option>
+            <option value="500">500部</option>
+            <option value="1000">1,000部</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="sinano-fields" style="display:none;">
+      <div class="row">
+        <div class="field">
+          <label>サイズ・仕様</label>
+          <select id="sinano-size" onchange="updateCopiesForSize(); calc()">
+            <option value="shiro_mono">四六版 モノクロ</option>
+            <option value="shiro_2c">四六版 2色</option>
+            <option value="shiro_4c">四六版 フルカラー</option>
+            <option value="a5_4c">A5 フルカラー</option>
+            <option value="a4_4c_jousei">A4変型 絵本（上製）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>部数</label>
+          <select id="sinano-copies" onchange="calc()">
+            <option value="1000">1,000部</option>
+            <option value="2000">2,000部</option>
+            <option value="3000">3,000部</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ページ数</label>
+      <input type="text" id="pages-display" value="200p" readonly>
+    </div>
+    <div class="field">
+      <label>ジャンル（記録用）</label>
+      <div class="genre-tags">
+        <span class="genre-tag" onclick="selectGenre(this)">小説・詩</span>
+        <span class="genre-tag" onclick="selectGenre(this)">エッセイ・随筆</span>
+        <span class="genre-tag" onclick="selectGenre(this)">写真集・画集</span>
+        <span class="genre-tag" onclick="selectGenre(this)">技術・専門書</span>
+        <span class="genre-tag" onclick="selectGenre(this)">絵本・児童書</span>
+        <span class="genre-tag" onclick="selectGenre(this)">ビジネス・自己啓発</span>
+        <span class="genre-tag" onclick="selectGenre(this)">社史</span>
+        <span class="genre-tag" onclick="selectGenre(this)">その他</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="option-section" style="display:none;">
+    <p class="section-title">オプション</p>
+    <div class="option-grid">
+      <label class="option-item" id="opt1"><input type="checkbox" onchange="toggleOpt(this,'opt1');calc()"><span class="option-label">上製本（ハードカバー）</span><span class="option-price">+5,000円</span></label>
+      <label class="option-item" id="opt2"><input type="checkbox" onchange="toggleOpt(this,'opt2');calc()"><span class="option-label">表紙加工（PP加工・箔押し等）</span><span class="option-price">+30,000円</span></label>
+      <label class="option-item" id="opt3"><input type="checkbox" onchange="toggleOpt(this,'opt3');calc()"><span class="option-label">ISBN取得</span><span class="option-price">+10,000円</span></label>
+      <label class="option-item" id="opt4"><input type="checkbox" onchange="toggleOpt(this,'opt4');calc()"><span class="option-label">海外販売サポート</span><span class="option-price">+50,000円</span></label>
+      <label class="option-item" id="opt5"><input type="checkbox" onchange="toggleOpt(this,'opt5');calc()"><span class="option-label">書棚に置くプラン</span><span class="option-price">+15,000円</span></label>
+    </div>
+  </div>
+
+  <div class="estimate-card">
+    <div class="est-section">
+      <div class="est-section-title">印刷・製本費（税抜）</div>
+      <div class="estimate-row"><span id="print-label">—</span><span id="print-display">—</span></div>
+    </div>
+    <div class="est-section">
+      <div class="est-section-title">編集・制作費（税抜）</div>
+      <div class="estimate-row subtotal"><span id="production-label">編集・校正・デザイン・DTP</span><span id="production-subtotal">—</span></div>
+    </div>
+    <div class="est-section">
+      <div class="est-section-title">送料（税抜）</div>
+      <div class="estimate-row"><span id="shipping-label">配送料</span><span id="shipping-display">—</span></div>
+    </div>
+    <div class="est-section" id="opt-est-section" style="display:none;">
+      <div class="est-section-title">オプション（税抜）</div>
+      <div class="estimate-row"><span>オプション合計</span><span id="opt-display">¥0</span></div>
+    </div>
+    <div class="estimate-total">
+      <span class="total-label">お見積もり合計（税込）</span>
+      <span class="total-amount" id="total-display">—</span>
+    </div>
+    <div class="tax-note">消費税10%含む</div>
+    <div id="consultation-note" style="display:none; margin-top:12px; padding:12px 14px; background:#fffef0; border:0.5px solid #e8d060; border-radius:8px; font-size:13px; color:#7a5e00; line-height:1.8;">
+      📋 <strong>事前相談について</strong>（相談料：¥3,300 税込／1時間）<br>
+      事前相談では、出版したい理由や書籍のテーマなどをお伺いします。その上で、詳細なお見積もりを出させていただきます。
+    </div>
+  </div>
+
+  <div id="schedule-section" style="display:none;">
+    <div class="section">
+      <p class="section-title">事前相談の日程調整</p>
+      <p style="font-size:13px; color:#888; margin-bottom:1rem; line-height:1.6;">ご希望の日時を3つお知らせください。担当者より確認のご連絡をいたします。</p>
+      <div class="field">
+        <label>第1希望</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <input type="date" id="schedule1-date">
+          <select id="schedule1-time">
+            <option value="">時間を選択</option>
+            <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+            <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
+            <option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option>
+            <option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option>
+            <option>18:00</option><option>18:30</option><option>19:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>第2希望</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <input type="date" id="schedule2-date">
+          <select id="schedule2-time">
+            <option value="">時間を選択</option>
+            <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+            <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
+            <option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option>
+            <option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option>
+            <option>18:00</option><option>18:30</option><option>19:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>第3希望</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <input type="date" id="schedule3-date">
+          <select id="schedule3-time">
+            <option value="">時間を選択</option>
+            <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+            <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
+            <option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option>
+            <option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option>
+            <option>18:00</option><option>18:30</option><option>19:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>オンライン・対面のご希望</label>
+        <select id="meeting-type" onchange="toggleMeetingNote(this.value)">
+          <option value="">選択してください</option>
+          <option value="online">オンライン（Zoom等）</option>
+          <option value="visit">対面</option>
+          <option value="either">どちらでも</option>
+        </select>
+      </div>
+      <div id="meeting-note" style="display:none;">
+        <p style="font-size:12px; color:#888; line-height:1.8; margin-bottom:0.75rem;">
+          ※ 対面の場合は、別途、場所をご相談させていただきます。<br>
+          ご希望がある場合は、下記にご記入ください。<br>
+          交通費はご支給いただきますので、相談料に追加させていただきます。
+        </p>
+        <div class="field">
+          <label>ご希望の場所（任意）</label>
+          <input type="text" id="meeting-place" placeholder="例：渋谷駅周辺、カフェ等">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="field">
+      <label>ご質問・ご要望（任意）</label>
+      <textarea id="customer-message" rows="4" placeholder="ご自由にお書きください" style="resize:vertical;width:100%;"></textarea>
+    </div>
+  </div>
+
+    <div class="section">
+    <p class="section-title">お客様情報</p>
+    <div class="row">
+      <div class="field">
+        <label>お名前 <span style="color:#c8a000;">*</span></label>
+        <input type="text" id="customer-name" placeholder="山田 太郎">
+      </div>
+      <div class="field">
+        <label>お電話番号</label>
+        <input type="tel" id="customer-tel" placeholder="090-0000-0000">
+      </div>
+    </div>
+    <div class="field">
+      <label>メールアドレス <span style="color:#c8a000;">*</span></label>
+      <input type="email" id="customer-email" placeholder="example@mail.com">
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:1.5rem 0 0;">
+    <button class="submit-btn" onclick="submitForm()">送信する</button>
+  </div>
+  <p class="note">※ 表示金額はすべて概算です。正式見積もりは別途ご提案します。</p>
+</div>
+
+<script>
+// ============================================================
+// 価格データはスプレッドシートで一元管理。
+// 起動時に GAS(doGet) から読み込み、計算に使う。
+// 価格を変えたいときは HTML ではなくスプシの「価格設定」シートを編集。
+// ============================================================
+const GAS_URL = 'ここにGASウェブアプリのURLを貼り付け';
+
+const ROUND_UNIT = 1000;
+
+// スプシから取得した価格が入る。読み込み完了までは null。
+let PRICE = null;
+
+// ヘルパー：価格データから各値を取り出す（未取得時は安全な既定値）
+function pRate(key, def)      { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
+function pPrint(key, copies)  { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
+function pPrintLabel(key)     { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
+function pFixedSell(key)      { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
+function pOptSell(i)          { return (PRICE && PRICE.option && PRICE.option[i]) ? Number(PRICE.option[i].sell) : 0; }
+function pShip(key)           { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
+
+function nishidaCost(copies) {
+  return Math.round(pRate('nishidaFixed', 32679) + pRate('nishidaVar', 110140/300) * copies);
+}
+
+// 起動時に価格を取得
+function loadPrices() {
+  const btn = document.querySelector('.submit-btn');
+  fetch(GAS_URL, { method:'GET' })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === 'ok' && res.prices) {
+        PRICE = res.prices;
+        // 印刷サイズの選択肢ラベルをスプシのラベルに同期（任意）
+        syncSinanoLabels();
+        calc();
+      } else {
+        throw new Error(res.message || '価格データの形式が不正です');
+      }
+    })
+    .catch(err => {
+      // 価格が取れない場合は計算不可。ボタンを止めて知らせる。
+      if (btn) { btn.disabled = true; btn.textContent = '価格読込エラー'; }
+      alert('価格データの読み込みに失敗しました。\nGAS_URL の設定とデプロイ状態を確認してください。\n' + err.message);
+    });
+}
+
+// スプシのラベルを四六判セレクトに反映（ラベルだけ。値keyは固定）
+function syncSinanoLabels() {
+  if (!PRICE || !PRICE.print) return;
+  const sel = document.getElementById('sinano-size');
+  if (!sel) return;
+  Array.from(sel.options).forEach(opt => {
+    if (PRICE.print[opt.value]) opt.text = PRICE.print[opt.value].label;
+  });
+}
+
+let currentPlan = 'undecided';
+let S = {};   // 直近計算結果を保持
+
+function updateCopiesForSize() {
+  const sizeKey = document.getElementById('sinano-size').value;
+  const copiesEl = document.getElementById('sinano-copies');
+  const current = copiesEl.value;
+  if (sizeKey === 'a4_4c_jousei') {
+    copiesEl.innerHTML = '<option value="1000">1,000部</option>';
+  } else {
+    copiesEl.innerHTML = '<option value="1000">1,000部</option><option value="2000">2,000部</option><option value="3000">3,000部</option>';
+    if (['1000','2000','3000'].includes(current)) copiesEl.value = current;
+  }
+}
+
+function toggleMeetingNote(val) {
+  const note = document.getElementById('meeting-note');
+  if (note) note.style.display = val === 'visit' ? 'block' : 'none';
+}
+
+function fmt(n)     { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+function ceilU(n,u) { return Math.ceil(n/u)*u; }
+function toggleOpt(cb,id) { const el=document.getElementById(id); if(el) el.classList.toggle('checked',cb.checked); }
+function selectGenre(el)  { document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('selected')); el.classList.add('selected'); }
+
+function selectPlan(plan) {
+  currentPlan = plan;
+  ['undecided','start','standard','premium'].forEach(p => {
+    document.getElementById('tab-'+p).classList.toggle('active', p===plan);
+  });
+  document.getElementById('start-fields').style.display  = plan==='start' ? 'block' : 'none';
+  document.getElementById('sinano-fields').style.display = (plan==='standard'||plan==='premium') ? 'block' : 'none';
+
+  const estimateCard = document.querySelector('.estimate-card');
+  if (estimateCard) estimateCard.style.display = plan==='undecided' ? 'none' : 'block';
+  document.getElementById('spec-section').style.display   = plan==='undecided' ? 'none' : 'block';
+  document.getElementById('option-section').style.display = plan==='undecided' ? 'none' : 'block';
+  document.getElementById('opt-est-section').style.display = 'block';
+
+  // オプションのチェックをリセット
+  ['opt1','opt2','opt3','opt4','opt5'].forEach(id => {
+    const cb = document.querySelector('#'+id+' input');
+    if (cb) cb.checked = false;
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('checked');
+  });
+
+  // プランごとのオプション表示制御
+  document.getElementById('opt1').style.display = plan==='start' ? 'none' : 'flex';
+  document.getElementById('opt2').style.display = plan==='start' ? 'none' : 'flex';
+  document.getElementById('opt3').style.display = 'none';
+  document.getElementById('opt4').style.display = plan==='start' ? 'none' : 'flex';
+  document.getElementById('opt5').style.display = plan==='start' ? 'flex' : 'none';
+
+  const showConsult = plan==='standard'||plan==='premium';
+  document.getElementById('consultation-note').style.display = showConsult ? 'block' : 'none';
+  document.getElementById('schedule-section').style.display  = showConsult ? 'block' : 'none';
+
+  calc();
+}
+
+function calc() {
+  if (currentPlan === 'undecided') { S = {}; return; }
+  if (!PRICE) { return; }   // 価格未取得なら計算しない
+
+  let printCost, printLabel;
+  if (currentPlan === 'start') {
+    const copies = parseInt(document.getElementById('start-copies').value);
+    printCost  = nishidaCost(copies);
+    printLabel = '四六判 モノクロ 無線綴じ / ' + copies.toLocaleString() + '部';
+  } else {
+    const key = document.getElementById('sinano-size').value;
+    const sinCopies = parseInt(document.getElementById('sinano-copies').value);
+    printCost = pPrint(key, sinCopies);
+    if (!printCost) { document.getElementById('total-display').textContent = '—'; return; }
+    printLabel = pPrintLabel(key) + ' / ' + sinCopies.toLocaleString() + '部';
+  }
+
+  const rate      = currentPlan === 'standard' ? pRate('printRateStd', 1.651) : pRate('printRate', 1.3);
+  const printSell = ceilU(printCost * rate, ROUND_UNIT);
+
+  const pages      = pRate('pages', 200);
+  const writerCost = currentPlan==='premium' ? pages * pRate('writerPerPage', Math.round(500000/224)) : 0;
+  const writerSell = currentPlan==='premium' ? ceilU(writerCost * pRate('writerRate', 1.4113), ROUND_UNIT) : 0;
+
+  const isbnSell   = (currentPlan==='standard'||currentPlan==='premium') ? pFixedSell('isbn') : 0;
+  const illustSell = currentPlan==='premium' ? pFixedSell('illustrator') : 0;
+
+  const cbs = ['opt1','opt2','opt3','opt4','opt5'].map(id=>document.querySelector('#'+id+' input')||{checked:false});
+  const optTotal = cbs.reduce((s,cb,i)=>s+(cb.checked?pOptSell(i):0),0);
+
+  // 送料
+  let shipping = 0, shippingLabel = '配送料';
+  if (currentPlan === 'start') {
+    const startCopies = parseInt(document.getElementById('start-copies').value);
+    const opt5checked = (document.querySelector('#opt5 input')||{checked:false}).checked;
+    const sendCopies  = opt5checked ? Math.floor(startCopies / 2) : startCopies;
+    shipping = Math.ceil(sendCopies * 17 / 100) * 100;
+    shippingLabel = '配送料（概算）';
+  } else {
+    shipping = currentPlan === 'premium' ? pShip('premium') : pShip('standard');
+  }
+
+  const prodSubtotal = pFixedSell('editor') + writerSell + pFixedSell('proofreader') + pFixedSell('designer') + illustSell + isbnSell;
+  const totalExTax   = printSell + prodSubtotal + optTotal + shipping;
+  const totalIncTax  = Math.round(totalExTax * 1.1);
+
+  // 直近結果を保持（送信時にGASへ渡す）
+  S = { printCost, printSell, writerCost, writerSell, isbnSell, illustSell, optTotal, shipping, prodSubtotal, totalExTax, totalIncTax };
+
+  // 画面表示（売価のみ。原価・利益・粗利は画面に出さない）
+  document.getElementById('shipping-label').textContent   = shippingLabel;
+  document.getElementById('shipping-display').textContent = fmt(shipping);
+  document.getElementById('print-label').textContent      = printLabel;
+  document.getElementById('print-display').textContent    = fmt(printSell);
+
+  const prodLabels = {
+    start:    '編集・校正・デザイン・DTP',
+    standard: '編集・校正・デザイン・DTP',
+    premium:  '編集・校正・デザイン・DTP・ライター・イラスト'
+  };
+  document.getElementById('production-label').textContent    = prodLabels[currentPlan] || '編集・制作費';
+  document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
+  document.getElementById('opt-display').textContent         = fmt(optTotal);
+  document.getElementById('total-display').textContent       = fmt(totalIncTax);
+}
+
+// 起動時
+selectPlan('undecided');
+loadPrices();   // スプシから価格を読み込む
+
+// ===================================
+// フォーム送信（GASへ送る）
+// ===================================
+
+function submitForm() {
+  const name  = document.getElementById('customer-name').value.trim();
+  const email = document.getElementById('customer-email').value.trim();
+  if (!name)  { alert('お名前を入力してください'); return; }
+  if (!email) { alert('メールアドレスを入力してください'); return; }
+
+  // 選択中ジャンル
+  const genreEl = document.querySelector('.genre-tag.selected');
+  const genre   = genreEl ? genreEl.textContent : '';
+
+  // 選択中オプション（表示中のものだけ）
+  const optLabels = ['上製本（ハードカバー）','表紙加工（PP加工・箔押し等）','ISBN取得','海外販売サポート','書棚に置くプラン'];
+  const optIds = ['opt1','opt2','opt3','opt4','opt5'];
+  const checkedOptIndexes = optIds
+    .map((id,i)=>({id,i}))
+    .filter(o => { const el=document.getElementById(o.id); return el && el.style.display!=='none' && el.querySelector('input').checked; })
+    .map(o => o.i);
+  const checkedOpts = checkedOptIndexes.map(i => optLabels[i]).join('、');
+
+  // 仕様・部数・サイズキー
+  let spec='', copies='', sizeKey='';
+  if (currentPlan === 'start') {
+    spec    = document.getElementById('start-size').options[document.getElementById('start-size').selectedIndex].text;
+    copies  = document.getElementById('start-copies').value;
+    sizeKey = 'nishida_mono';
+  } else if (currentPlan === 'standard' || currentPlan === 'premium') {
+    const sizeEl = document.getElementById('sinano-size');
+    spec    = sizeEl.options[sizeEl.selectedIndex].text;
+    copies  = document.getElementById('sinano-copies').value;
+    sizeKey = sizeEl.value;
+  }
+
+  // 日程
+  const sd = n => (document.getElementById('schedule'+n+'-date')||{value:''}).value;
+  const st = n => (document.getElementById('schedule'+n+'-time')||{value:''}).value;
+  const sched = n => { const d=sd(n), t=st(n); return d && t ? d+' '+t : d || ''; };
+  const mtEl  = document.getElementById('meeting-type');
+  const mtMap = { online:'オンライン', visit:'対面', either:'どちらでも' };
+
+  const planNames = { undecided:'まだ決めていない', start:'スタートプラン', standard:'スタンダードプラン', premium:'プレミアムプラン' };
+
+  const payload = {
+    // --- お客様情報 ---
+    name,
+    email,
+    tel:          document.getElementById('customer-tel').value.trim(),
+    // --- プラン・仕様 ---
+    plan:         currentPlan,
+    planName:     planNames[currentPlan],
+    spec,
+    sizeKey,
+    copies,                       // 文字列の数字（例 "1000"）
+    pages:        document.getElementById('pages-display').value,
+    genre,
+    options:      checkedOpts || 'なし',
+    optionIndexes: checkedOptIndexes,   // 原価再計算用（0始まりの配列）
+    // --- 売価（画面に出している金額） ---
+    printSell:    S.printSell    || 0,
+    prodSubtotal: S.prodSubtotal || 0,
+    optTotal:     S.optTotal     || 0,
+    shipping:     S.shipping     || 0,
+    totalExTax:   S.totalExTax   || 0,
+    totalIncTax:  S.totalIncTax  || 0,
+    totalDisplay: document.getElementById('total-display').textContent,
+    // --- 日程・その他 ---
+    schedule1:    sched(1),
+    schedule2:    sched(2),
+    schedule3:    sched(3),
+    meetingType:  mtEl && mtEl.value ? (mtMap[mtEl.value] || mtEl.value) : '',
+    meetingPlace: (document.getElementById('meeting-place')||{value:''}).value,
+    message:      document.getElementById('customer-message').value.trim(),
+    url:          location.href
+  };
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '送信中...';
+  btn.disabled = true;
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    body:   JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (res.status === 'ok') {
+      btn.textContent = '送信完了しました';
+      btn.style.background = '#4caf8a';
+      alert('送信しました。');
+    } else {
+      throw new Error(res.message || '不明なエラー');
+    }
+  })
+  .catch(err => {
+    btn.textContent = 'お問い合わせを送信する';
+    btn.disabled = false;
+    alert('送信に失敗しました。\n' + err.message);
+  });
+}
+</script>
+</body>
+</html>
