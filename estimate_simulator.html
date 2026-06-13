@@ -358,10 +358,7 @@ function calc() {
   let shipping = 0, shippingLabel = '配送料';
   if (currentPlan === 'start') {
     const startCopies = parseInt(document.getElementById('start-copies').value);
-    // 「書棚に置くプラン」(キー opt_shelf) がチェックされていれば配送半減
-    const shelfChecked = checkedIdx.some(i => PRICE.option[i] && PRICE.option[i].key === 'opt_shelf');
-    const sendCopies = shelfChecked ? Math.floor(startCopies / 2) : startCopies;
-    shipping = Math.ceil(sendCopies * 17 / 100) * 100;
+    shipping = Math.ceil(startCopies * 17 / 100) * 100;
     shippingLabel = '配送料（概算）';
   } else {
     shipping = currentPlan === 'premium' ? pShip('premium') : pShip('standard');
