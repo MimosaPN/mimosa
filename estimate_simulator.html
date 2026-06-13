@@ -96,7 +96,8 @@
         <div class="field">
           <label>仕様</label>
           <select id="start-size" onchange="calc()">
-            <option value="mono">四六版 モノクロ 無線綴じ</option>
+            <option value="shiro_mono_St">四六版 モノクロ 無線綴じ</option>
+            <option value="shiro_4c_St">四六版 フルカラー 無線綴じ</option>
           </select>
         </div>
         <div class="field">
@@ -229,8 +230,17 @@ let S = {};                // 直近計算結果
 // 価格ヘルパー
 function pRate(key, def)     { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
 function pPrint(key, copies) { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
+function pPrintSell(key, copies){ return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].sells && PRICE.print[key].sells[copies]) ? PRICE.print[key].sells[copies] : 0; }
 function pPrintLabel(key)    { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
 function pFixedSell(key)     { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
+function pFixedLabel(key)    { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? (PRICE.fixed[key].label||key) : key; }
+
+// プランごとに含める制作費の項目キー
+// ST/SD: 編集・校正・デザイン・DTP・文字起こし / PM: それ + ライター・イラスト
+function prodKeysForPlan(plan) {
+  const base = ['editor','proofreader','designer','dtp','moji'];
+  return (plan === 'premium') ? base.concat(['writer','illustroter']) : base;
+}
 function pShip(key)          { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
 
 function nishidaCost(copies) {
@@ -289,6 +299,8 @@ function renderOptions() {
   if (!PRICE || !PRICE.option) return;
 
   PRICE.option.forEach((opt, i) => {
+    // ラベルが空の行（スプシのゴミ行）は表示しない
+    if (!opt.label || String(opt.label).trim() === '') return;
     // 対象プランに現プランが含まれるものだけ表示
     if (opt.plans && opt.plans.indexOf(currentPlan) === -1) return;
 
@@ -323,30 +335,39 @@ function selectPlan(plan) {
 function calc() {
   if (!PRICE) { return; }
 
-  let printCost, printLabel;
+  // ---- 印刷（サイズキー・部数を決定）----
+  let sizeKey, copies, printLabel;
   if (currentPlan === 'start') {
-    const copies = parseInt(document.getElementById('start-copies').value);
-    printCost  = nishidaCost(copies);
-    printLabel = '四六版 モノクロ 無線綴じ / ' + copies.toLocaleString() + '部';
+    copies  = parseInt(document.getElementById('start-copies').value);
+    sizeKey = document.getElementById('start-size').value;   // 例 shiro_mono_St
+    printLabel = pPrintLabel(sizeKey) + ' / ' + copies.toLocaleString() + '部';
   } else {
-    const key = document.getElementById('sinano-size').value;
-    const sinCopies = parseInt(document.getElementById('sinano-copies').value);
-    printCost = pPrint(key, sinCopies);
-    if (!printCost) { document.getElementById('total-display').textContent = '—'; return; }
-    printLabel = pPrintLabel(key) + ' / ' + sinCopies.toLocaleString() + '部';
+    sizeKey = document.getElementById('sinano-size').value;  // SD/PM共用キー
+    copies  = parseInt(document.getElementById('sinano-copies').value);
+    printLabel = pPrintLabel(sizeKey) + ' / ' + copies.toLocaleString() + '部';
   }
 
-  const rate      = currentPlan === 'standard' ? pRate('printRateStd', 1.651) : pRate('printRate', 1.3);
-  const printSell = ceilU(printCost * rate, ROUND_UNIT);
+  // 印刷売価はスプシのE列固定値をそのまま使う（掛け率計算なし）
+  const printSell = pPrintSell(sizeKey, copies);
+  if (!printSell) {
+    // 売価が未設定の組み合わせ
+    document.getElementById('print-label').textContent   = printLabel + '（売価未設定）';
+    document.getElementById('print-display').textContent = '—';
+    document.getElementById('total-display').textContent = '—';
+    S = {};
+    return;
+  }
 
-  const pages      = pRate('pages', 200);
-  const writerCost = currentPlan==='premium' ? pages * pRate('writerPerPage', Math.round(500000/224)) : 0;
-  const writerSell = currentPlan==='premium' ? ceilU(writerCost * pRate('writerRate', 1.4113), ROUND_UNIT) : 0;
+  // ---- 制作費（項目別の固定売価。プランで含める項目を切替）----
+  const prodKeys = prodKeysForPlan(currentPlan);
+  let prodSubtotal = 0;
+  const prodParts = [];
+  prodKeys.forEach(k => {
+    const sell = pFixedSell(k);
+    if (sell > 0) { prodSubtotal += sell; prodParts.push(pFixedLabel(k)); }
+  });
 
-  const isbnSell   = (currentPlan==='standard'||currentPlan==='premium') ? pFixedSell('isbn') : 0;
-  const illustSell = currentPlan==='premium' ? pFixedSell('illustrator') : 0;
-
-  // オプション合計（チェック中のものを集計。data-idx で価格を引く）
+  // ---- オプション（チェック中を集計）----
   let optTotal = 0;
   const checkedIdx = [];
   document.querySelectorAll('#option-grid input[type=checkbox]:checked').forEach(cb => {
@@ -354,36 +375,29 @@ function calc() {
     if (PRICE.option[i]) { optTotal += Number(PRICE.option[i].sell); checkedIdx.push(i); }
   });
 
-  // 送料
+  // ---- 送料 ----
   let shipping = 0, shippingLabel = '配送料';
   if (currentPlan === 'start') {
-    const startCopies = parseInt(document.getElementById('start-copies').value);
-    shipping = Math.ceil(startCopies * 17 / 100) * 100;
+    shipping = Math.ceil(copies * 17 / 100) * 100;
     shippingLabel = '配送料（概算）';
   } else {
     shipping = currentPlan === 'premium' ? pShip('premium') : pShip('standard');
   }
 
-  const prodSubtotal = pFixedSell('editor') + writerSell + pFixedSell('proofreader') + pFixedSell('designer') + illustSell + isbnSell;
-  const totalExTax   = printSell + prodSubtotal + optTotal + shipping;
-  const totalIncTax  = Math.round(totalExTax * 1.1);
+  const totalExTax  = printSell + prodSubtotal + optTotal + shipping;
+  const totalIncTax = Math.round(totalExTax * 1.1);
 
-  S = { printCost, printSell, writerCost, writerSell, isbnSell, illustSell, optTotal, shipping, prodSubtotal, totalExTax, totalIncTax, checkedIdx };
+  S = { sizeKey, copies, printSell, prodSubtotal, optTotal, shipping, totalExTax, totalIncTax, checkedIdx };
 
-  // オプション小計の表示/非表示
+  // ---- 表示 ----
   document.getElementById('opt-est-section').style.display = optTotal > 0 ? 'block' : 'none';
-
   document.getElementById('shipping-label').textContent   = shippingLabel;
   document.getElementById('shipping-display').textContent = fmt(shipping);
   document.getElementById('print-label').textContent      = printLabel;
   document.getElementById('print-display').textContent    = fmt(printSell);
 
-  const prodLabels = {
-    start:    '編集・校正・デザイン',
-    standard: '編集・校正・デザイン',
-    premium:  '編集・校正・デザイン・ライター・イラスト'
-  };
-  document.getElementById('production-label').textContent    = prodLabels[currentPlan] || '編集・制作費';
+  // 制作費は内訳（項目名を並べる）を見出しに反映
+  document.getElementById('production-label').textContent    = prodParts.join('・') || '編集・制作費';
   document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
   document.getElementById('opt-display').textContent         = fmt(optTotal);
   document.getElementById('total-display').textContent       = fmt(totalIncTax);
@@ -410,9 +424,10 @@ function submitForm() {
 
   let spec='', copies='', sizeKey='';
   if (currentPlan === 'start') {
-    spec    = document.getElementById('start-size').options[document.getElementById('start-size').selectedIndex].text;
+    const sizeEl = document.getElementById('start-size');
+    spec    = sizeEl.options[sizeEl.selectedIndex].text;
     copies  = document.getElementById('start-copies').value;
-    sizeKey = 'nishida_mono';
+    sizeKey = sizeEl.value;   // 例 shiro_mono_St
   } else {
     const sizeEl = document.getElementById('sinano-size');
     spec    = sizeEl.options[sizeEl.selectedIndex].text;
