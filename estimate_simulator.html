@@ -25,7 +25,7 @@
   .field input:focus, .field select:focus, .field textarea:focus { border-color: #e0b800; box-shadow: 0 0 0 3px rgba(224,184,0,0.12); }
   .field input[readonly] { background: #f5f0e8; color: #888; cursor: default; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .plan-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;}
+  .plan-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
   .plan-tab { padding: 10px 8px; border: 1.5px solid #e0d8b0; border-radius: 10px; cursor: pointer; transition: all 0.15s; background: #fff; text-align: center; }
   .plan-tab:hover { background: #fdf8e8; }
   .plan-tab.active { border-color: #c8a000; background: #fff9d0; }
@@ -33,7 +33,6 @@
   .plan-tab.active .plan-tab-name { color: #7a5e00; }
   .plan-tab-desc { font-size: 10px; color: #aaa; margin-top: 3px; line-height: 1.4; }
   .plan-tab.active .plan-tab-desc { color: #a07800; }
-  .plan-note { font-size: 12px; color: #aaa; background: #f8f5ea; border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; }
   .genre-tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .genre-tag { padding: 6px 14px; border: 0.5px solid #d8cfa8; border-radius: 999px; font-size: 13px; cursor: pointer; background: #fff; color: #666; transition: all 0.15s; }
   .genre-tag:hover { background: #fdf3c0; border-color: #e0c84a; }
@@ -155,16 +154,8 @@
 
   <div class="section" id="option-section" style="display:none;">
     <p class="section-title">オプション</p>
-    <div class="option-grid">
-      <label class="option-item" id="opt1"><input type="checkbox" onchange="toggleOpt(this,'opt1');calc()"><span class="option-label">表紙（PP加工）</span><span class="option-price">+30,000円</span></label>
-      <label class="option-item" id="opt2"><input type="checkbox" onchange="toggleOpt(this,'opt2');calc()"><span class="option-label">表紙（箔押し）</span><span class="option-price">+30,000円</span></label>
-      <label class="option-item" id="opt3"><input type="checkbox" onchange="toggleOpt(this,'opt3');calc()"><span class="option-label">見返し</span><span class="option-price">+30,000円</span></label>
-      <label class="option-item" id="opt4"><input type="checkbox" onchange="toggleOpt(this,'opt4');calc()"><span class="option-label">表紙（箔押し）</span><span class="option-price">+30,000円</span></label>
-      <label class="option-item" id="opt5"><input type="checkbox" onchange="toggleOpt(this,'opt5');calc()"><span class="option-label">上製本（ハードカバー）</span><span class="option-price">+5,000円</span></label>
-      <label class="option-item" id="opt6"><input type="checkbox" onchange="toggleOpt(this,'opt6');calc()"><span class="option-label">書店流通サポート</span><span class="option-price">+10,000円</span></label>
-      <label class="option-item" id="opt7"><input type="checkbox" onchange="toggleOpt(this,'opt7');calc()"><span class="option-label">海外販売サポート</span><span class="option-price">+50,000円</span></label>
-      <label class="option-item" id="opt8"><input type="checkbox" onchange="toggleOpt(this,'opt8');calc()"><span class="option-label">書棚に置くプラン</span><span class="option-price">+15,000円</span></label>
-    </div>
+    <!-- ↓ チェックボックスはスプシのオプション行から自動生成されます -->
+    <div class="option-grid" id="option-grid"></div>
   </div>
 
   <div class="estimate-card">
@@ -198,7 +189,7 @@
     </div>
   </div>
 
-    <div class="section">
+  <div class="section">
     <p class="section-title">お客様情報</p>
     <div class="row">
       <div class="field">
@@ -223,63 +214,32 @@
 
 <script>
 // ============================================================
-// 価格データはスプレッドシートで一元管理。
-// 起動時に GAS(doGet) から読み込み、計算に使う。
-// 価格を変えたいときは HTML ではなくスプシの「価格設定」シートを編集。
+// 価格・オプションはスプレッドシートで一元管理。
+// 起動時に GAS(doGet) から読み込み、オプションも動的生成。
+// 変えたいときは HTML ではなくスプシの「価格設定」シートを編集。
 // ============================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx4HnF4BnBotXTHQaM8M0dZj8-5c3JhF0bCxriWsH6y-XPGJBrViqAbNHd7kJPKAKw8Sw/exec';
 
 const ROUND_UNIT = 1000;
 
-// スプシから取得した価格が入る。読み込み完了までは null。
-let PRICE = null;
+let PRICE = null;          // スプシから取得した価格データ
+let currentPlan = 'start'; // 起動時はスタート
+let S = {};                // 直近計算結果
 
-// ヘルパー：価格データから各値を取り出す（未取得時は安全な既定値）
-function pRate(key, def)      { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
-function pPrint(key, copies)  { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
-function pPrintLabel(key)     { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
-function pFixedSell(key)      { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
-function pOptSell(i)          { return (PRICE && PRICE.option && PRICE.option[i]) ? Number(PRICE.option[i].sell) : 0; }
-function pShip(key)           { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
+// 価格ヘルパー
+function pRate(key, def)     { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
+function pPrint(key, copies) { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
+function pPrintLabel(key)    { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
+function pFixedSell(key)     { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
+function pShip(key)          { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
 
 function nishidaCost(copies) {
   return Math.round(pRate('nishidaFixed', 32679) + pRate('nishidaVar', 110140/300) * copies);
 }
 
-// 起動時に価格を取得
-function loadPrices() {
-  const btn = document.querySelector('.submit-btn');
-  fetch(GAS_URL, { method:'GET' })
-    .then(res => res.json())
-    .then(res => {
-      if (res.status === 'ok' && res.prices) {
-        PRICE = res.prices;
-        // 印刷サイズの選択肢ラベルをスプシのラベルに同期（任意）
-        syncSinanoLabels();
-        calc();
-      } else {
-        throw new Error(res.message || '価格データの形式が不正です');
-      }
-    })
-    .catch(err => {
-      // 価格が取れない場合は計算不可。ボタンを止めて知らせる。
-      if (btn) { btn.disabled = true; btn.textContent = '価格読込エラー'; }
-      alert('価格データの読み込みに失敗しました。\nGAS_URL の設定とデプロイ状態を確認してください。\n' + err.message);
-    });
-}
-
-// スプシのラベルを四六版セレクトに反映（ラベルだけ。値keyは固定）
-function syncSinanoLabels() {
-  if (!PRICE || !PRICE.print) return;
-  const sel = document.getElementById('sinano-size');
-  if (!sel) return;
-  Array.from(sel.options).forEach(opt => {
-    if (PRICE.print[opt.value]) opt.text = PRICE.print[opt.value].label;
-  });
-}
-
-let currentPlan = 'undecided';
-let S = {};   // 直近計算結果を保持
+function fmt(n)     { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+function ceilU(n,u) { return Math.ceil(n/u)*u; }
+function selectGenre(el) { document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('selected')); el.classList.add('selected'); }
 
 function updateCopiesForSize() {
   const sizeKey = document.getElementById('sinano-size').value;
@@ -293,58 +253,75 @@ function updateCopiesForSize() {
   }
 }
 
-function toggleMeetingNote(val) {
-  const note = document.getElementById('meeting-note');
-  if (note) note.style.display = val === 'visit' ? 'block' : 'none';
+// 起動時に価格・オプションを取得
+function loadPrices() {
+  const btn = document.querySelector('.submit-btn');
+  fetch(GAS_URL, { method:'GET' })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === 'ok' && res.prices) {
+        PRICE = res.prices;
+        syncSinanoLabels();
+        selectPlan(currentPlan);   // オプション生成＋計算は価格取得後に行う
+      } else {
+        throw new Error(res.message || '価格データの形式が不正です');
+      }
+    })
+    .catch(err => {
+      if (btn) { btn.disabled = true; btn.textContent = '価格読込エラー'; }
+      alert('価格データの読み込みに失敗しました。\nGAS_URL の設定とデプロイ状態を確認してください。\n' + err.message);
+    });
 }
 
-function fmt(n)     { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
-function ceilU(n,u) { return Math.ceil(n/u)*u; }
-function toggleOpt(cb,id) { const el=document.getElementById(id); if(el) el.classList.toggle('checked',cb.checked); }
-function selectGenre(el)  { document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('selected')); el.classList.add('selected'); }
+function syncSinanoLabels() {
+  if (!PRICE || !PRICE.print) return;
+  const sel = document.getElementById('sinano-size');
+  if (!sel) return;
+  Array.from(sel.options).forEach(opt => {
+    if (PRICE.print[opt.value]) opt.text = PRICE.print[opt.value].label;
+  });
+}
+
+// スプシのオプションを、現プランに合わせてチェックボックス生成
+function renderOptions() {
+  const grid = document.getElementById('option-grid');
+  grid.innerHTML = '';
+  if (!PRICE || !PRICE.option) return;
+
+  PRICE.option.forEach((opt, i) => {
+    // 対象プランに現プランが含まれるものだけ表示
+    if (opt.plans && opt.plans.indexOf(currentPlan) === -1) return;
+
+    const label = document.createElement('label');
+    label.className = 'option-item';
+    label.innerHTML =
+      '<input type="checkbox" data-idx="' + i + '">' +
+      '<span class="option-label">' + opt.label + '</span>' +
+      '<span class="option-price">+' + Number(opt.sell).toLocaleString('ja-JP') + '円</span>';
+    const cb = label.querySelector('input');
+    cb.addEventListener('change', () => { label.classList.toggle('checked', cb.checked); calc(); });
+    grid.appendChild(label);
+  });
+
+  // オプションが1つも無いプランならセクションごと隠す
+  document.getElementById('option-section').style.display = grid.children.length ? 'block' : 'none';
+}
 
 function selectPlan(plan) {
   currentPlan = plan;
-  ['undecided','start','standard','premium'].forEach(p => {
-    document.getElementById('tab-'+p).classList.toggle('active', p===plan);
+  ['start','standard','premium'].forEach(p => {
+    const tab = document.getElementById('tab-'+p);
+    if (tab) tab.classList.toggle('active', p===plan);
   });
   document.getElementById('start-fields').style.display  = plan==='start' ? 'block' : 'none';
   document.getElementById('sinano-fields').style.display = (plan==='standard'||plan==='premium') ? 'block' : 'none';
 
-  const estimateCard = document.querySelector('.estimate-card');
-  if (estimateCard) estimateCard.style.display = plan==='undecided' ? 'none' : 'block';
-  document.getElementById('spec-section').style.display   = plan==='undecided' ? 'none' : 'block';
-  document.getElementById('option-section').style.display = plan==='undecided' ? 'none' : 'block';
-  document.getElementById('opt-est-section').style.display = 'block';
-
-  // オプションのチェックをリセット
-  ['opt1','opt2','opt3','opt4','opt5','opt6','opt7','opt8'].forEach(id => {
-    const cb = document.querySelector('#'+id+' input');
-    if (cb) cb.checked = false;
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('checked');
-  });
-
-  // プランごとのオプション表示制御
-  document.getElementById('opt1').style.display = plan==='start' ? 'none' : 'flex';
-  document.getElementById('opt2').style.display = plan==='start' ? 'none' : 'flex';
-  document.getElementById('opt3').style.display = 'none';
-  document.getElementById('opt4').style.display = plan==='start' ? 'none' : 'flex';
-  document.getElementById('opt5').style.display = plan==='start' ? 'flex' : 'none';
-  document.getElementById('opt6').style.display = plan==='start' ? 'flex' : 'none';
-  document.getElementById('opt7').style.display = plan==='start' ? 'flex' : 'none';
-  document.getElementById('opt8').style.display = plan==='start' ? 'flex' : 'none';
-
-  const showConsult = plan==='standard'||plan==='premium';
-  document.getElementById('consultation-note').style.display = showConsult ? 'block' : 'none';
-  document.getElementById('schedule-section').style.display  = showConsult ? 'block' : 'none';
-
+  renderOptions();   // プランに応じてオプション再生成
   calc();
 }
 
 function calc() {
-  if (currentPlan === 'undecided') { S = {}; return; }
-  if (!PRICE) { return; }   // 価格未取得なら計算しない
+  if (!PRICE) { return; }
 
   let printCost, printLabel;
   if (currentPlan === 'start') {
@@ -369,15 +346,21 @@ function calc() {
   const isbnSell   = (currentPlan==='standard'||currentPlan==='premium') ? pFixedSell('isbn') : 0;
   const illustSell = currentPlan==='premium' ? pFixedSell('illustrator') : 0;
 
-  const cbs = ['opt1','opt2','opt3','opt4','opt5'].map(id=>document.querySelector('#'+id+' input')||{checked:false});
-  const optTotal = cbs.reduce((s,cb,i)=>s+(cb.checked?pOptSell(i):0),0);
+  // オプション合計（チェック中のものを集計。data-idx で価格を引く）
+  let optTotal = 0;
+  const checkedIdx = [];
+  document.querySelectorAll('#option-grid input[type=checkbox]:checked').forEach(cb => {
+    const i = parseInt(cb.dataset.idx, 10);
+    if (PRICE.option[i]) { optTotal += Number(PRICE.option[i].sell); checkedIdx.push(i); }
+  });
 
   // 送料
   let shipping = 0, shippingLabel = '配送料';
   if (currentPlan === 'start') {
     const startCopies = parseInt(document.getElementById('start-copies').value);
-    const opt5checked = (document.querySelector('#opt5 input')||{checked:false}).checked;
-    const sendCopies  = opt5checked ? Math.floor(startCopies / 2) : startCopies;
+    // 「書棚に置くプラン」(キー opt_shelf) がチェックされていれば配送半減
+    const shelfChecked = checkedIdx.some(i => PRICE.option[i] && PRICE.option[i].key === 'opt_shelf');
+    const sendCopies = shelfChecked ? Math.floor(startCopies / 2) : startCopies;
     shipping = Math.ceil(sendCopies * 17 / 100) * 100;
     shippingLabel = '配送料（概算）';
   } else {
@@ -388,10 +371,11 @@ function calc() {
   const totalExTax   = printSell + prodSubtotal + optTotal + shipping;
   const totalIncTax  = Math.round(totalExTax * 1.1);
 
-  // 直近結果を保持（送信時にGASへ渡す）
-  S = { printCost, printSell, writerCost, writerSell, isbnSell, illustSell, optTotal, shipping, prodSubtotal, totalExTax, totalIncTax };
+  S = { printCost, printSell, writerCost, writerSell, isbnSell, illustSell, optTotal, shipping, prodSubtotal, totalExTax, totalIncTax, checkedIdx };
 
-  // 画面表示（売価のみ。原価・利益・粗利は画面に出さない）
+  // オプション小計の表示/非表示
+  document.getElementById('opt-est-section').style.display = optTotal > 0 ? 'block' : 'none';
+
   document.getElementById('shipping-label').textContent   = shippingLabel;
   document.getElementById('shipping-display').textContent = fmt(shipping);
   document.getElementById('print-label').textContent      = printLabel;
@@ -408,40 +392,31 @@ function calc() {
   document.getElementById('total-display').textContent       = fmt(totalIncTax);
 }
 
-// 起動時
-selectPlan('undecided');
-loadPrices();   // スプシから価格を読み込む
+// 起動
+loadPrices();
 
 // ===================================
-// フォーム送信（GASへ送る）
+// フォーム送信
 // ===================================
-
 function submitForm() {
   const name  = document.getElementById('customer-name').value.trim();
   const email = document.getElementById('customer-email').value.trim();
   if (!name)  { alert('お名前を入力してください'); return; }
   if (!email) { alert('メールアドレスを入力してください'); return; }
 
-  // 選択中ジャンル
   const genreEl = document.querySelector('.genre-tag.selected');
   const genre   = genreEl ? genreEl.textContent : '';
 
-  // 選択中オプション（表示中のものだけ）
-  const optLabels = ['表紙加工（PP）','表紙加工（箔押し）','上製本（ハードカバー）','書店流通サポート','海外販売サポート','＊＊＊'];
-  const optIds = ['opt1','opt2','opt3','opt4','opt5','opt6','opt7','opt8'];
-  const checkedOptIndexes = optIds
-    .map((id,i)=>({id,i}))
-    .filter(o => { const el=document.getElementById(o.id); return el && el.style.display!=='none' && el.querySelector('input').checked; })
-    .map(o => o.i);
-  const checkedOpts = checkedOptIndexes.map(i => optLabels[i]).join('、');
+  // 選択中オプション（スプシのラベルとindexをそのまま使う）
+  const checkedIdx = S.checkedIdx || [];
+  const checkedLabels = checkedIdx.map(i => (PRICE.option[i] ? PRICE.option[i].label : '')).filter(Boolean).join('、');
 
-  // 仕様・部数・サイズキー
   let spec='', copies='', sizeKey='';
   if (currentPlan === 'start') {
     spec    = document.getElementById('start-size').options[document.getElementById('start-size').selectedIndex].text;
     copies  = document.getElementById('start-copies').value;
     sizeKey = 'nishida_mono';
-  } else if (currentPlan === 'standard' || currentPlan === 'premium') {
+  } else {
     const sizeEl = document.getElementById('sinano-size');
     spec    = sizeEl.options[sizeEl.selectedIndex].text;
     copies  = document.getElementById('sinano-copies').value;
@@ -450,53 +425,48 @@ function submitForm() {
   const planNames = { start:'スタートプラン', standard:'スタンダードプラン', premium:'プレミアムプラン' };
 
   const payload = {
-    // --- お客様情報 ---
     name,
     email,
-    tel:          document.getElementById('customer-tel').value.trim(),
-    // --- プラン・仕様 ---
-    plan:         currentPlan,
-    planName:     planNames[currentPlan],
+    tel:           document.getElementById('customer-tel').value.trim(),
+    plan:          currentPlan,
+    planName:      planNames[currentPlan],
     spec,
     sizeKey,
-    copies,                       // 文字列の数字（例 "1000"）
-    pages:        document.getElementById('pages-display').value,
+    copies,
+    pages:         document.getElementById('pages-display').value,
     genre,
-    options:      checkedOpts || 'なし',
-    optionIndexes: checkedOptIndexes,   // 原価再計算用（0始まりの配列）
-    // --- 売価（画面に出している金額） ---
-    printSell:    S.printSell    || 0,
-    prodSubtotal: S.prodSubtotal || 0,
-    optTotal:     S.optTotal     || 0,
-    shipping:     S.shipping     || 0,
-    totalExTax:   S.totalExTax   || 0,
-    totalIncTax:  S.totalIncTax  || 0,
-    totalDisplay: document.getElementById('total-display').textContent
+    options:       checkedLabels || 'なし',
+    optionIndexes: checkedIdx,
+    printSell:     S.printSell    || 0,
+    prodSubtotal:  S.prodSubtotal || 0,
+    optTotal:      S.optTotal     || 0,
+    shipping:      S.shipping     || 0,
+    totalExTax:    S.totalExTax   || 0,
+    totalIncTax:   S.totalIncTax  || 0,
+    totalDisplay:  document.getElementById('total-display').textContent,
+    message:       document.getElementById('customer-message').value.trim()
   };
 
   const btn = document.querySelector('.submit-btn');
   btn.textContent = '送信中...';
   btn.disabled = true;
 
-  fetch(GAS_URL, {
-    method: 'POST',
-    body:   JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === 'ok') {
-      btn.textContent = '送信完了しました';
-      btn.style.background = '#4caf8a';
-      alert('送信しました。');
-    } else {
-      throw new Error(res.message || '不明なエラー');
-    }
-  })
-  .catch(err => {
-    btn.textContent = 'お問い合わせを送信する';
-    btn.disabled = false;
-    alert('送信に失敗しました。\n' + err.message);
-  });
+  fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === 'ok') {
+        btn.textContent = '送信完了しました';
+        btn.style.background = '#4caf8a';
+        alert('送信しました。');
+      } else {
+        throw new Error(res.message || '不明なエラー');
+      }
+    })
+    .catch(err => {
+      btn.textContent = '送信';
+      btn.disabled = false;
+      alert('送信に失敗しました。\n' + err.message);
+    });
 }
 </script>
 </body>
