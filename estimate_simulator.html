@@ -351,7 +351,7 @@ function calc() {
   const printSell = pPrintSell(sizeKey, copies);
   if (!printSell) {
     // 売価が未設定の組み合わせ
-    document.getElementById('print-label').textContent   = printLabel + '（売価未設定）';
+    document.getElementById('print-label').textContent   = printLabel + '（未設定）';
     document.getElementById('print-display').textContent = '—';
     document.getElementById('total-display').textContent = '—';
     S = {};
