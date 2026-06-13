@@ -176,6 +176,9 @@
       <div class="est-section-title">オプション（税抜）</div>
       <div class="estimate-row"><span>オプション合計</span><span id="opt-display">¥0</span></div>
     </div>
+    <div class="estimate-row subtotal" style="margin-top:1rem;padding-top:0.75rem;border-top:0.5px solid #e8d88a;">
+      <span>小計（税抜）</span><span id="subtotal-display">—</span>
+    </div>
     <div class="estimate-total">
       <span class="total-label">お見積合計（税込）</span>
       <span class="total-amount" id="total-display">—</span>
@@ -355,6 +358,7 @@ function calc() {
     // 売価が未設定の組み合わせ
     document.getElementById('print-label').textContent   = printLabel + '（売価未設定）';
     document.getElementById('print-display').textContent = '—';
+    document.getElementById('subtotal-display').textContent = '—';
     document.getElementById('total-display').textContent = '—';
     S = {};
     return;
@@ -402,6 +406,7 @@ function calc() {
   document.getElementById('production-label').textContent    = prodParts.join('・') || '編集・制作費';
   document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
   document.getElementById('opt-display').textContent         = fmt(optTotal);
+  document.getElementById('subtotal-display').textContent    = fmt(totalExTax);
   document.getElementById('total-display').textContent       = fmt(totalIncTax);
 }
 
