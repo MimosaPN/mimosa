@@ -167,7 +167,6 @@
     <div class="est-section">
       <div class="est-section-title">編集・制作費一式（税抜）</div>
       <div class="estimate-row subtotal"><span id="production-subtotal">—</span></div>
-      //<div class="estimate-row subtotal"><span id="production-label">編集・校正・デザイン</span><span id="production-subtotal">—</span></div>
     </div>
     <div class="est-section">
       <div class="est-section-title">送料（税抜）</div>
@@ -404,7 +403,6 @@ function calc() {
   document.getElementById('print-display').textContent    = fmt(printSell);
 
   // 制作費は項目名を出さず「一式」表示（内訳はスプシ記録には残る）
-  //document.getElementById('production-label').textContent    = '編集・制作費一式';
   document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
   document.getElementById('opt-display').textContent         = fmt(optTotal);
   document.getElementById('subtotal-display').textContent    = fmt(totalExTax);
