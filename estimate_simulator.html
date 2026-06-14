@@ -166,11 +166,11 @@
     </div>
     <div class="est-section">
       <div class="est-section-title">編集・制作費（税抜）</div>
-      <div class="estimate-row subtotal"><span id="production-label">編集・校正・デザインなど</span><span id="production-subtotal">—</span></div>
+      <div class="estimate-row subtotal"><span id="production-label">編集・校正・デザイン</span><span id="production-subtotal">—</span></div>
     </div>
     <div class="est-section">
       <div class="est-section-title">送料（税抜）</div>
-      <div class="estimate-row"><span id="shipping-label">配送料（概算）</span><span id="shipping-display">—</span></div>
+      <div class="estimate-row"><span id="shipping-label">配送料</span><span id="shipping-display">—</span></div>
     </div>
     <div class="est-section" id="opt-est-section" style="display:none;">
       <div class="est-section-title">オプション（税抜）</div>
@@ -402,8 +402,8 @@ function calc() {
   document.getElementById('print-label').textContent      = printLabel;
   document.getElementById('print-display').textContent    = fmt(printSell);
 
-  // 制作費は内訳（項目名を並べる）を見出しに反映
-  document.getElementById('production-label').textContent    = prodParts.join('・') || '編集・制作費';
+  // 制作費は項目名を出さず「一式」表示（内訳はスプシ記録には残る）
+  document.getElementById('production-label').textContent    = '編集・制作費一式';
   document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
   document.getElementById('opt-display').textContent         = fmt(optTotal);
   document.getElementById('subtotal-display').textContent    = fmt(totalExTax);
