@@ -201,7 +201,7 @@
       </div>
       <div class="field">
         <label>お電話番号</label>
-        <input type="tel" id="customer-tel" placeholder="090-0000-0000">
+        <input type="tel" id="customer-tel" placeholder="09000000000（ハイフン不要）">
       </div>
     </div>
     <div class="field">
@@ -419,6 +419,25 @@ function submitForm() {
   const email = document.getElementById('customer-email').value.trim();
   if (!name)  { alert('お名前を入力してください'); return; }
   if (!email) { alert('メールアドレスを入力してください'); return; }
+  // メール形式の簡易チェック
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('メールアドレスの形式が正しくないようです。ご確認ください。');
+    return;
+  }
+
+  // 電話番号：全角→半角に変換し、数字以外を除去して桁数チェック（入力時のみ）
+  let tel = document.getElementById('customer-tel').value.trim();
+  if (tel) {
+    // 全角数字を半角に
+    tel = tel.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    // 数字以外（ハイフン・スペース・括弧など）を除去
+    const digits = tel.replace(/[^0-9]/g, '');
+    if (digits.length < 10 || digits.length > 11) {
+      alert('電話番号は10〜11桁の数字でご入力ください（ハイフンは不要です）。');
+      return;
+    }
+    tel = digits;   // 数字のみで送る（頭の0も保持される）
+  }
 
   const genreEl = document.querySelector('.genre-tag.selected');
   const genre   = genreEl ? genreEl.textContent : '';
@@ -444,7 +463,7 @@ function submitForm() {
   const payload = {
     name,
     email,
-    tel:           document.getElementById('customer-tel').value.trim(),
+    tel:           tel,
     plan:          currentPlan,
     planName:      planNames[currentPlan],
     spec,
