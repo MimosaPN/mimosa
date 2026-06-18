@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お取引について | ミモザ書房</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
+
+.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; }
+.nav-logo { text-decoration: none; color: inherit; }
+.nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; font-family: 'Noto Sans JP', sans-serif; }
+.nav-logo .name { font-size: 20px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; font-family: 'Noto Serif JP', serif; }
+.nav-links { display: flex; gap: 2rem; list-style: none; font-size: 12px; letter-spacing: 0.05em; color: #666; }
+.nav-links a { color: inherit; text-decoration: none; }
+.nav-links .active { color: #8a6f4e; font-weight: 500; }
+
+.page-header { padding: 4rem 3rem 3rem; border-bottom: 0.5px solid #d8d4c8; max-width: 860px; margin: 0 auto; }
+.breadcrumb { font-size: 11px; color: #b8a888; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+.breadcrumb a { color: #b8a888; text-decoration: none; }
+.breadcrumb span { margin: 0 0.5rem; }
+.page-title { font-family: 'Noto Serif JP', serif; font-size: 32px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 1rem; }
+.page-lead { font-size: 13px; color: #6b6454; line-height: 2; letter-spacing: 0.05em; }
+
+.content { max-width: 860px; margin: 0 auto; padding: 3rem; }
+.section-block { margin-bottom: 4rem; }
+.section-title { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; padding-bottom: 1rem; border-bottom: 0.5px solid #d8d4c8; margin-bottom: 2rem; }
+
+.tonya-box { background: #f5f0e8; border-left: 3px solid #c8b89a; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
+.tonya-name { font-size: 15px; font-weight: 500; color: #1e1c18; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+.tonya-desc { font-size: 13px; color: #6b6454; line-height: 1.9; }
+.tonya-link { display: inline-block; margin-top: 0.75rem; font-size: 12px; color: #8a6f4e; letter-spacing: 0.05em; text-decoration: underline; }
+.tonya-note { font-size: 12px; color: #6b6454; line-height: 1.9; padding: 1rem 0; }
+
+.trade-table { width: 100%; border-collapse: collapse; }
+.trade-table tr { border-bottom: 0.5px solid #e8e4da; }
+.trade-table th { width: 140px; padding: 1rem 0; font-size: 12px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; vertical-align: top; text-align: left; }
+.trade-table td { padding: 1rem 0 1rem 2rem; font-size: 13px; color: #2c2a24; line-height: 1.9; }
+.trade-table td .note { font-size: 11px; color: #a09880; margin-top: 0.25rem; }
+.highlight { color: #8a6f4e; font-weight: 500; }
+
+.flow { display: flex; flex-direction: column; }
+.flow-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+.flow-line { display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0; }
+.flow-dot { width: 10px; height: 10px; border-radius: 50%; background: #c8b89a; flex-shrink: 0; margin-top: 4px; }
+.flow-connector { width: 1px; height: 32px; background: #d8d4c8; margin: 4px 0; }
+.flow-body { padding-bottom: 2rem; }
+.flow-label { font-size: 11px; letter-spacing: 0.15em; color: #a09880; margin-bottom: 0.25rem; }
+.flow-text { font-size: 13px; color: #2c2a24; line-height: 1.8; }
+.flow-sub { font-size: 12px; color: #6b6454; margin-top: 0.25rem; }
+
+.flow-section-label { font-size: 12px; letter-spacing: 0.1em; color: #a09880; margin-bottom: 1.5rem; }
+.flow-section-label + .flow-section-label { margin-top: 2rem; }
+
+.return-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.5rem 2rem; }
+.return-box p { font-size: 13px; color: #2c2a24; line-height: 2; }
+
+.company-grid { width: 100%; border-collapse: collapse; border: 0.5px solid #d8d4c8; }
+.company-grid tr { border-bottom: 0.5px solid #e8e4da; }
+.company-grid tr:last-child { border-bottom: none; }
+.company-grid th { background: #f5f0e8; padding: 0.9rem 1.25rem; font-size: 11px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; text-align: left; width: 180px; }
+.company-grid td { padding: 0.9rem 1.25rem; font-size: 13px; color: #2c2a24; line-height: 1.8; }
+
+.contact-card { background: #fff; border: 0.5px solid #d8d4c8; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start; }
+.contact-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e8e0d4; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #8a6f4e; flex-shrink: 0; font-family: 'Noto Sans JP', sans-serif; }
+.contact-info .name { font-size: 16px; font-weight: 500; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 0.25rem; }
+.contact-info .role { font-size: 11px; color: #a09880; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.contact-info .detail { font-size: 13px; color: #4a4438; line-height: 1.9; }
+.contact-info .detail span { display: block; }
+
+.form-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 2.5rem; }
+.form-note { font-size: 12px; color: #6b6454; line-height: 1.9; margin-bottom: 2rem; }
+.form-row { margin-bottom: 1.25rem; }
+.form-label { font-size: 11px; letter-spacing: 0.1em; color: #a09880; margin-bottom: 0.4rem; display: block; }
+.form-label .req { color: #c87060; margin-left: 0.25rem; }
+input[type=text], input[type=email], select, textarea { width: 100%; padding: 0.6rem 0.75rem; border: 0.5px solid #d8d4c8; background: #faf8f4; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; color: #2c2a24; outline: none; appearance: none; }
+input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus { border-color: #a09880; }
+textarea { resize: vertical; min-height: 80px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-check { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+.form-check label { display: flex; align-items: center; gap: 0.4rem; font-size: 13px; color: #4a4438; cursor: pointer; }
+.btn { display: inline-block; padding: 0.85rem 3rem; background: #2c2a24; color: #faf8f4; font-size: 13px; letter-spacing: 0.2em; border: none; cursor: pointer; margin-top: 1.5rem; font-family: 'Noto Sans JP', sans-serif; }
+.btn:hover { background: #1e1c18; }
+
+footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; justify-content: space-between; font-size: 11px; color: #aaa; letter-spacing: 0.05em; }
+footer a { color: #c8b89a; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="mimosa-shobo.html">
+    <div class="parent">出版社ミモザ ／ Mimosa Shobo</div>
+    <div class="name">ミモザ書房</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="mimosa-shobo.html">書籍</a></li>
+    <li><a href="mimosa-shobo.html#recruit">著者募集</a></li>
+    <li class="active">お取引について</li>
+    <li><a href="mimosa-shobo.html#contact">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <p class="breadcrumb"><a href="mimosa-shobo.html">ミモザ書房</a> <span>›</span> お取引について</p>
+  <h1 class="page-title">お取引について</h1>
+  <p class="page-lead">
+    書店・取次の方向けに、取引条件・注文フロー・資料請求をご案内します。<br>
+    ご不明な点はお気軽に担当者までご連絡ください。
+  </p>
+</div>
+
+<div class="content">
+
+  <div class="section-block">
+    <h2 class="section-title">取次取引</h2>
+    <div class="tonya-box">
+      <p class="tonya-name">鍬谷書店 経由</p>
+      <p class="tonya-desc">
+        鍬谷書店を通じて、日販・トーハンをはじめとするすべての帳合取次への納本が可能です。<br>
+        取次経由でのご注文は、各帳合取次を通じてお手続きください。
+      </p>
+      <a class="tonya-link" href="http://www.kuwatani.co.jp/" target="_blank">鍬谷書店 ウェブサイト →</a>
+    </div>
+    <p class="tonya-note">※取次経由でのお取引に関するご質問は、担当者までメールにてお問い合わせください。</p>
+  </div>
+
+  <div class="section-block">
+    <h2 class="section-title">直取引</h2>
+    <table class="trade-table">
+      <tr>
+        <th>条件</th>
+        <td>買切<div class="note">※委託条件・イベント販売は別途ご相談ください</div></td>
+      </tr>
+      <tr>
+        <th>注文ロット</th>
+        <td><span class="highlight">2冊より</span><div class="note">6冊以下は偶数冊でお願いします</div></td>
+      </tr>
+      <tr>
+        <th>掛率</th>
+        <td><span class="highlight">70%</span>（20冊以上は <span class="highlight">65%</span>）</td>
+      </tr>
+      <tr>
+        <th>送料</th>
+        <td>元払い（当社負担）</td>
+      </tr>
+      <tr>
+        <th>支払</th>
+        <td>月末締め・翌月末精算<div class="note">振込手数料はご負担ください</div></td>
+      </tr>
+      <tr>
+        <th>返品</th>
+        <td>無期限で受付<div class="note">長期にわたってご販売いただけますようお願いします</div></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section-block">
+    <h2 class="section-title">注文・返品フロー</h2>
+    <p class="flow-section-label">■ ご注文の流れ</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-body">
+          <p class="flow-label">STEP 1</p>
+          <p class="flow-text">担当者へメールまたはフォームでご注文</p>
+          <p class="flow-sub">書名・冊数・納品先をご明記ください</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-body">
+          <p class="flow-label">STEP 2</p>
+          <p class="flow-text">受注確認メールをお送りします（2営業日以内）</p>
+          <p class="flow-sub">納品先住所をご確認いただきます</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-body">
+          <p class="flow-label">STEP 3</p>
+          <p class="flow-text">発送・納品書を同封してお送りします</p>
+          <p class="flow-sub">発送後、追跡番号をご連絡します</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div></div>
+        <div class="flow-body">
+          <p class="flow-label">STEP 4</p>
+          <p class="flow-text">翌月末にご請求書を送付・お振込みをお願いします</p>
+        </div>
+      </div>
+    </div>
+    <p class="flow-section-label" style="margin-top:2rem;">■ 返品の流れ</p>
+    <div class="return-box">
+      <p>返品は<strong>無期限</strong>で承ります。ご返品の際は事前にメールにてご連絡のうえ、着払いにてお送りください。<br>
+      返送先住所はメールにてご案内します。返品確認後、翌月末精算にて金額を調整いたします。</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2 class="section-title">会社概要・ISBN情報</h2>
+    <table class="company-grid">
+      <tr><th>出版社名（ISBN登録）</th><td>ミモザ</td></tr>
+      <tr><th>運営会社</th><td>ミモザパートナーズ合同会社</td></tr>
+      <tr><th>レーベル</th><td>ミモザ書房 ／ ミモザ堂</td></tr>
+      <tr><th>設立</th><td>2026年1月13日</td></tr>
+      <tr><th>所在地</th><td>メールにてご案内します</td></tr>
+      <tr><th>取次</th><td>鍬谷書店</td></tr>
+      <tr><th>メール</th><td>info@mimosa-partners.com</td></tr>
+    </table>
+  </div>
+
+  <div class="section-block">
+    <h2 class="section-title">担当者</h2>
+    <div class="contact-card">
+      <div class="contact-avatar">石井</div>
+      <div class="contact-info">
+        <p class="name">石井 絵里加</p>
+        <p class="role">代表 ／ 取次・書店担当</p>
+        <div class="detail">
+          <span>Email：info@mimosa-partners.com</span>
+          <span style="font-size:11px;color:#a09880;margin-top:0.25rem;">※返信まで2営業日以内</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2 class="section-title">資料請求・お問い合わせ</h2>
+    <div class="form-box">
+      <p class="form-note">
+        会社概要・書誌情報・ISBN一覧・所在地などの資料をご希望の方は、下記フォームよりご請求ください。<br>
+        メールにてPDFおよび必要情報をお送りします（2営業日以内）。
+      </p>
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">書店・取次名<span class="req">*</span></label>
+          <input type="text" placeholder="〇〇書店">
+        </div>
+        <div class="form-row">
+          <label class="form-label">担当者名<span class="req">*</span></label>
+          <input type="text" placeholder="山田 花子">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">メールアドレス<span class="req">*</span></label>
+        <input type="email" placeholder="info@example.com">
+      </div>
+      <div class="form-row">
+        <label class="form-label">ご希望の資料（複数選択可）</label>
+        <div class="form-check">
+          <label><input type="checkbox"> 会社概要</label>
+          <label><input type="checkbox"> 書誌情報・ISBN一覧</label>
+          <label><input type="checkbox"> 直取引申込書</label>
+          <label><input type="checkbox"> その他</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">ご質問・備考</label>
+        <textarea placeholder="取引条件についてのご質問など、お気軽にどうぞ。"></textarea>
+      </div>
+      <button class="btn">送信する</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="mimosa-shobo.html">← ミモザ書房 トップへ</a>
+  <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
+</footer>
+
+</body>
+</html>
