@@ -7,187 +7,98 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Noto Serif JP', serif;
-    background: #faf8f4;
-    color: #2c2a24;
-    min-height: 100vh;
-  }
-  .nav {
-    padding: 1.5rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 0.5px solid #d8d4c8;
-  }
-  .nav-logo {
-    font-size: 13px;
-    letter-spacing: 0.15em;
-    color: #888;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .nav-logo span {
-    display: block;
-    font-size: 20px;
-    letter-spacing: 0.08em;
-    color: #2c2a24;
-    font-family: 'Noto Serif JP', serif;
-    font-weight: 600;
-  }
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-    font-family: 'Noto Sans JP', sans-serif;
-    color: #666;
-    list-style: none;
-  }
-  .hero {
-    padding: 6rem 3rem 4rem;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .hero-en {
-    font-size: 11px;
-    letter-spacing: 0.25em;
-    color: #a09880;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .hero-title {
-    font-size: 48px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    line-height: 1.3;
-    color: #1e1c18;
-    margin-bottom: 1.5rem;
-  }
-  .hero-sub {
-    font-size: 15px;
-    color: #6b6454;
-    line-height: 2;
-    letter-spacing: 0.05em;
-    font-family: 'Noto Sans JP', sans-serif;
-    max-width: 560px;
-    margin: 0 auto 3rem;
-  }
-  .divider {
-    width: 40px;
-    height: 1px;
-    background: #c8b89a;
-    margin: 3rem auto;
-  }
-  .labels-section {
-    padding: 2rem 3rem 6rem;
-    max-width: 880px;
-    margin: 0 auto;
-  }
-  .labels-heading {
-    text-align: center;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    color: #a09880;
-    text-transform: uppercase;
-    font-family: 'Noto Sans JP', sans-serif;
-    margin-bottom: 3rem;
-  }
-  .labels-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-  .label-card {
-    border: 0.5px solid #d8d4c8;
-    padding: 3rem 2.5rem;
-    background: #fff;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-  .label-card:hover { border-color: #a09880; }
-  .label-en {
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: #b8a888;
-    text-transform: uppercase;
-    font-family: 'Noto Sans JP', sans-serif;
-    margin-bottom: 1rem;
-  }
-  .label-name {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: #1e1c18;
-    margin-bottom: 1.25rem;
-  }
-  .label-desc {
-    font-size: 13px;
-    color: #6b6454;
-    line-height: 1.9;
-    font-family: 'Noto Sans JP', sans-serif;
-    letter-spacing: 0.03em;
-  }
-  .label-arrow {
-    display: inline-block;
-    margin-top: 2rem;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    color: #a09880;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  .isbn-section {
-    background: #f0ece3;
-    padding: 3rem;
-    text-align: center;
-  }
-  .isbn-label {
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: #a09880;
-    text-transform: uppercase;
-    font-family: 'Noto Sans JP', sans-serif;
-    margin-bottom: 0.75rem;
-  }
-  .isbn-text {
-    font-size: 14px;
-    color: #4a4438;
-    letter-spacing: 0.05em;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  footer {
-    padding: 2rem 3rem;
-    border-top: 0.5px solid #d8d4c8;
-    text-align: center;
-    font-size: 11px;
-    color: #aaa;
-    font-family: 'Noto Sans JP', sans-serif;
-    letter-spacing: 0.05em;
-  }
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --mimosa-yellow:#E8B84B;
+  --mimosa-gold:#C9962A;
+  --mimosa-soft:#FBF5E6;
+  --mimosa-deep:#7A5C1E;
+  --green-leaf:#4A6741;
+  --green-soft:#EBF0E4;
+  --ink:#2C2A24;
+  --ink-light:#6B6454;
+  --border:#DDD8C8;
+  --cream:#FAFAF5;
+  --white:#FFFFFF;
+  --muted:#A09880;
+}
+body{font-family:'Noto Serif JP',serif;background:var(--cream);color:var(--ink);line-height:1.7;}
+
+nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);background:rgba(250,250,245,.95);position:sticky;top:0;z-index:40;backdrop-filter:blur(6px);}
+.nav-logo{text-decoration:none;color:var(--ink);}
+.nav-logo .en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);}
+.nav-logo .ja{font-size:20px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:block;}
+.nav-links{display:flex;gap:2rem;list-style:none;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.05em;}
+.nav-links a{color:var(--ink-light);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--mimosa-gold);}
+
+.hero{padding:5rem 3rem 3rem;max-width:900px;margin:0 auto;text-align:center;}
+.hero-accent{display:inline-flex;align-items:center;gap:.5rem;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:1.5rem;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--mimosa-yellow);}
+.hero h1{font-size:48px;font-weight:600;letter-spacing:.12em;line-height:1.3;color:var(--ink);margin-bottom:1.5rem;}
+.hero h1 em{font-style:normal;color:var(--mimosa-gold);}
+.hero-sub{font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--ink-light);line-height:2;max-width:560px;margin:0 auto 2.5rem;}
+
+.mimosa-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2rem auto;max-width:300px;}
+.divider-line{flex:1;height:0.5px;background:var(--border);}
+.divider-flower{display:flex;gap:4px;}
+.petal{width:7px;height:7px;border-radius:50%;background:var(--mimosa-yellow);}
+
+.labels-section{padding:2rem 3rem 5rem;max-width:880px;margin:0 auto;}
+.labels-heading{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
+.labels-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s;}
+.label-card:hover{border-color:var(--mimosa-gold);transform:translateY(-2px);}
+.label-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
+.label-name{font-size:26px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:1rem;}
+.label-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:1.9;}
+.label-arrow{display:inline-block;margin-top:1.5rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);}
+
+.isbn-section{background:var(--mimosa-soft);border-top:0.5px solid #E8D8A8;border-bottom:0.5px solid #E8D8A8;padding:4rem 3rem;scroll-margin-top:80px;}
+.isbn-inner{max-width:760px;margin:0 auto;}
+.isbn-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:2rem;text-align:center;}
+.isbn-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.isbn-card{background:var(--white);border:0.5px solid #E8D8A8;padding:1.5rem 1.75rem;}
+.isbn-card-label{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);margin-bottom:.5rem;}
+.isbn-card-val{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.05em;}
+.isbn-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
+
+.contact-section{padding:4rem 3rem;max-width:700px;margin:0 auto;text-align:center;scroll-margin-top:80px;}
+.contact-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;}
+.contact-title{font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:1rem;}
+.contact-body{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:2;margin-bottom:2rem;}
+.contact-btn{display:inline-block;padding:.85rem 2.5rem;background:var(--ink);color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;text-decoration:none;transition:background .2s;}
+.contact-btn:hover{background:var(--mimosa-deep);}
+
+footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
+.footer-flower{display:flex;gap:3px;align-items:center;}
+.footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
+
+@media(max-width:640px){
+  .labels-grid,.isbn-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:34px;}
+  nav{padding:1rem 1.5rem;}
+  .labels-section,.contact-section,.isbn-section{padding:2rem 1.5rem;}
+}
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-logo">
-    <span>出版社　ミモザ</span>
-    Publisher Mimosa
-  </div>
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="en">Publisher Mimosa</span>
+    <span class="ja">出版社　ミモザ</span>
+  </a>
   <ul class="nav-links">
-    <li>レーベル</li>
-    <li>ISBNについて</li>
-    <li>お問い合わせ</li>
+    <li><a href="#labels">レーベル</a></li>
+    <li><a href="#isbn">ISBNについて</a></li>
+    <li><a href="#contact">お問い合わせ</a></li>
   </ul>
 </nav>
 
 <section class="hero">
-  <p class="hero-en">Publisher Mimosa</p>
-  <h1 class="hero-title">ことばを、残す。</h1>
+  <div class="hero-accent"><div class="dot"></div>Publisher Mimosa<div class="dot"></div></div>
+  <h1>ことばを、<em>残す</em>。</h1>
   <p class="hero-sub">
     出版社ミモザは、文学・エッセイから自費出版まで、<br>
     書き手の声をかたちにする出版レーベルです。<br>
@@ -195,9 +106,13 @@
   </p>
 </section>
 
-<div class="divider"></div>
+<div class="mimosa-divider">
+  <div class="divider-line"></div>
+  <div class="divider-flower"><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div></div>
+  <div class="divider-line"></div>
+</div>
 
-<section class="labels-section">
+<section class="labels-section" id="labels">
   <p class="labels-heading">Our Labels</p>
   <div class="labels-grid">
     <a class="label-card" href="/shobo/">
@@ -223,13 +138,51 @@
   </div>
 </section>
 
-<div class="isbn-section">
-  <p class="isbn-label">ISBN</p>
-  <p class="isbn-text">ISBNコード登録出版社名：ミモザ　／　運営：ミモザパートナーズ合同会社</p>
-</div>
+<section class="isbn-section" id="isbn">
+  <div class="isbn-inner">
+    <p class="isbn-heading">ISBN について</p>
+    <div class="isbn-grid">
+      <div class="isbn-card">
+        <p class="isbn-card-label">登録出版社名</p>
+        <p class="isbn-card-val">ミモザ</p>
+      </div>
+      <div class="isbn-card">
+        <p class="isbn-card-label">運営会社</p>
+        <p class="isbn-card-val">ミモザパートナーズ合同会社</p>
+      </div>
+      <div class="isbn-card">
+        <p class="isbn-card-label">取次</p>
+        <p class="isbn-card-val">鍬谷書店</p>
+      </div>
+      <div class="isbn-card">
+        <p class="isbn-card-label">レーベル</p>
+        <p class="isbn-card-val">ミモザ書房 ／ ミモザ堂</p>
+      </div>
+    </div>
+    <p class="isbn-note">
+      書籍のISBNはすべて「出版社：ミモザ」名義で登録されています。<br>
+      取次・書店の方は<a href="/shobo/trade.html" style="color:var(--mimosa-gold);text-decoration:none;">お取引ページ</a>よりご連絡ください。
+    </p>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <p class="contact-heading">Contact</p>
+  <h2 class="contact-title">お問い合わせ</h2>
+  <p class="contact-body">
+    出版・取材・取次・著者応募など、<br>お気軽にご連絡ください。
+  </p>
+  <a class="contact-btn" href="mailto:info@mimosa-partners.com">info@mimosa-partners.com</a>
+</section>
 
 <footer>
-  © 2026 ミモザパートナーズ合同会社　|　pub.mimosa-partners.com
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
+  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
 </footer>
 
 </body>
