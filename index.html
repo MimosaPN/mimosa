@@ -47,12 +47,15 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .labels-section{padding:2rem 3rem 5rem;max-width:880px;margin:0 auto;}
 .labels-heading{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
 .labels-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
-.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s;}
+.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);color:inherit;display:block;transition:border-color .2s,transform .2s;}
 .label-card:hover{border-color:var(--mimosa-gold);transform:translateY(-2px);}
 .label-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
 .label-name{font-size:26px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:1rem;}
 .label-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:1.9;}
-.label-arrow{display:inline-block;margin-top:1.5rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);}
+.label-links{display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;flex-wrap:wrap;}
+.label-arrow{font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);text-decoration:none;}
+.label-arrow:hover{color:var(--mimosa-deep);}
+.label-shop{padding:0.35rem 1rem;border:0.5px solid var(--mimosa-gold);border-radius:2px;font-size:11px;}
 
 .isbn-section{background:var(--mimosa-soft);border-top:0.5px solid #E8D8A8;border-bottom:0.5px solid #E8D8A8;padding:4rem 3rem;scroll-margin-top:80px;}
 .isbn-inner{max-width:760px;margin:0 auto;}
@@ -142,8 +145,8 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <ul class="nav-links">
     <li><a href="#labels">レーベル</a></li>
     <li><a href="#isbn">ISBNについて</a></li>
-    <li><a href="/shop/">ショップ</a></li>
     <li><a href="/trade.html">書店員の方へ</a></li>
+    <li><a href="/shop.html">ショップ</a></li>
     <li><a href="#contact">お問い合わせ</a></li>
     <li><a href="#feeling-form">ご感想</a></li>
   </ul>
@@ -153,7 +156,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <div class="hero-accent"><div class="dot"></div>Publisher Mimosa<div class="dot"></div></div>
   <h1>ことばを、<em>残す</em>。</h1>
   <p class="hero-sub">
-    出版社 ミモザは、文学・エッセイから自費出版まで、<br>
+    出版社 ミモザは、文学・エッセイから書籍出版サポートまで、<br>
     書き手の声をかたちにする出版レーベルです。<br>
     ミモザ書房とミモザ堂、2つのレーベルで刊行しています。
   </p>
@@ -168,7 +171,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 <section class="labels-section" id="labels">
   <p class="labels-heading">Our Labels</p>
   <div class="labels-grid">
-    <a class="label-card" href="/shobo/">
+    <div class="label-card">
       <p class="label-en">Mimosa Shobo</p>
       <h2 class="label-name">ミモザ書房</h2>
       <p class="label-desc">
@@ -176,20 +179,24 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
         書き手の個性と物語を丁寧に世に届けます。<br>
         2025年秋、第1作刊行予定。
       </p>
-      <span class="label-arrow">ミモザ書房へ →</span>
-      <a href="/shop/shobo/" style="display:inline-block;margin-top:0.75rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);text-decoration:none;">本を買う →</a>
-    </a>
-    <a class="label-card" href="/mimosado/">
+      <div class="label-links">
+        <a class="label-arrow" href="/shobo/">ミモザ書房へ →</a>
+        <a class="label-arrow label-shop" href="/shop/shobo/">本を買う →</a>
+      </div>
+    </div>
+    <div class="label-card">
       <p class="label-en">Mimosado</p>
       <h2 class="label-name">ミモザ堂</h2>
       <p class="label-desc">
-        自費出版サポートのレーベル。<br>
+        書籍出版サポートのレーベル。<br>
         あなたの原稿を、本というかたちに。<br>
         個人の出版を丁寧にサポートします。
       </p>
-      <span class="label-arrow">ミモザ堂へ →</span>
-      <a href="/shop/mimosado/" style="display:inline-block;margin-top:0.75rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);text-decoration:none;">本を買う →</a>
-    </a>
+      <div class="label-links">
+        <a class="label-arrow" href="/mimosado/">ミモザ堂へ →</a>
+        <a class="label-arrow label-shop" href="/shop/mimosado/">本を買う →</a>
+      </div>
+    </div>
   </div>
 </section>
 
