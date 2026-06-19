@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>お取引について | ミモザ書房</title>
+<title>書店員の方へ | 出版社 ミモザ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
 
-.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; }
+.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: rgba(250,250,245,.95); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(6px); }
 .nav-logo { text-decoration: none; color: inherit; }
-.nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; font-family: 'Noto Sans JP', sans-serif; }
-.nav-logo .name { font-size: 20px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; font-family: 'Noto Serif JP', serif; }
+.nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; }
+.nav-logo .name { font-size: 20px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; font-family: 'Noto Serif JP', serif; display: block; }
 .nav-links { display: flex; gap: 2rem; list-style: none; font-size: 12px; letter-spacing: 0.05em; color: #666; }
 .nav-links a { color: inherit; text-decoration: none; }
-.nav-links .active { color: #8a6f4e; font-weight: 500; }
+.nav-links a:hover { color: #C9962A; }
+.nav-links .active { color: #C9962A; font-weight: 500; }
 
 .page-header { padding: 4rem 3rem 3rem; border-bottom: 0.5px solid #d8d4c8; max-width: 860px; margin: 0 auto; }
 .breadcrumb { font-size: 11px; color: #b8a888; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
@@ -29,12 +30,27 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .section-block { margin-bottom: 4rem; }
 .section-title { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; padding-bottom: 1rem; border-bottom: 0.5px solid #d8d4c8; margin-bottom: 2rem; }
 
+/* 注文書ダウンロード */
+.download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.download-label { font-size: 10px; letter-spacing: 0.25em; color: #C9962A; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1rem; }
+.download-group { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.75rem; }
+.download-group-title { font-family: 'Noto Serif JP', serif; font-size: 16px; font-weight: 600; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #e8e4da; }
+.download-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 0.5px solid #f0ece4; }
+.download-item:last-child { border-bottom: none; }
+.download-item-name { font-size: 13px; color: #2c2a24; line-height: 1.6; }
+.download-item-meta { font-size: 11px; color: #a09880; margin-top: 0.2rem; }
+.download-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 11px; letter-spacing: 0.1em; padding: 0.4rem 1rem; border: 0.5px solid #C9962A; color: #C9962A; text-decoration: none; white-space: nowrap; transition: all .2s; font-family: 'Noto Sans JP', sans-serif; }
+.download-btn:hover { background: #C9962A; color: #fff; }
+.download-note { font-size: 12px; color: #a09880; margin-top: 1.25rem; line-height: 1.8; }
+
+/* 取次 */
 .tonya-box { background: #f5f0e8; border-left: 3px solid #c8b89a; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
 .tonya-name { font-size: 15px; font-weight: 500; color: #1e1c18; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
 .tonya-desc { font-size: 13px; color: #6b6454; line-height: 1.9; }
 .tonya-link { display: inline-block; margin-top: 0.75rem; font-size: 12px; color: #8a6f4e; letter-spacing: 0.05em; text-decoration: underline; }
 .tonya-note { font-size: 12px; color: #6b6454; line-height: 1.9; padding: 1rem 0; }
 
+/* 取引条件 */
 .trade-table { width: 100%; border-collapse: collapse; }
 .trade-table tr { border-bottom: 0.5px solid #e8e4da; }
 .trade-table th { width: 140px; padding: 1rem 0; font-size: 12px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; vertical-align: top; text-align: left; }
@@ -42,6 +58,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .trade-table td .note { font-size: 11px; color: #a09880; margin-top: 0.25rem; }
 .highlight { color: #8a6f4e; font-weight: 500; }
 
+/* フロー */
 .flow { display: flex; flex-direction: column; }
 .flow-step { display: flex; gap: 1.5rem; align-items: flex-start; }
 .flow-line { display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0; }
@@ -51,33 +68,34 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .flow-label { font-size: 11px; letter-spacing: 0.15em; color: #a09880; margin-bottom: 0.25rem; }
 .flow-text { font-size: 13px; color: #2c2a24; line-height: 1.8; }
 .flow-sub { font-size: 12px; color: #6b6454; margin-top: 0.25rem; }
-
 .flow-section-label { font-size: 12px; letter-spacing: 0.1em; color: #a09880; margin-bottom: 1.5rem; }
-.flow-section-label + .flow-section-label { margin-top: 2rem; }
 
 .return-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.5rem 2rem; }
 .return-box p { font-size: 13px; color: #2c2a24; line-height: 2; }
 
+/* 会社概要 */
 .company-grid { width: 100%; border-collapse: collapse; border: 0.5px solid #d8d4c8; }
 .company-grid tr { border-bottom: 0.5px solid #e8e4da; }
 .company-grid tr:last-child { border-bottom: none; }
 .company-grid th { background: #f5f0e8; padding: 0.9rem 1.25rem; font-size: 11px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; text-align: left; width: 180px; }
 .company-grid td { padding: 0.9rem 1.25rem; font-size: 13px; color: #2c2a24; line-height: 1.8; }
 
+/* 担当者 */
 .contact-card { background: #fff; border: 0.5px solid #d8d4c8; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start; }
-.contact-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e8e0d4; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #8a6f4e; flex-shrink: 0; font-family: 'Noto Sans JP', sans-serif; }
+.contact-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e8e0d4; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #8a6f4e; flex-shrink: 0; }
 .contact-info .name { font-size: 16px; font-weight: 500; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 0.25rem; }
 .contact-info .role { font-size: 11px; color: #a09880; letter-spacing: 0.1em; margin-bottom: 1rem; }
 .contact-info .detail { font-size: 13px; color: #4a4438; line-height: 1.9; }
 .contact-info .detail span { display: block; }
 
+/* フォーム */
 .form-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 2.5rem; }
 .form-note { font-size: 12px; color: #6b6454; line-height: 1.9; margin-bottom: 2rem; }
 .form-row { margin-bottom: 1.25rem; }
 .form-label { font-size: 11px; letter-spacing: 0.1em; color: #a09880; margin-bottom: 0.4rem; display: block; }
 .form-label .req { color: #c87060; margin-left: 0.25rem; }
-input[type=text], input[type=email], select, textarea { width: 100%; padding: 0.6rem 0.75rem; border: 0.5px solid #d8d4c8; background: #faf8f4; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; color: #2c2a24; outline: none; appearance: none; }
-input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus { border-color: #a09880; }
+input[type=text], input[type=email], textarea { width: 100%; padding: 0.6rem 0.75rem; border: 0.5px solid #d8d4c8; background: #faf8f4; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; color: #2c2a24; outline: none; }
+input[type=text]:focus, input[type=email]:focus, textarea:focus { border-color: #a09880; }
 textarea { resize: vertical; min-height: 80px; }
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .form-check { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
@@ -87,34 +105,89 @@ textarea { resize: vertical; min-height: 80px; }
 
 footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; justify-content: space-between; font-size: 11px; color: #aaa; letter-spacing: 0.05em; }
 footer a { color: #c8b89a; text-decoration: none; }
+
+@media(max-width:640px) {
+  .download-grid { grid-template-columns: 1fr; }
+  .nav { padding: 1rem 1.5rem; }
+  .content, .page-header { padding: 1.5rem; }
+  .form-row-2 { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav-logo" href="/shobo/">
-    <div class="parent">出版社ミモザ ／ Mimosa Shobo</div>
-    <div class="name">ミモザ書房</div>
+  <a class="nav-logo" href="/index.html">
+    <span class="parent">Publisher Mimosa</span>
+    <span class="name">出版社　ミモザ</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/shobo/">書籍</a></li>
-    <li><a href="/shobo/#recruit">著者募集</a></li>
-    <li class="active">お取引について</li>
-    <li><a href="/shobo/#contact">お問い合わせ</a></li>
+    <li><a href="/index.html">トップ</a></li>
+    <li><a href="/shobo/">ミモザ書房</a></li>
+    <li><a href="/mimosado/">ミモザ堂</a></li>
+    <li class="active">書店員の方へ</li>
   </ul>
 </nav>
 
 <div class="page-header">
-  <p class="breadcrumb"><a href="/shobo/">ミモザ書房</a> <span>›</span> お取引について</p>
-  <h1 class="page-title">お取引について</h1>
+  <p class="breadcrumb"><a href="/index.html">出版社ミモザ</a> <span>›</span> 書店員の方へ</p>
+  <h1 class="page-title">書店員の方へ</h1>
   <p class="page-lead">
-    書店・取次の方向けに、取引条件・注文フロー・資料請求をご案内します。<br>
-    ご不明な点はお気軽に担当者までご連絡ください。
+    いつも大変お世話になっております。<br>
+    注文書のダウンロード・取引条件・資料請求はこちらのページからご確認いただけます。
   </p>
 </div>
 
 <div class="content">
 
+  <!-- 注文書ダウンロード -->
+  <div class="section-block">
+    <h2 class="section-title">注文書ダウンロード</h2>
+    <div class="download-grid">
+
+      <div class="download-group">
+        <p class="download-label">Mimosa Shobo</p>
+        <h3 class="download-group-title">ミモザ書房</h3>
+        <div class="download-item">
+          <div>
+            <p class="download-item-name">ミモザ書房 注文書</p>
+            <p class="download-item-meta">全書籍共通</p>
+          </div>
+          <a class="download-btn" href="/files/order-shobo.pdf" download>↓ PDF</a>
+        </div>
+        <!-- 書籍が増えたらここに追加 -->
+        <!-- 例：
+        <div class="download-item">
+          <div>
+            <p class="download-item-name">『書名』注文書</p>
+            <p class="download-item-meta">2025年秋刊行</p>
+          </div>
+          <a class="download-btn" href="/files/order-shobo-01.pdf" download>↓ PDF</a>
+        </div>
+        -->
+      </div>
+
+      <div class="download-group">
+        <p class="download-label">Mimosado</p>
+        <h3 class="download-group-title">ミモザ堂</h3>
+        <div class="download-item">
+          <div>
+            <p class="download-item-name">ミモザ堂 注文書</p>
+            <p class="download-item-meta">全書籍・商品共通</p>
+          </div>
+          <a class="download-btn" href="/files/order-mimosado.pdf" download>↓ PDF</a>
+        </div>
+        <!-- 商品が増えたらここに追加 -->
+      </div>
+
+    </div>
+    <p class="download-note">
+      ※ PDFが開かない場合はブラウザを更新してお試しください。<br>
+      ※ ご注文はFAXまたはメール（info@mimosa-partners.com）にてお送りください。
+    </p>
+  </div>
+
+  <!-- 取次取引 -->
   <div class="section-block">
     <h2 class="section-title">取次取引</h2>
     <div class="tonya-box">
@@ -128,8 +201,9 @@ footer a { color: #c8b89a; text-decoration: none; }
     <p class="tonya-note">※取次経由でのお取引に関するご質問は、担当者までメールにてお問い合わせください。</p>
   </div>
 
+  <!-- 直取引条件 -->
   <div class="section-block">
-    <h2 class="section-title">直取引</h2>
+    <h2 class="section-title">直取引条件</h2>
     <table class="trade-table">
       <tr>
         <th>条件</th>
@@ -158,6 +232,7 @@ footer a { color: #c8b89a; text-decoration: none; }
     </table>
   </div>
 
+  <!-- 注文・返品フロー -->
   <div class="section-block">
     <h2 class="section-title">注文・返品フロー</h2>
     <p class="flow-section-label">■ ご注文の流れ</p>
@@ -166,7 +241,7 @@ footer a { color: #c8b89a; text-decoration: none; }
         <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
         <div class="flow-body">
           <p class="flow-label">STEP 1</p>
-          <p class="flow-text">担当者へメールまたはフォームでご注文</p>
+          <p class="flow-text">担当者へメール・FAX・フォームでご注文</p>
           <p class="flow-sub">書名・冊数・納品先をご明記ください</p>
         </div>
       </div>
@@ -201,6 +276,7 @@ footer a { color: #c8b89a; text-decoration: none; }
     </div>
   </div>
 
+  <!-- 会社概要・ISBN -->
   <div class="section-block">
     <h2 class="section-title">会社概要・ISBN情報</h2>
     <table class="company-grid">
@@ -214,6 +290,7 @@ footer a { color: #c8b89a; text-decoration: none; }
     </table>
   </div>
 
+  <!-- 担当者 -->
   <div class="section-block">
     <h2 class="section-title">担当者</h2>
     <div class="contact-card">
@@ -229,6 +306,7 @@ footer a { color: #c8b89a; text-decoration: none; }
     </div>
   </div>
 
+  <!-- 資料請求・問い合わせ -->
   <div class="section-block">
     <h2 class="section-title">資料請求・お問い合わせ</h2>
     <div class="form-box">
@@ -271,24 +349,22 @@ footer a { color: #c8b89a; text-decoration: none; }
 </div>
 
 <footer>
-  <a href="/shobo/">← ミモザ書房 トップへ</a>
-  <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
+  <a href="/index.html">← 出版社ミモザ トップへ</a>
+  <span>© 2026 ミモザパートナーズ合同会社</span>
 </footer>
 
 <script>
-// GASのウェブアプリURLをここに設定（既存のものと同じURL）
-const TRADE_GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
+const TRADE_GAS_URL = '【GASのウェブアプリURLをここに貼る】';
 
 async function submitTradeForm() {
-  const shopName = document.getElementById('f-shopname').value.trim();
-  const name     = document.getElementById('f-name').value.trim();
-  const email    = document.getElementById('f-email').value.trim();
-  const message  = document.getElementById('f-message').value.trim();
+  const shopName  = document.getElementById('f-shopname').value.trim();
+  const name      = document.getElementById('f-name').value.trim();
+  const email     = document.getElementById('f-email').value.trim();
+  const message   = document.getElementById('f-message').value.trim();
   const materials = Array.from(document.querySelectorAll('.f-material:checked')).map(c => c.value);
-  const result   = document.getElementById('f-result');
-  const btn      = document.getElementById('f-submit');
+  const result    = document.getElementById('f-result');
+  const btn       = document.getElementById('f-submit');
 
-  // バリデーション
   if (!shopName || !name || !email) {
     result.style.display = 'block';
     result.style.color = '#c87060';
@@ -318,7 +394,6 @@ async function submitTradeForm() {
       result.style.color = '#4a6741';
       result.textContent = 'ありがとうございます。2営業日以内にご連絡いたします。';
       btn.textContent = '送信しました';
-      // フォームをリセット
       document.getElementById('f-shopname').value = '';
       document.getElementById('f-name').value = '';
       document.getElementById('f-email').value = '';
@@ -330,7 +405,7 @@ async function submitTradeForm() {
   } catch(err) {
     result.style.display = 'block';
     result.style.color = '#c87060';
-    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メール（info@mimosa-partners.com）にてご連絡ください。';
+    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
     btn.disabled = false;
     btn.textContent = '送信する';
   }
