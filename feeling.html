@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご感想フォーム | 出版社 ミモザ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --mimosa-yellow:#E8B84B;
+  --mimosa-gold:#C9962A;
+  --mimosa-soft:#FBF5E6;
+  --mimosa-deep:#7A5C1E;
+  --ink:#2C2A24;
+  --ink-light:#6B6454;
+  --border:#DDD8C8;
+  --cream:#FAFAF5;
+  --white:#FFFFFF;
+  --muted:#A09880;
+}
+body{font-family:'Noto Serif JP',serif;background:var(--cream);color:var(--ink);line-height:1.7;}
+
+nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);background:rgba(250,250,245,.95);position:sticky;top:0;z-index:40;backdrop-filter:blur(6px);}
+.nav-logo{text-decoration:none;color:var(--ink);}
+.nav-logo .en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);}
+.nav-logo .ja{font-size:20px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:block;}
+.back-link{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
+.back-link:hover{color:var(--ink);}
+
+/* ── メインコンテンツ ── */
+.page-wrap{max-width:720px;margin:0 auto;padding:5rem 3rem 6rem;}
+
+.page-eyebrow{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;display:block;}
+.page-title{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:.75rem;}
+.page-lead{font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;color:var(--ink-light);line-height:1.9;margin-bottom:3rem;}
+
+/* ── フォーム ── */
+.ff-row{margin-bottom:1.75rem;}
+.ff-label{display:block;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;}
+.ff-label .req{color:#c87060;margin-left:3px;}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea{
+  width:100%;padding:.65rem .85rem;
+  border:0.5px solid var(--border);
+  background:var(--white);
+  font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);
+  outline:none;box-sizing:border-box;
+  appearance:none;-webkit-appearance:none;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus{border-color:var(--mimosa-gold);}
+
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A09880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
+}
+textarea{resize:vertical;min-height:120px;}
+
+.ff-hint{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);margin-top:4px;}
+.ff-radios,.ff-checks{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:6px;}
+.ff-radios label,.ff-checks label{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;
+}
+input[type="checkbox"],input[type="radio"]{
+  width:15px;height:15px;accent-color:var(--mimosa-gold);flex-shrink:0;
+}
+
+.ff-submit{
+  display:inline-block;padding:.85rem 3rem;
+  background:var(--ink);color:var(--white);
+  font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;
+  border:none;cursor:pointer;margin-top:.5rem;transition:background .2s;
+}
+.ff-submit:hover{background:var(--mimosa-deep);}
+.ff-submit:disabled{background:var(--muted);cursor:not-allowed;}
+
+#ff-result{
+  display:none;margin-top:1.25rem;padding:16px 20px;
+  font-family:'Noto Sans JP',sans-serif;font-size:13px;line-height:1.9;
+}
+#ff-result.success{background:#edf7ed;color:#2d6a2f;border:0.5px solid #b7ddb7;}
+#ff-result.error{background:#fdecea;color:#c0392b;border:0.5px solid #f1b5b0;}
+
+footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
+.footer-flower{display:flex;gap:3px;align-items:center;}
+.footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
+
+@media(max-width:640px){
+  nav{padding:1rem 1.5rem;}
+  .page-wrap{padding:3rem 1.5rem 4rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="en">Publisher Mimosa</span>
+    <span class="ja">出版社 ミモザ</span>
+  </a>
+  <a class="back-link" href="/">← 出版社ミモザ トップへ</a>
+</nav>
+
+<div class="page-wrap">
+  <span class="page-eyebrow">Reader's Voice</span>
+  <h1 class="page-title">ご感想をお聞かせください</h1>
+  <p class="page-lead">
+    ご購入いただいた本の奥付に記載された記号をご用意のうえ、お送りください。<br>
+    <span style="font-size:0.8rem;color:var(--muted);">＊は必須項目です</span>
+  </p>
+
+  <form id="feelingForm" novalidate>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-name">お名前<span class="req">＊</span></label>
+      <input type="text" id="ff-name" name="name" placeholder="山田 花子">
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-email">メールアドレス<span class="req">＊</span></label>
+      <input type="email" id="ff-email" name="email" placeholder="example@mail.com">
+      <p class="ff-hint">送信確認のメールをお届けします。公開されることはありません。</p>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label">性別</label>
+      <div class="ff-radios">
+        <label><input type="radio" name="gender" value="女性"> 女性</label>
+        <label><input type="radio" name="gender" value="男性"> 男性</label>
+        <label><input type="radio" name="gender" value="その他"> その他</label>
+        <label><input type="radio" name="gender" value="回答しない"> 回答しない</label>
+      </div>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-age">年齢</label>
+      <input type="number" id="ff-age" name="age" placeholder="例：32" min="1" max="120" style="max-width:120px;">
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-prefecture">お住まいの都道府県</label>
+      <select id="ff-prefecture" name="prefecture">
+        <option value="">-- 選択してください --</option>
+        <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
+        <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
+        <option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option>
+        <option>東京都</option><option>神奈川県</option><option>新潟県</option><option>富山県</option>
+        <option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+        <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+        <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
+        <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option>
+        <option>岡山県</option><option>広島県</option><option>山口県</option><option>徳島県</option>
+        <option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option>
+        <option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option>
+        <option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option><option>その他（海外等）</option>
+      </select>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-bookId">本の記号<span class="req">＊</span></label>
+      <select id="ff-bookId" name="bookId">
+        <option value="">-- 読み込み中 --</option>
+      </select>
+      <p class="ff-hint">奥付に記載された「SB-000」「DO-000」のような記号をお選びください。</p>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-occupation">ご職業</label>
+      <select id="ff-occupation" name="occupation">
+        <option value="">-- 選択してください --</option>
+        <option>会社員・公務員</option>
+        <option>自営業・フリーランス</option>
+        <option>学生</option>
+        <option>主婦・主夫</option>
+        <option>クリエイター・芸術家</option>
+        <option>医療・福祉関係</option>
+        <option>教育関係</option>
+        <option>出版・書店関係</option>
+        <option>無職・休職中</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-buyPlace">この本を買った場所<span class="req">＊</span></label>
+      <select id="ff-buyPlace" name="buyPlace">
+        <option value="">-- 選択してください --</option>
+        <option>書店（全国チェーン）</option>
+        <option>書店（地域の独立書店）</option>
+        <option>オンラインショップ（ミモザ公式）</option>
+        <option>オンラインショップ（Amazon等）</option>
+        <option>イベント・ブックフェア</option>
+        <option>作者から直接</option>
+        <option>図書館で借りた</option>
+        <option>プレゼントでもらった</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-howKnown">この本を知ったきっかけ<span class="req">＊</span></label>
+      <select id="ff-howKnown" name="howKnown">
+        <option value="">-- 選択してください --</option>
+        <option>SNS（Instagram）</option>
+        <option>SNS（X / Twitter）</option>
+        <option>SNS（その他）</option>
+        <option>書店の棚・ディスプレイ</option>
+        <option>書店員のおすすめ（POP等）</option>
+        <option>知人・友人の口コミ</option>
+        <option>ウェブ記事・ブログ</option>
+        <option>雑誌・新聞</option>
+        <option>イベント・フェア</option>
+        <option>出版社のウェブサイト</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label">この本を買った理由<span class="req">＊</span>（いくつでも）</label>
+      <div class="ff-checks">
+        <label><input type="checkbox" name="whyBought" value="表紙・デザインが好き"> 表紙・デザインが好き</label>
+        <label><input type="checkbox" name="whyBought" value="タイトルが気になった"> タイトルが気になった</label>
+        <label><input type="checkbox" name="whyBought" value="内容・テーマに興味があった"> 内容・テーマに興味があった</label>
+        <label><input type="checkbox" name="whyBought" value="著者を知っていた"> 著者を知っていた</label>
+        <label><input type="checkbox" name="whyBought" value="出版社を信頼している"> 出版社を信頼している</label>
+        <label><input type="checkbox" name="whyBought" value="人にすすめられた"> 人にすすめられた</label>
+        <label><input type="checkbox" name="whyBought" value="試し読みして気に入った"> 試し読みして気に入った</label>
+        <label><input type="checkbox" name="whyBought" value="価格・ボリューム感"> 価格・ボリューム感</label>
+        <label><input type="checkbox" name="whyBought" value="その他"> その他</label>
+      </div>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-comment">ご意見・ご感想</label>
+      <textarea id="ff-comment" name="comment" placeholder="読んで感じたことを自由にお書きください。"></textarea>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label" for="ff-interests">興味のあること・好きなこと</label>
+      <input type="text" id="ff-interests" name="interests" placeholder="例：写真、猫、旅、短歌…">
+      <p class="ff-hint">次の企画の参考にさせていただきます。</p>
+    </div>
+
+    <div class="ff-row">
+      <label class="ff-label">ご感想の掲載可否<span class="req">＊</span></label>
+      <p class="ff-hint" style="margin-bottom:8px;">いただいたご感想をウェブサイト・SNS・販促物に掲載させていただく場合があります。</p>
+      <div class="ff-radios">
+        <label><input type="radio" name="publishable" value="掲載可（氏名あり）"> 掲載可（お名前あり）</label>
+        <label><input type="radio" name="publishable" value="掲載可（匿名）"> 掲載可（匿名・イニシャル等）</label>
+        <label><input type="radio" name="publishable" value="要確認"> 掲載前に確認してほしい</label>
+        <label><input type="radio" name="publishable" value="掲載不可"> 掲載不可</label>
+      </div>
+    </div>
+
+    <button type="submit" class="ff-submit" id="ff-submit-btn">送信する</button>
+  </form>
+  <div id="ff-result"></div>
+</div>
+
+<footer>
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
+  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
+</footer>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
+
+const form      = document.getElementById('feelingForm');
+const submitBtn = document.getElementById('ff-submit-btn');
+const resultBox = document.getElementById('ff-result');
+const bookSel   = document.getElementById('ff-bookId');
+
+// 書籍プルダウンをGASから取得
+fetch(GAS_URL + '?action=getBooks')
+  .then(r => r.json())
+  .then(data => {
+    bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
+    if (data.ok && data.books.length > 0) {
+      data.books.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = b.label;
+        bookSel.appendChild(opt);
+      });
+    } else {
+      bookSel.innerHTML = '<option value="">（書籍が見つかりません）</option>';
+    }
+  })
+  .catch(() => {
+    bookSel.innerHTML = '<option value="">（取得に失敗しました）</option>';
+  });
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name        = document.getElementById('ff-name').value.trim();
+  const email       = document.getElementById('ff-email').value.trim();
+  const bookId      = document.getElementById('ff-bookId').value;
+  const buyPlace    = document.getElementById('ff-buyPlace').value;
+  const howKnown    = document.getElementById('ff-howKnown').value;
+  const publishable = form.querySelector('[name="publishable"]:checked');
+  const whyChecked  = form.querySelectorAll('[name="whyBought"]:checked');
+
+  if (!name || !email || !bookId || !buyPlace || !howKnown || !publishable || whyChecked.length === 0) {
+    showResult('error', '＊印の必須項目をすべてご入力ください。');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showResult('error', 'メールアドレスの形式が正しくありません。');
+    return;
+  }
+
+  const payload = {
+    action:      'feelingForm',
+    name, email,
+    gender:      (form.querySelector('[name="gender"]:checked') || {}).value || '',
+    age:         document.getElementById('ff-age').value,
+    prefecture:  document.getElementById('ff-prefecture').value,
+    bookId,
+    occupation:  document.getElementById('ff-occupation').value,
+    buyPlace, howKnown,
+    whyBought:   Array.from(whyChecked).map(c => c.value).join('、'),
+    comment:     document.getElementById('ff-comment').value.trim(),
+    interests:   document.getElementById('ff-interests').value.trim(),
+    publishable: publishable.value
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '送信中…';
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+    .then(r => r.json())
+    .then(res => {
+      if (res.ok) {
+        form.reset();
+        bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
+        showResult('success', 'ご感想をお送りいただきありがとうございます。\nスタッフ一同、大切に読ませていただきます。');
+        submitBtn.textContent = '送信しました';
+      } else {
+        showResult('error', 'エラーが発生しました：' + (res.error || '不明なエラー'));
+        submitBtn.disabled = false;
+        submitBtn.textContent = '送信する';
+      }
+    })
+    .catch(() => {
+      showResult('error', '送信に失敗しました。時間をおいて再度お試しください。');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する';
+    });
+});
+
+function showResult(type, msg) {
+  resultBox.className = type;
+  resultBox.style.display = 'block';
+  resultBox.textContent = msg;
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+
+</body>
+</html>
