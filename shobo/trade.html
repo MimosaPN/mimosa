@@ -92,20 +92,20 @@ footer a { color: #c8b89a; text-decoration: none; }
 <body>
 
 <nav class="nav">
-  <a class="nav-logo" href="mimosa-shobo.html">
+  <a class="nav-logo" href="/shobo/">
     <div class="parent">出版社ミモザ ／ Mimosa Shobo</div>
     <div class="name">ミモザ書房</div>
   </a>
   <ul class="nav-links">
-    <li><a href="mimosa-shobo.html">書籍</a></li>
-    <li><a href="mimosa-shobo.html#recruit">著者募集</a></li>
+    <li><a href="/shobo/">書籍</a></li>
+    <li><a href="/shobo/#recruit">著者募集</a></li>
     <li class="active">お取引について</li>
-    <li><a href="mimosa-shobo.html#contact">お問い合わせ</a></li>
+    <li><a href="/shobo/#contact">お問い合わせ</a></li>
   </ul>
 </nav>
 
 <div class="page-header">
-  <p class="breadcrumb"><a href="mimosa-shobo.html">ミモザ書房</a> <span>›</span> お取引について</p>
+  <p class="breadcrumb"><a href="/shobo/">ミモザ書房</a> <span>›</span> お取引について</p>
   <h1 class="page-title">お取引について</h1>
   <p class="page-lead">
     書店・取次の方向けに、取引条件・注文フロー・資料請求をご案内します。<br>
@@ -239,40 +239,103 @@ footer a { color: #c8b89a; text-decoration: none; }
       <div class="form-row-2">
         <div class="form-row">
           <label class="form-label">書店・取次名<span class="req">*</span></label>
-          <input type="text" placeholder="〇〇書店">
+          <input type="text" id="f-shopname" placeholder="〇〇書店">
         </div>
         <div class="form-row">
           <label class="form-label">担当者名<span class="req">*</span></label>
-          <input type="text" placeholder="山田 花子">
+          <input type="text" id="f-name" placeholder="山田 花子">
         </div>
       </div>
       <div class="form-row">
         <label class="form-label">メールアドレス<span class="req">*</span></label>
-        <input type="email" placeholder="info@example.com">
+        <input type="email" id="f-email" placeholder="info@example.com">
       </div>
       <div class="form-row">
         <label class="form-label">ご希望の資料（複数選択可）</label>
         <div class="form-check">
-          <label><input type="checkbox"> 会社概要</label>
-          <label><input type="checkbox"> 書誌情報・ISBN一覧</label>
-          <label><input type="checkbox"> 直取引申込書</label>
-          <label><input type="checkbox"> その他</label>
+          <label><input type="checkbox" class="f-material" value="会社概要"> 会社概要</label>
+          <label><input type="checkbox" class="f-material" value="書誌情報・ISBN一覧"> 書誌情報・ISBN一覧</label>
+          <label><input type="checkbox" class="f-material" value="直取引申込書"> 直取引申込書</label>
+          <label><input type="checkbox" class="f-material" value="その他"> その他</label>
         </div>
       </div>
       <div class="form-row">
         <label class="form-label">ご質問・備考</label>
-        <textarea placeholder="取引条件についてのご質問など、お気軽にどうぞ。"></textarea>
+        <textarea id="f-message" placeholder="取引条件についてのご質問など、お気軽にどうぞ。"></textarea>
       </div>
-      <button class="btn">送信する</button>
+      <button class="btn" id="f-submit" onclick="submitTradeForm()">送信する</button>
+      <p id="f-result" style="margin-top:1rem;font-size:13px;display:none;"></p>
     </div>
   </div>
 
 </div>
 
 <footer>
-  <a href="mimosa-shobo.html">← ミモザ書房 トップへ</a>
+  <a href="/shobo/">← ミモザ書房 トップへ</a>
   <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
 </footer>
+
+<script>
+// GASのウェブアプリURLをここに設定（既存のものと同じURL）
+const TRADE_GAS_URL = '【GASのウェブアプリURLをここに貼る】';
+
+async function submitTradeForm() {
+  const shopName = document.getElementById('f-shopname').value.trim();
+  const name     = document.getElementById('f-name').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
+  const message  = document.getElementById('f-message').value.trim();
+  const materials = Array.from(document.querySelectorAll('.f-material:checked')).map(c => c.value);
+  const result   = document.getElementById('f-result');
+  const btn      = document.getElementById('f-submit');
+
+  // バリデーション
+  if (!shopName || !name || !email) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = '書店・取次名、担当者名、メールアドレスは必須です。';
+    return;
+  }
+  if (email.indexOf('@') === -1) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = 'メールアドレスの形式が正しくありません。';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '送信中…';
+  result.style.display = 'none';
+
+  try {
+    const res = await fetch(TRADE_GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ type: 'trade', shopName, name, email, materials, message })
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      result.style.display = 'block';
+      result.style.color = '#4a6741';
+      result.textContent = 'ありがとうございます。2営業日以内にご連絡いたします。';
+      btn.textContent = '送信しました';
+      // フォームをリセット
+      document.getElementById('f-shopname').value = '';
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-email').value = '';
+      document.getElementById('f-message').value = '';
+      document.querySelectorAll('.f-material').forEach(c => c.checked = false);
+    } else {
+      throw new Error(data.message || 'エラーが発生しました');
+    }
+  } catch(err) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
+    btn.disabled = false;
+    btn.textContent = '送信する';
+  }
+}
+</script>
 
 </body>
 </html>
