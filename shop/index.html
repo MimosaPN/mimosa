@@ -117,7 +117,7 @@
       <b>ミモザショップ</b>
     </a>
     <div class="header-right">
-      <a class="back-link" href="/">← 出版社ミモザ</a>
+      <a class="back-link" href="/">← 出版社 ミモザ</a>
       <button class="cart-btn" onclick="openCart()">
         カート <span class="cart-count" id="cc">0</span>
       </button>
@@ -189,8 +189,8 @@ let PRODUCTS_MIMOSADO = [];
 let activeTab         = 'shobo';
 let activeFilter      = 'all';
 
-const bookSvgEl = `<svg viewBox="0 0 24 24" fill="none" stroke="#5A6B3B" stroke-width="1.4"><path d="M4 4h13a2 2 0 012 2v14H6a2 2 0 01-2-2z"/><path d="M4 4a2 2 0 00-2 2v12a2 2 0 002 2"/></svg>`;
-const yen = n => '¥' + Number(n).toLocaleString('ja-JP');
+// bookSvgEl・yen は cart.js で定義済み
+const bookSvgEl = bookSvg;
 
 // ── 商品読み込み ──
 async function loadProducts() {
