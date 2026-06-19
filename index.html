@@ -63,18 +63,22 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .isbn-card-val{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.05em;}
 .isbn-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
 
+/* ── お問い合わせフォーム ── */
 .contact-section{padding:4rem 3rem;max-width:760px;margin:0 auto;scroll-margin-top:80px;}
 .contact-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
 .contact-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:2rem;text-align:center;}
-
 .form-box{background:var(--white);border:0.5px solid var(--border);padding:2.5rem;}
 .form-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-bottom:2rem;}
 .form-row{margin-bottom:1.25rem;}
 .form-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;display:block;}
 .form-label .req{color:#c87060;margin-left:.25rem;}
-input[type=text],input[type=email],textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
-input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:var(--mimosa-gold);}
-textarea{resize:vertical;min-height:90px;}
+.contact-section input[type=text],
+.contact-section input[type=email],
+.contact-section textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
+.contact-section input[type=text]:focus,
+.contact-section input[type=email]:focus,
+.contact-section textarea:focus{border-color:var(--mimosa-gold);}
+.contact-section textarea{resize:vertical;min-height:90px;}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .form-check{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
 .form-check label{display:flex;align-items:center;gap:.4rem;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
@@ -82,6 +86,38 @@ textarea{resize:vertical;min-height:90px;}
 .btn:hover{background:var(--mimosa-deep);}
 .btn:disabled{background:var(--muted);cursor:not-allowed;}
 .form-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1rem;display:none;}
+
+/* ── 感想フォーム ── */
+.feeling-section{padding:80px 3rem;background:#faf8f5;border-top:0.5px solid var(--border);scroll-margin-top:80px;}
+.feeling-section .feeling-eyebrow{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;display:block;}
+.feeling-section .feeling-title{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:.75rem;}
+.feeling-section .feeling-lead{font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;color:var(--ink-light);max-width:520px;margin-bottom:3rem;line-height:1.9;}
+.feeling-form{max-width:640px;}
+.feeling-form .ff-row{margin-bottom:28px;}
+.feeling-form .ff-label{display:block;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;}
+.feeling-form .ff-label .req{color:#c87060;margin-left:4px;}
+.feeling-form input[type="text"],
+.feeling-form input[type="email"],
+.feeling-form input[type="number"],
+.feeling-form select,
+.feeling-form textarea{width:100%;padding:10px 14px;border:0.5px solid var(--border);background:var(--white);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;box-sizing:border-box;appearance:none;-webkit-appearance:none;}
+.feeling-form input[type="text"]:focus,
+.feeling-form input[type="email"]:focus,
+.feeling-form input[type="number"]:focus,
+.feeling-form select:focus,
+.feeling-form textarea:focus{border-color:var(--mimosa-gold);}
+.feeling-form select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A09880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.feeling-form textarea{resize:vertical;min-height:120px;}
+.feeling-form .ff-hint{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);margin-top:5px;}
+.feeling-form .ff-checks,.feeling-form .ff-radios{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:6px;}
+.feeling-form .ff-checks label,.feeling-form .ff-radios label{display:flex;align-items:center;gap:6px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
+.feeling-form input[type="checkbox"],.feeling-form input[type="radio"]{width:15px;height:15px;accent-color:var(--mimosa-gold);flex-shrink:0;}
+.ff-submit{display:inline-block;padding:.85rem 3rem;background:var(--ink);color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;border:none;cursor:pointer;margin-top:1rem;transition:background .2s;}
+.ff-submit:hover{background:var(--mimosa-deep);}
+.ff-submit:disabled{background:var(--muted);cursor:not-allowed;}
+#ff-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1.25rem;display:none;padding:16px 20px;line-height:1.8;}
+#ff-result.success{background:#edf7ed;color:#2d6a2f;border:0.5px solid #b7ddb7;}
+#ff-result.error{background:#fdecea;color:#c0392b;border:0.5px solid #f1b5b0;}
 
 footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
 .footer-flower{display:flex;gap:3px;align-items:center;}
@@ -91,7 +127,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   .labels-grid,.isbn-grid,.form-row-2{grid-template-columns:1fr;}
   .hero h1{font-size:34px;}
   nav{padding:1rem 1.5rem;}
-  .labels-section,.contact-section,.isbn-section{padding:2rem 1.5rem;}
+  .labels-section,.contact-section,.isbn-section,.feeling-section{padding:2rem 1.5rem;}
   .form-box{padding:1.5rem;}
 }
 </style>
@@ -108,6 +144,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
     <li><a href="#isbn">ISBNについて</a></li>
     <li><a href="/trade.html">書店員の方へ</a></li>
     <li><a href="#contact">お問い合わせ</a></li>
+    <li><a href="#feeling-form">ご感想</a></li>
   </ul>
 </nav>
 
@@ -192,248 +229,61 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
     <div class="form-row-2">
       <div class="form-row">
         <label class="form-label">会社・書店・取次名</label>
-        <input type="text" id="f-shopname" placeholder="株式会社〇〇">
+        <input type="text" id="c-shopname" placeholder="株式会社〇〇">
       </div>
       <div class="form-row">
         <label class="form-label">お名前<span class="req">*</span></label>
-        <input type="text" id="f-name" placeholder="山田 花子">
+        <input type="text" id="c-name" placeholder="山田 花子">
       </div>
     </div>
     <div class="form-row">
       <label class="form-label">メールアドレス<span class="req">*</span></label>
-      <input type="email" id="f-email" placeholder="info@example.com">
+      <input type="email" id="c-email" placeholder="info@example.com">
     </div>
     <div class="form-row">
       <label class="form-label">お問い合わせの種類（複数選択可）</label>
       <div class="form-check">
-        <label><input type="checkbox" class="f-material" value="出版について"> 出版について</label>
-        <label><input type="checkbox" class="f-material" value="取材について"> 取材について</label>
-        <label><input type="checkbox" class="f-material" value="取次について"> 取次について</label>
-        <label><input type="checkbox" class="f-material" value="著者募集について"> 著者募集について</label>
-        <label><input type="checkbox" class="f-material" value="その他"> その他</label>
+        <label><input type="checkbox" class="c-material" value="出版について"> 出版について</label>
+        <label><input type="checkbox" class="c-material" value="取材について"> 取材について</label>
+        <label><input type="checkbox" class="c-material" value="取次について"> 取次について</label>
+        <label><input type="checkbox" class="c-material" value="著者募集について"> 著者募集について</label>
+        <label><input type="checkbox" class="c-material" value="その他"> その他</label>
       </div>
     </div>
     <div class="form-row">
       <label class="form-label">メッセージ<span class="req">*</span></label>
-      <textarea id="f-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
+      <textarea id="c-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
     </div>
-    <button class="btn" id="f-submit" onclick="submitForm()">送信する</button>
-    <p class="form-result" id="f-result"></p>
+    <button class="btn" id="c-submit" onclick="submitContact()">送信する</button>
+    <p class="form-result" id="c-result"></p>
   </div>
 </section>
 
-  <!-- ============================================================
-  感想フォーム セクション
-  出版社ミモザ index.html の </main> 直前などに貼り付けてください
-
-  ① GAS_URL を実際のウェブアプリURLに置き換えてください
-  ② このセクション用のCSSは <style> タグごとコピーしてください
-============================================================ -->
-
-<style>
-  /* ── 感想フォーム ─────────────────────── */
-  .feeling-section {
-    padding: 80px 24px;
-    background: #faf8f5;
-  }
-
-  .feeling-section .section-eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #9b8f82;
-    margin-bottom: 8px;
-  }
-
-  .feeling-section h2 {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 700;
-    color: #2c2420;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-
-  .feeling-section .section-lead {
-    font-size: 0.95rem;
-    color: #6b5f57;
-    max-width: 520px;
-    margin-bottom: 48px;
-    line-height: 1.8;
-  }
-
-  .feeling-form {
-    max-width: 640px;
-  }
-
-  .feeling-form .form-row {
-    margin-bottom: 28px;
-  }
-
-  .feeling-form label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #2c2420;
-    margin-bottom: 6px;
-  }
-
-  .feeling-form label .required {
-    color: #c0392b;
-    margin-left: 4px;
-    font-size: 0.8rem;
-  }
-
-  .feeling-form input[type="text"],
-  .feeling-form input[type="email"],
-  .feeling-form input[type="number"],
-  .feeling-form select,
-  .feeling-form textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #d4ccc6;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    color: #2c2420;
-    background: #fff;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-
-  .feeling-form select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239b8f82' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-  }
-
-  .feeling-form input:focus,
-  .feeling-form select:focus,
-  .feeling-form textarea:focus {
-    outline: none;
-    border-color: #8b7355;
-    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.12);
-  }
-
-  .feeling-form textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-
-  .feeling-form .checkbox-group,
-  .feeling-form .radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    margin-top: 4px;
-  }
-
-  .feeling-form .checkbox-group label,
-  .feeling-form .radio-group label {
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: #4a3f38;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    margin-bottom: 0;
-  }
-
-  .feeling-form input[type="checkbox"],
-  .feeling-form input[type="radio"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #8b7355;
-    flex-shrink: 0;
-  }
-
-  .feeling-form .hint {
-    font-size: 0.78rem;
-    color: #9b8f82;
-    margin-top: 4px;
-  }
-
-  /* 送信ボタン */
-  .feeling-form .submit-btn {
-    margin-top: 12px;
-    padding: 14px 40px;
-    background: #2c2420;
-    color: #fff;
-    font-size: 0.95rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-    transition: background 0.2s, transform 0.1s;
-  }
-
-  .feeling-form .submit-btn:hover {
-    background: #3e302a;
-  }
-
-  .feeling-form .submit-btn:active {
-    transform: scale(0.98);
-  }
-
-  .feeling-form .submit-btn:disabled {
-    background: #b0a89e;
-    cursor: not-allowed;
-  }
-
-  /* 送信結果 */
-  #feeling-result {
-    display: none;
-    margin-top: 24px;
-    padding: 20px 24px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    line-height: 1.7;
-  }
-
-  #feeling-result.success {
-    background: #edf7ed;
-    color: #2d6a2f;
-    border: 1px solid #b7ddb7;
-  }
-
-  #feeling-result.error {
-    background: #fdecea;
-    color: #c0392b;
-    border: 1px solid #f1b5b0;
-  }
-</style>
-
-<!-- 感想フォーム セクション -->
+<!-- ── 感想フォーム ──────────────────────────────── -->
 <section class="feeling-section" id="feeling-form">
-  <div class="section-eyebrow">Reader's Voice</div>
-  <h2>ご感想をお聞かせください</h2>
-  <p class="section-lead">
+  <span class="feeling-eyebrow">Reader's Voice</span>
+  <h2 class="feeling-title">ご感想をお聞かせください</h2>
+  <p class="feeling-lead">
     ご購入いただいた本の奥付に記載された記号をご用意のうえ、お送りください。<br>
-    <span style="font-size:0.85rem; color:#9b8f82;">＊は必須項目です</span>
+    <span style="font-size:0.8rem;color:var(--muted);">＊は必須項目です</span>
   </p>
 
   <form class="feeling-form" id="feelingForm" novalidate>
 
-    <!-- 氏名 -->
-    <div class="form-row">
-      <label for="f-name">お名前<span class="required">＊</span></label>
-      <input type="text" id="f-name" name="name" placeholder="山田 花子" required>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-name">お名前<span class="req">＊</span></label>
+      <input type="text" id="ff-name" name="name" placeholder="山田 花子">
     </div>
 
-    <!-- メールアドレス -->
-    <div class="form-row">
-      <label for="f-email">メールアドレス<span class="required">＊</span></label>
-      <input type="email" id="f-email" name="email" placeholder="example@mail.com" required>
-      <p class="hint">送信確認のメールをお届けします。公開されることはありません。</p>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-email">メールアドレス<span class="req">＊</span></label>
+      <input type="email" id="ff-email" name="email" placeholder="example@mail.com">
+      <p class="ff-hint">送信確認のメールをお届けします。公開されることはありません。</p>
     </div>
 
-    <!-- 性別 -->
-    <div class="form-row">
-      <label>性別</label>
-      <div class="radio-group">
+    <div class="ff-row">
+      <label class="ff-label">性別</label>
+      <div class="ff-radios">
         <label><input type="radio" name="gender" value="女性"> 女性</label>
         <label><input type="radio" name="gender" value="男性"> 男性</label>
         <label><input type="radio" name="gender" value="その他"> その他</label>
@@ -441,16 +291,14 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </div>
     </div>
 
-    <!-- 年齢 -->
-    <div class="form-row">
-      <label for="f-age">年齢</label>
-      <input type="number" id="f-age" name="age" placeholder="例：32" min="1" max="120" style="max-width:120px;">
+    <div class="ff-row">
+      <label class="ff-label" for="ff-age">年齢</label>
+      <input type="number" id="ff-age" name="age" placeholder="例：32" min="1" max="120" style="max-width:120px;">
     </div>
 
-    <!-- 都道府県 -->
-    <div class="form-row">
-      <label for="f-prefecture">お住まいの都道府県</label>
-      <select id="f-prefecture" name="prefecture">
+    <div class="ff-row">
+      <label class="ff-label" for="ff-prefecture">お住まいの都道府県</label>
+      <select id="ff-prefecture" name="prefecture">
         <option value="">-- 選択してください --</option>
         <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
         <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
@@ -467,19 +315,17 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </select>
     </div>
 
-    <!-- 記号（書籍ID） -->
-    <div class="form-row">
-      <label for="f-bookId">本の記号<span class="required">＊</span></label>
-      <select id="f-bookId" name="bookId" required>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-bookId">本の記号<span class="req">＊</span></label>
+      <select id="ff-bookId" name="bookId">
         <option value="">-- 読み込み中 --</option>
       </select>
-      <p class="hint">奥付に記載された「SB-000」「DO-000」のような記号をお選びください。</p>
+      <p class="ff-hint">奥付に記載された「SB-000」「DO-000」のような記号をお選びください。</p>
     </div>
 
-    <!-- 職業 -->
-    <div class="form-row">
-      <label for="f-occupation">ご職業</label>
-      <select id="f-occupation" name="occupation">
+    <div class="ff-row">
+      <label class="ff-label" for="ff-occupation">ご職業</label>
+      <select id="ff-occupation" name="occupation">
         <option value="">-- 選択してください --</option>
         <option>会社員・公務員</option>
         <option>自営業・フリーランス</option>
@@ -494,10 +340,9 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </select>
     </div>
 
-    <!-- 買った場所 -->
-    <div class="form-row">
-      <label for="f-buyPlace">この本を買った場所<span class="required">＊</span></label>
-      <select id="f-buyPlace" name="buyPlace" required>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-buyPlace">この本を買った場所<span class="req">＊</span></label>
+      <select id="ff-buyPlace" name="buyPlace">
         <option value="">-- 選択してください --</option>
         <option>書店（全国チェーン）</option>
         <option>書店（地域の独立書店）</option>
@@ -511,10 +356,9 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </select>
     </div>
 
-    <!-- 知ったきっかけ -->
-    <div class="form-row">
-      <label for="f-howKnown">この本を知ったきっかけ<span class="required">＊</span></label>
-      <select id="f-howKnown" name="howKnown" required>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-howKnown">この本を知ったきっかけ<span class="req">＊</span></label>
+      <select id="ff-howKnown" name="howKnown">
         <option value="">-- 選択してください --</option>
         <option>SNS（Instagram）</option>
         <option>SNS（X / Twitter）</option>
@@ -530,10 +374,9 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </select>
     </div>
 
-    <!-- 買った理由（複数選択） -->
-    <div class="form-row">
-      <label>この本を買った理由<span class="required">＊</span>（いくつでも）</label>
-      <div class="checkbox-group">
+    <div class="ff-row">
+      <label class="ff-label">この本を買った理由<span class="req">＊</span>（いくつでも）</label>
+      <div class="ff-checks">
         <label><input type="checkbox" name="whyBought" value="表紙・デザインが好き"> 表紙・デザインが好き</label>
         <label><input type="checkbox" name="whyBought" value="タイトルが気になった"> タイトルが気になった</label>
         <label><input type="checkbox" name="whyBought" value="内容・テーマに興味があった"> 内容・テーマに興味があった</label>
@@ -546,77 +389,138 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </div>
     </div>
 
-    <!-- 意見・感想 -->
-    <div class="form-row">
-      <label for="f-comment">ご意見・ご感想</label>
-      <textarea id="f-comment" name="comment" placeholder="読んで感じたことを自由にお書きください。"></textarea>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-comment">ご意見・ご感想</label>
+      <textarea id="ff-comment" name="comment" placeholder="読んで感じたことを自由にお書きください。"></textarea>
     </div>
 
-    <!-- 興味のあること -->
-    <div class="form-row">
-      <label for="f-interests">興味のあること・好きなこと</label>
-      <input type="text" id="f-interests" name="interests" placeholder="例：写真、猫、旅、短歌…">
-      <p class="hint">次の企画の参考にさせていただきます。</p>
+    <div class="ff-row">
+      <label class="ff-label" for="ff-interests">興味のあること・好きなこと</label>
+      <input type="text" id="ff-interests" name="interests" placeholder="例：写真、猫、旅、短歌…">
+      <p class="ff-hint">次の企画の参考にさせていただきます。</p>
     </div>
 
-    <!-- 掲載可否 -->
-    <div class="form-row">
-      <label>ご感想の掲載可否<span class="required">＊</span></label>
-      <p class="hint" style="margin-bottom:8px;">いただいたご感想をウェブサイト・SNS・販促物に掲載させていただく場合があります。</p>
-      <div class="radio-group">
-        <label><input type="radio" name="publishable" value="掲載可（氏名あり）" required> 掲載可（お名前あり）</label>
+    <div class="ff-row">
+      <label class="ff-label">ご感想の掲載可否<span class="req">＊</span></label>
+      <p class="ff-hint" style="margin-bottom:8px;">いただいたご感想をウェブサイト・SNS・販促物に掲載させていただく場合があります。</p>
+      <div class="ff-radios">
+        <label><input type="radio" name="publishable" value="掲載可（氏名あり）"> 掲載可（お名前あり）</label>
         <label><input type="radio" name="publishable" value="掲載可（匿名）"> 掲載可（匿名・イニシャル等）</label>
         <label><input type="radio" name="publishable" value="要確認"> 掲載前に確認してほしい</label>
         <label><input type="radio" name="publishable" value="掲載不可"> 掲載不可</label>
       </div>
     </div>
 
-    <button type="submit" class="submit-btn" id="feelingSubmitBtn">送信する</button>
+    <button type="submit" class="ff-submit" id="ff-submit-btn">送信する</button>
   </form>
-
-  <div id="feeling-result"></div>
+  <div id="ff-result"></div>
 </section>
 
+<footer>
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
+  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
+  <div class="footer-flower">
+    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
+  </div>
+</footer>
+
 <script>
+// ★ GASのウェブアプリURLをここに貼る
+const GAS_URL = '【GASのウェブアプリURLをここに貼る】';
+
+// ── お問い合わせフォーム ──────────────────────────────────
+async function submitContact() {
+  const shopName  = document.getElementById('c-shopname').value.trim();
+  const name      = document.getElementById('c-name').value.trim();
+  const email     = document.getElementById('c-email').value.trim();
+  const message   = document.getElementById('c-message').value.trim();
+  const materials = Array.from(document.querySelectorAll('.c-material:checked')).map(c => c.value);
+  const result    = document.getElementById('c-result');
+  const btn       = document.getElementById('c-submit');
+
+  if (!name || !email || !message) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = 'お名前・メールアドレス・メッセージは必須です。';
+    return;
+  }
+  if (email.indexOf('@') === -1) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = 'メールアドレスの形式が正しくありません。';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '送信中…';
+  result.style.display = 'none';
+
+  try {
+    const res  = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      result.style.display = 'block';
+      result.style.color = '#4A6741';
+      result.textContent = 'ありがとうございます。2〜3営業日以内にご連絡いたします。';
+      btn.textContent = '送信しました';
+      document.getElementById('c-shopname').value = '';
+      document.getElementById('c-name').value = '';
+      document.getElementById('c-email').value = '';
+      document.getElementById('c-message').value = '';
+      document.querySelectorAll('.c-material').forEach(c => c.checked = false);
+    } else {
+      throw new Error(data.message || 'エラーが発生しました');
+    }
+  } catch(err) {
+    result.style.display = 'block';
+    result.style.color = '#c87060';
+    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
+    btn.disabled = false;
+    btn.textContent = '送信する';
+  }
+}
+
+// ── 感想フォーム ──────────────────────────────────────────
 (function () {
-  // ★ GASのウェブアプリURLに置き換えてください
-  const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+  const form      = document.getElementById('feelingForm');
+  const submitBtn = document.getElementById('ff-submit-btn');
+  const resultBox = document.getElementById('ff-result');
+  const bookSel   = document.getElementById('ff-bookId');
 
-  const form       = document.getElementById('feelingForm');
-  const submitBtn  = document.getElementById('feelingSubmitBtn');
-  const resultBox  = document.getElementById('feeling-result');
-  const bookSelect = document.getElementById('f-bookId');
-
-  // ── 書籍プルダウンをGASから取得 ──────────────────
+  // 書籍プルダウンをGASから取得
   fetch(GAS_URL + '?action=getBooks')
     .then(r => r.json())
     .then(data => {
-      bookSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+      bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
       if (data.ok && data.books.length > 0) {
         data.books.forEach(b => {
           const opt = document.createElement('option');
           opt.value = b.id;
           opt.textContent = b.label;
-          bookSelect.appendChild(opt);
+          bookSel.appendChild(opt);
         });
       } else {
-        bookSelect.innerHTML = '<option value="">（書籍が見つかりません）</option>';
+        bookSel.innerHTML = '<option value="">（書籍が見つかりません）</option>';
       }
     })
     .catch(() => {
-      bookSelect.innerHTML = '<option value="">（取得に失敗しました）</option>';
+      bookSel.innerHTML = '<option value="">（取得に失敗しました）</option>';
     });
 
-  // ── 送信処理 ─────────────────────────────────────
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    // 必須チェック
-    const name        = form.querySelector('[name="name"]').value.trim();
-    const email       = form.querySelector('[name="email"]').value.trim();
-    const bookId      = form.querySelector('[name="bookId"]').value;
-    const buyPlace    = form.querySelector('[name="buyPlace"]').value;
-    const howKnown    = form.querySelector('[name="howKnown"]').value;
+    const name        = document.getElementById('ff-name').value.trim();
+    const email       = document.getElementById('ff-email').value.trim();
+    const bookId      = document.getElementById('ff-bookId').value;
+    const buyPlace    = document.getElementById('ff-buyPlace').value;
+    const howKnown    = document.getElementById('ff-howKnown').value;
     const publishable = form.querySelector('[name="publishable"]:checked');
     const whyChecked  = form.querySelectorAll('[name="whyBought"]:checked');
 
@@ -629,22 +533,21 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       return;
     }
 
-    // データ収集
     const payload = {
-      name:        name,
-      email:       email,   // ← 追加
+      action:      'feelingForm',
+      name,
+      email,
       gender:      (form.querySelector('[name="gender"]:checked') || {}).value || '',
-      age:         form.querySelector('[name="age"]').value,
-      prefecture:  form.querySelector('[name="prefecture"]').value,
-      bookId:      bookId,
-      occupation:  form.querySelector('[name="occupation"]').value,
-      buyPlace:    buyPlace,
-      howKnown:    howKnown,
+      age:         document.getElementById('ff-age').value,
+      prefecture:  document.getElementById('ff-prefecture').value,
+      bookId,
+      occupation:  document.getElementById('ff-occupation').value,
+      buyPlace,
+      howKnown,
       whyBought:   Array.from(whyChecked).map(c => c.value).join('、'),
-      comment:     form.querySelector('[name="comment"]').value.trim(),
-      interests:   form.querySelector('[name="interests"]').value.trim(),
-      publishable: publishable.value,
-      action:      'feelingForm'
+      comment:     document.getElementById('ff-comment').value.trim(),
+      interests:   document.getElementById('ff-interests').value.trim(),
+      publishable: publishable.value
     };
 
     submitBtn.disabled = true;
@@ -652,14 +555,16 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 
     fetch(GAS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain' }, // GASのCORSルール上 text/plain を使用
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     })
       .then(r => r.json())
       .then(res => {
         if (res.ok) {
           form.reset();
+          bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
           showResult('success', 'ご感想をお送りいただきありがとうございます。\nスタッフ一同、大切に読ませていただきます。');
+          submitBtn.textContent = '送信しました';
         } else {
           showResult('error', 'エラーが発生しました：' + (res.error || '不明なエラー'));
           submitBtn.disabled = false;
@@ -680,76 +585,6 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
     resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 })();
-</script>
-
-<footer>
-  <div class="footer-flower">
-    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
-  </div>
-  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
-  <div class="footer-flower">
-    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
-  </div>
-</footer>
-
-<script>
-const GAS_URL = '【GASのウェブアプリURLをここに貼る】';
-
-async function submitForm() {
-  const shopName  = document.getElementById('f-shopname').value.trim();
-  const name      = document.getElementById('f-name').value.trim();
-  const email     = document.getElementById('f-email').value.trim();
-  const message   = document.getElementById('f-message').value.trim();
-  const materials = Array.from(document.querySelectorAll('.f-material:checked')).map(c => c.value);
-  const result    = document.getElementById('f-result');
-  const btn       = document.getElementById('f-submit');
-
-  // バリデーション
-  if (!name || !email || !message) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'お名前・メールアドレス・メッセージは必須です。';
-    return;
-  }
-  if (email.indexOf('@') === -1) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'メールアドレスの形式が正しくありません。';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '送信中…';
-  result.style.display = 'none';
-
-  try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
-    });
-    const data = await res.json();
-    if (data.status === 'ok') {
-      result.style.display = 'block';
-      result.style.color = '#4A6741';
-      result.textContent = 'ありがとうございます。2〜3営業日以内にご連絡いたします。';
-      btn.textContent = '送信しました';
-      document.getElementById('f-shopname').value = '';
-      document.getElementById('f-name').value = '';
-      document.getElementById('f-email').value = '';
-      document.getElementById('f-message').value = '';
-      document.querySelectorAll('.f-material').forEach(c => c.checked = false);
-    } else {
-      throw new Error(data.message || 'エラーが発生しました');
-    }
-  } catch(err) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
-    btn.disabled = false;
-    btn.textContent = '送信する';
-  }
-}
 </script>
 
 </body>
