@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>著者応募フォーム | ミモザ書房</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
+
+/* ナビ */
+.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; position: sticky; top: 0; z-index: 40; }
+.nav-logo { text-decoration: none; color: inherit; }
+.nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; font-family: 'Noto Sans JP', sans-serif; }
+.nav-logo .name { font-size: 22px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; }
+.nav-back { font-size: 12px; letter-spacing: 0.05em; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; text-decoration: none; border-bottom: 0.5px solid #c8b89a; padding-bottom: 1px; }
+.nav-back:hover { color: #5a4f3e; }
+
+/* ヒーロー */
+.hero { padding: 5rem 3rem 3.5rem; text-align: center; background: linear-gradient(180deg, #f5f0e8 0%, #faf8f4 100%); }
+.hero-label { font-size: 10px; letter-spacing: 0.35em; color: #b8a888; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.25rem; }
+.hero-title { font-size: 36px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 1.5rem; line-height: 1.4; }
+.hero-copy { font-size: 13px; line-height: 2.2; color: #6b6454; letter-spacing: 0.06em; font-family: 'Noto Sans JP', sans-serif; max-width: 520px; margin: 0 auto; }
+
+/* フォーム本体 */
+.form-wrap { max-width: 680px; margin: 0 auto; padding: 4rem 3rem 6rem; }
+
+.form-section { margin-bottom: 3rem; }
+.form-section-label {
+  font-size: 10px; letter-spacing: 0.3em; color: #a09880;
+  text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif;
+  margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+  border-bottom: 0.5px solid #d8d4c8;
+}
+
+.field { margin-bottom: 1.75rem; }
+.field label {
+  display: block; font-size: 12px; letter-spacing: 0.1em;
+  color: #2c2a24; font-family: 'Noto Sans JP', sans-serif;
+  margin-bottom: 0.5rem; font-weight: 500;
+}
+.field label .req {
+  display: inline-block; font-size: 10px; color: #c8734a;
+  margin-left: 0.4rem; letter-spacing: 0;
+}
+.field label .opt {
+  display: inline-block; font-size: 10px; color: #a09880;
+  margin-left: 0.4rem; letter-spacing: 0;
+}
+.field input[type="text"],
+.field input[type="email"],
+.field select,
+.field textarea {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 0.5px solid #d8d4c8; background: #fff;
+  font-size: 14px; font-family: 'Noto Sans JP', sans-serif;
+  color: #2c2a24; outline: none; border-radius: 0;
+  transition: border-color 0.2s;
+  -webkit-appearance: none; appearance: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: #8a6f4e; }
+.field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a09880' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+.field textarea { resize: vertical; min-height: 120px; line-height: 1.8; }
+.field .hint { font-size: 11px; color: #a09880; font-family: 'Noto Sans JP', sans-serif; margin-top: 0.4rem; line-height: 1.7; }
+
+/* ファイル添付 */
+.file-area {
+  border: 0.5px dashed #c8b89a; background: #fdf9f4;
+  padding: 2rem; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.file-area:hover { border-color: #8a6f4e; background: #f5f0e8; }
+.file-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.file-icon { font-size: 28px; margin-bottom: 0.75rem; color: #c8b89a; }
+.file-text { font-size: 13px; color: #6b6454; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; }
+.file-text strong { color: #8a6f4e; }
+.file-name { margin-top: 0.75rem; font-size: 12px; color: #4a6741; font-family: 'Noto Sans JP', sans-serif; display: none; }
+.file-name.show { display: block; }
+
+/* 同意 */
+.agree-wrap { margin: 2.5rem 0; }
+.agree-label { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; }
+.agree-label input[type="checkbox"] { margin-top: 2px; accent-color: #8a6f4e; width: 16px; height: 16px; flex-shrink: 0; }
+.agree-text { font-size: 12px; color: #6b6454; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; letter-spacing: 0.03em; }
+.agree-text a { color: #8a6f4e; }
+
+/* 送信ボタン */
+.btn-submit {
+  width: 100%; padding: 1.1rem;
+  background: #2c2a24; color: #faf8f4;
+  font-size: 13px; letter-spacing: 0.2em;
+  font-family: 'Noto Sans JP', sans-serif;
+  border: none; cursor: pointer;
+  transition: background 0.2s; display: block;
+}
+.btn-submit:hover:not(:disabled) { background: #1e1c18; }
+.btn-submit:disabled { background: #a09880; cursor: default; }
+
+/* エラー・成功 */
+.msg { display: none; margin-top: 1.5rem; padding: 1rem 1.25rem; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; }
+.msg.error { background: #fdf0ec; border: 0.5px solid #e8a090; color: #a03020; }
+.msg.success { background: #e8f0e4; border: 0.5px solid #a0c090; color: #2a5020; }
+.msg.show { display: block; }
+
+/* 完了画面 */
+.done { display: none; text-align: center; padding: 5rem 3rem; max-width: 560px; margin: 0 auto; }
+.done.show { display: block; }
+.done-icon { font-size: 40px; margin-bottom: 1.5rem; }
+.done-title { font-size: 24px; font-weight: 600; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 1rem; }
+.done-body { font-size: 13px; color: #6b6454; font-family: 'Noto Sans JP', sans-serif; line-height: 2.2; }
+.done-back { display: inline-block; margin-top: 2.5rem; font-size: 12px; letter-spacing: 0.1em; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; text-decoration: none; border-bottom: 0.5px solid #c8b89a; padding-bottom: 1px; }
+
+footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #aaa; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.05em; }
+.footer-back { color: #c8b89a; text-decoration: none; }
+
+@media(max-width:640px){
+  .nav { padding: 1rem 1.5rem; }
+  .hero { padding: 3.5rem 1.5rem 2.5rem; }
+  .hero-title { font-size: 26px; }
+  .form-wrap { padding: 3rem 1.5rem 5rem; }
+  footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="/shobo/">
+    <div class="parent">出版社 ミモザ ／ Mimosa Shobo</div>
+    <div class="name">ミモザ書房</div>
+  </a>
+  <a class="nav-back" href="/shobo/#recruit">← ミモザ書房トップへ戻る</a>
+</nav>
+
+<section class="hero">
+  <p class="hero-label">Author Recruitment</p>
+  <h1 class="hero-title">原稿を送る・応募する</h1>
+  <p class="hero-copy">
+    ミモザ書房では、ともに本を作る書き手を募集しています。<br>
+    原稿データを添付のうえ、以下のフォームよりお送りください。<br>
+    内容確認後、2週間以内にご連絡いたします。
+  </p>
+</section>
+
+<div class="form-wrap" id="form-wrap">
+  <form id="recruit-form" novalidate>
+
+    <!-- 応募者情報 -->
+    <div class="form-section">
+      <p class="form-section-label">Applicant — 応募者情報</p>
+
+      <div class="field">
+        <label>お名前（ペンネーム可）<span class="req">必須</span></label>
+        <input type="text" name="name" placeholder="山田 花子" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label>メールアドレス<span class="req">必須</span></label>
+        <input type="email" name="email" placeholder="example@mail.com" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label>自己紹介<span class="opt">任意</span></label>
+        <textarea name="profile" placeholder="現在のお仕事や活動、本づくりへの思いなどをご自由にお書きください。"></textarea>
+      </div>
+
+      <div class="field">
+        <label>執筆歴・受賞歴<span class="opt">任意</span></label>
+        <textarea name="history" placeholder="同人誌・ブログ・文学賞応募歴など、あればお書きください。なくても構いません。"></textarea>
+      </div>
+    </div>
+
+    <!-- 原稿情報 -->
+    <div class="form-section">
+      <p class="form-section-label">Manuscript — 原稿情報</p>
+
+      <div class="field">
+        <label>ジャンル<span class="req">必須</span></label>
+        <select name="genre">
+          <option value="">選択してください</option>
+          <option value="小説">小説</option>
+          <option value="エッセイ">エッセイ</option>
+          <option value="ライフスタイル">ライフスタイル</option>
+          <option value="ノンフィクション">ノンフィクション</option>
+          <option value="その他">その他（備考に記載）</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>あらすじ・企画概要<span class="req">必須</span></label>
+        <textarea name="synopsis" style="min-height:160px;" placeholder="作品のあらすじ、テーマ、想定読者など、400字程度でお書きください。"></textarea>
+      </div>
+    </div>
+
+    <!-- 原稿ファイル -->
+    <div class="form-section">
+      <p class="form-section-label">File — 原稿ファイル</p>
+
+      <div class="field">
+        <label>原稿データを添付<span class="req">必須</span></label>
+        <div class="file-area" id="file-area">
+          <input type="file" id="file-input" accept=".pdf,.doc,.docx" aria-label="原稿ファイルを選択">
+          <div class="file-icon">📄</div>
+          <p class="file-text">
+            クリックまたはドラッグ＆ドロップ<br>
+            <strong>PDF / Word（.doc・.docx）</strong> ／ 最大 20MB
+          </p>
+          <p class="file-name" id="file-name"></p>
+        </div>
+        <p class="hint">冒頭30ページ程度でも構いません。全文でなくても受け付けています。</p>
+      </div>
+    </div>
+
+    <!-- 同意 -->
+    <div class="agree-wrap">
+      <label class="agree-label">
+        <input type="checkbox" id="agree">
+        <span class="agree-text">
+          送信いただいた原稿データは、選考目的のみに使用します。
+          第三者への提供・転載は行いません。
+          ミモザ書房の<a href="/shobo/" target="_blank">著者募集方針</a>に同意のうえ、送信します。
+        </span>
+      </label>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submit-btn" disabled>原稿を送る</button>
+    <div class="msg error" id="msg-error"></div>
+    <div class="msg success" id="msg-success"></div>
+
+  </form>
+
+  <!-- 完了画面 -->
+  <div class="done" id="done">
+    <div class="done-icon">✉️</div>
+    <h2 class="done-title">ご応募ありがとうございます</h2>
+    <p class="done-body">
+      原稿データを受け付けました。<br>
+      内容を確認のうえ、2週間以内にご登録のメールアドレスへご連絡いたします。<br>
+      （応募多数の場合、選考にお時間をいただくことがございます）<br><br>
+      自動返信メールが届かない場合は、迷惑メールフォルダをご確認ください。
+    </p>
+    <a class="done-back" href="/shobo/">← ミモザ書房トップへ戻る</a>
+  </div>
+</div>
+
+<footer>
+  <a class="footer-back" href="/">← 出版社ミモザ トップへ</a>
+  <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
+</footer>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
+
+// ── ファイル選択 ──────────────────────────────
+const fileInput = document.getElementById('file-input');
+const fileArea  = document.getElementById('file-area');
+const fileName  = document.getElementById('file-name');
+let selectedFile = null;
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) {
+    selectedFile = fileInput.files[0];
+    fileName.textContent = '📎 ' + selectedFile.name;
+    fileName.classList.add('show');
+    validateForm();
+  }
+});
+
+// ドラッグ＆ドロップ
+fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.style.borderColor = '#8a6f4e'; });
+fileArea.addEventListener('dragleave', () => { fileArea.style.borderColor = ''; });
+fileArea.addEventListener('drop', e => {
+  e.preventDefault();
+  fileArea.style.borderColor = '';
+  const f = e.dataTransfer.files[0];
+  if (f) {
+    const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowed.includes(f.type)) {
+      showError('PDF または Word ファイル（.doc/.docx）を添付してください。');
+      return;
+    }
+    if (f.size > 20 * 1024 * 1024) {
+      showError('ファイルサイズは 20MB 以下にしてください。');
+      return;
+    }
+    selectedFile = f;
+    fileInput.files; // 参照のみ（DataTransfer経由は直接代入不可）
+    fileName.textContent = '📎 ' + selectedFile.name;
+    fileName.classList.add('show');
+    validateForm();
+  }
+});
+
+// ── 同意チェック → ボタン活性化 ─────────────
+const agreeChk  = document.getElementById('agree');
+const submitBtn = document.getElementById('submit-btn');
+
+function validateForm() {
+  const form = document.getElementById('recruit-form');
+  const name     = form.name.value.trim();
+  const email    = form.email.value.trim();
+  const genre    = form.genre.value;
+  const synopsis = form.synopsis.value.trim();
+  const ok = name && email && genre && synopsis && selectedFile && agreeChk.checked;
+  submitBtn.disabled = !ok;
+}
+
+agreeChk.addEventListener('change', validateForm);
+document.getElementById('recruit-form').addEventListener('input', validateForm);
+
+// ── 送信 ─────────────────────────────────────
+document.getElementById('recruit-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  hideMessages();
+
+  const form = e.target;
+  const name     = form.name.value.trim();
+  const email    = form.email.value.trim();
+  const genre    = form.genre.value;
+  const synopsis = form.synopsis.value.trim();
+  const profile  = form.profile.value.trim();
+  const history  = form.history.value.trim();
+
+  if (!name || !email || !genre || !synopsis || !selectedFile) {
+    showError('必須項目を入力し、原稿ファイルを添付してください。');
+    return;
+  }
+  if (!email.includes('@')) {
+    showError('メールアドレスの形式が正しくありません。');
+    return;
+  }
+  if (selectedFile.size > 20 * 1024 * 1024) {
+    showError('ファイルサイズは 20MB 以下にしてください。');
+    return;
+  }
+
+  submitBtn.disabled    = true;
+  submitBtn.textContent = '送信しています…';
+
+  // Base64エンコード
+  let fileData, mimeType;
+  try {
+    fileData = await toBase64(selectedFile);
+    mimeType = selectedFile.type || 'application/octet-stream';
+  } catch {
+    showError('ファイルの読み込みに失敗しました。もう一度お試しください。');
+    resetButton();
+    return;
+  }
+
+  const payload = {
+    action:   'recruitForm',
+    name, email, genre, synopsis, profile, history,
+    fileName: selectedFile.name,
+    fileData,
+    mimeType
+  };
+
+  try {
+    const res  = await fetch(GAS_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      document.getElementById('form-wrap').querySelector('form').style.display = 'none';
+      document.getElementById('done').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      showError(data.error || '送信に失敗しました。時間をおいて再度お試しください。');
+      resetButton();
+    }
+  } catch {
+    showError('通信エラーが発生しました。時間をおいて再度お試しください。');
+    resetButton();
+  }
+});
+
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function showError(msg) {
+  const el = document.getElementById('msg-error');
+  el.textContent = msg;
+  el.classList.add('show');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideMessages() {
+  document.getElementById('msg-error').classList.remove('show');
+  document.getElementById('msg-success').classList.remove('show');
+}
+
+function resetButton() {
+  submitBtn.disabled    = false;
+  submitBtn.textContent = '原稿を送る';
+}
+</script>
+</body>
+</html>
