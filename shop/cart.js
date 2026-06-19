@@ -7,7 +7,7 @@
 // ============================================================
 
 const CART_KEY = 'mimosa_cart'; // localStorage のキー
-const GAS_URL  = '【GASのウェブアプリURLをここに貼る】';
+const GAS_URL  = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
 
 // ============================================================
 // カートの読み書き（localStorage）
