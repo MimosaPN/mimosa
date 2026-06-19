@@ -277,7 +277,7 @@ footer a { color: #c8b89a; text-decoration: none; }
 
 <script>
 // GASのウェブアプリURLをここに設定（既存のものと同じURL）
-const TRADE_GAS_URL = '【GASのウェブアプリURLをここに貼る】';
+const TRADE_GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
 
 async function submitTradeForm() {
   const shopName = document.getElementById('f-shopname').value.trim();
@@ -330,7 +330,7 @@ async function submitTradeForm() {
   } catch(err) {
     result.style.display = 'block';
     result.style.color = '#c87060';
-    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
+    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メール（info@mimosa-partners.com）にてご連絡ください。';
     btn.disabled = false;
     btn.textContent = '送信する';
   }
