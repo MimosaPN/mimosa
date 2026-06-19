@@ -90,38 +90,6 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .btn:disabled{background:var(--muted);cursor:not-allowed;}
 .form-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1rem;display:none;}
 
-/* ── 感想フォーム ── */
-.feeling-section{padding:80px 3rem;background:#faf8f5;border-top:0.5px solid var(--border);scroll-margin-top:80px;}
-.feeling-section .feeling-eyebrow{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;display:block;}
-.feeling-section .feeling-title{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:.75rem;}
-.feeling-section .feeling-lead{font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;color:var(--ink-light);max-width:520px;margin-bottom:3rem;line-height:1.9;}
-.feeling-form{max-width:640px;}
-.feeling-form .ff-row{margin-bottom:28px;}
-.feeling-form .ff-label{display:block;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;}
-.feeling-form .ff-label .req{color:#c87060;margin-left:4px;}
-.feeling-form input[type="text"],
-.feeling-form input[type="email"],
-.feeling-form input[type="number"],
-.feeling-form select,
-.feeling-form textarea{width:100%;padding:10px 14px;border:0.5px solid var(--border);background:var(--white);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;box-sizing:border-box;appearance:none;-webkit-appearance:none;}
-.feeling-form input[type="text"]:focus,
-.feeling-form input[type="email"]:focus,
-.feeling-form input[type="number"]:focus,
-.feeling-form select:focus,
-.feeling-form textarea:focus{border-color:var(--mimosa-gold);}
-.feeling-form select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A09880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
-.feeling-form textarea{resize:vertical;min-height:120px;}
-.feeling-form .ff-hint{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);margin-top:5px;}
-.feeling-form .ff-checks,.feeling-form .ff-radios{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:6px;}
-.feeling-form .ff-checks label,.feeling-form .ff-radios label{display:flex;align-items:center;gap:6px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
-.feeling-form input[type="checkbox"],.feeling-form input[type="radio"]{width:15px;height:15px;accent-color:var(--mimosa-gold);flex-shrink:0;}
-.ff-submit{display:inline-block;padding:.85rem 3rem;background:var(--ink);color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;border:none;cursor:pointer;margin-top:1rem;transition:background .2s;}
-.ff-submit:hover{background:var(--mimosa-deep);}
-.ff-submit:disabled{background:var(--muted);cursor:not-allowed;}
-#ff-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1.25rem;display:none;padding:16px 20px;line-height:1.8;}
-#ff-result.success{background:#edf7ed;color:#2d6a2f;border:0.5px solid #b7ddb7;}
-#ff-result.error{background:#fdecea;color:#c0392b;border:0.5px solid #f1b5b0;}
-
 footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
 .footer-flower{display:flex;gap:3px;align-items:center;}
 .footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
@@ -148,7 +116,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
     <li><a href="/trade.html">書店員の方へ</a></li>
     <li><a href="/shop/shop.html">ショップ</a></li>
     <li><a href="#contact">お問い合わせ</a></li>
-    <li><a href="#feeling-form">ご感想</a></li>
+    <li><a href="/feeling.html">ご感想</a></li>
   </ul>
 </nav>
 
@@ -438,7 +406,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 
 <script>
 // ★ GASのウェブアプリURLをここに貼る
-const GAS_URL = '【GASのウェブアプリURLをここに貼る】';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
 
 // ── お問い合わせフォーム ──────────────────────────────────
 async function submitContact() {
@@ -495,106 +463,6 @@ async function submitContact() {
     btn.textContent = '送信する';
   }
 }
-
-// ── 感想フォーム ──────────────────────────────────────────
-(function () {
-  const form      = document.getElementById('feelingForm');
-  const submitBtn = document.getElementById('ff-submit-btn');
-  const resultBox = document.getElementById('ff-result');
-  const bookSel   = document.getElementById('ff-bookId');
-
-  // 書籍プルダウンをGASから取得
-  fetch(GAS_URL + '?action=getBooks')
-    .then(r => r.json())
-    .then(data => {
-      bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
-      if (data.ok && data.books.length > 0) {
-        data.books.forEach(b => {
-          const opt = document.createElement('option');
-          opt.value = b.id;
-          opt.textContent = b.label;
-          bookSel.appendChild(opt);
-        });
-      } else {
-        bookSel.innerHTML = '<option value="">（書籍が見つかりません）</option>';
-      }
-    })
-    .catch(() => {
-      bookSel.innerHTML = '<option value="">（取得に失敗しました）</option>';
-    });
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const name        = document.getElementById('ff-name').value.trim();
-    const email       = document.getElementById('ff-email').value.trim();
-    const bookId      = document.getElementById('ff-bookId').value;
-    const buyPlace    = document.getElementById('ff-buyPlace').value;
-    const howKnown    = document.getElementById('ff-howKnown').value;
-    const publishable = form.querySelector('[name="publishable"]:checked');
-    const whyChecked  = form.querySelectorAll('[name="whyBought"]:checked');
-
-    if (!name || !email || !bookId || !buyPlace || !howKnown || !publishable || whyChecked.length === 0) {
-      showResult('error', '＊印の必須項目をすべてご入力ください。');
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showResult('error', 'メールアドレスの形式が正しくありません。');
-      return;
-    }
-
-    const payload = {
-      action:      'feelingForm',
-      name,
-      email,
-      gender:      (form.querySelector('[name="gender"]:checked') || {}).value || '',
-      age:         document.getElementById('ff-age').value,
-      prefecture:  document.getElementById('ff-prefecture').value,
-      bookId,
-      occupation:  document.getElementById('ff-occupation').value,
-      buyPlace,
-      howKnown,
-      whyBought:   Array.from(whyChecked).map(c => c.value).join('、'),
-      comment:     document.getElementById('ff-comment').value.trim(),
-      interests:   document.getElementById('ff-interests').value.trim(),
-      publishable: publishable.value
-    };
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = '送信中…';
-
-    fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    })
-      .then(r => r.json())
-      .then(res => {
-        if (res.ok) {
-          form.reset();
-          bookSel.innerHTML = '<option value="">-- 選択してください --</option>';
-          showResult('success', 'ご感想をお送りいただきありがとうございます。\nスタッフ一同、大切に読ませていただきます。');
-          submitBtn.textContent = '送信しました';
-        } else {
-          showResult('error', 'エラーが発生しました：' + (res.error || '不明なエラー'));
-          submitBtn.disabled = false;
-          submitBtn.textContent = '送信する';
-        }
-      })
-      .catch(() => {
-        showResult('error', '送信に失敗しました。時間をおいて再度お試しください。');
-        submitBtn.disabled = false;
-        submitBtn.textContent = '送信する';
-      });
-  });
-
-  function showResult(type, msg) {
-    resultBox.className = type;
-    resultBox.style.display = 'block';
-    resultBox.textContent = msg;
-    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-})();
 </script>
 
 </body>
