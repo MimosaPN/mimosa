@@ -148,16 +148,16 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
         <p class="isbn-card-val">ミモザ</p>
       </div>
       <div class="isbn-card">
-        <p class="isbn-card-label">運営会社</p>
-        <p class="isbn-card-val">ミモザパートナーズ合同会社</p>
+        <p class="isbn-card-label">レーベル</p>
+        <p class="isbn-card-val">ミモザ書房 ／ ミモザ堂</p>
       </div>
       <div class="isbn-card">
         <p class="isbn-card-label">取次</p>
         <p class="isbn-card-val">鍬谷書店</p>
       </div>
       <div class="isbn-card">
-        <p class="isbn-card-label">レーベル</p>
-        <p class="isbn-card-val">ミモザ書房 ／ ミモザ堂</p>
+        <p class="isbn-card-label">運営会社</p>
+        <p class="isbn-card-val">ミモザパートナーズ合同会社</p>
       </div>
     </div>
     <p class="isbn-note">
@@ -173,7 +173,22 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <p class="contact-body">
     出版・取材・取次・著者応募など、<br>お気軽にご連絡ください。
   </p>
-  <a class="contact-btn" href="mailto:info@mimosa-partners.com">info@mimosa-partners.com</a>
+  <div class="contact-form">
+    <div class="cf-row">
+      <label class="cf-label">お名前<span class="req">*</span></label>
+      <input type="text" class="cf-input" id="cf-name" placeholder="山田 花子">
+    </div>
+    <div class="cf-row">
+      <label class="cf-label">メールアドレス<span class="req">*</span></label>
+      <input type="email" class="cf-input" id="cf-email" placeholder="info@example.com">
+    </div>
+    <div class="cf-row">
+      <label class="cf-label">メッセージ<span class="req">*</span></label>
+      <textarea class="cf-textarea" id="cf-message" placeholder="出版のご相談、取材依頼など、お気軽にどうぞ。"></textarea>
+    </div>
+    <button class="cf-btn" id="cf-btn" onclick="submitContact()">送信する</button>
+    <p class="cf-result" id="cf-result"></p>
+  </div>
 </section>
 
 <footer>
