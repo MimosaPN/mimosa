@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>出版社ミモザ オンラインショップ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3A4031; --green:#5A6B3B; --mimosa:#E8B84B; --mimosa-soft:#FBF1D6;
+  --cream:#FFFDF7; --paper:#FFFFFF; --muted:#8A8A7A; --line:#E7E3D6;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Serif JP',serif;color:var(--ink);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.bar{max-width:1100px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);}
+.brand b{font-family:'Noto Sans JP',sans-serif;font-size:18px;letter-spacing:.06em;}
+.brand span{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.18em;display:block;margin-top:-2px;}
+.nav-link{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.08em;}
+.nav-link:hover{color:var(--ink);}
+
+.hero{max-width:1100px;margin:0 auto;padding:64px 22px 48px;text-align:center;}
+.hero-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa);font-weight:700;margin-bottom:1.5rem;text-transform:uppercase;}
+.hero h1{font-size:42px;font-weight:600;letter-spacing:.08em;line-height:1.3;margin-bottom:1.25rem;}
+.hero p{font-family:'Noto Sans JP',sans-serif;font-size:14px;color:var(--green);max-width:560px;margin:0 auto;}
+
+.divider{width:40px;height:1px;background:var(--mimosa);margin:3rem auto;}
+
+.labels{max-width:860px;margin:0 auto;padding:0 22px 80px;display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.label-card{display:block;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .18s,box-shadow .18s;}
+.label-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(58,64,49,.10);}
+.card-top{padding:3rem 2.5rem 2rem;border-bottom:1px solid var(--line);}
+.card-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa);text-transform:uppercase;margin-bottom:.75rem;}
+.card-name{font-size:28px;font-weight:600;letter-spacing:.1em;margin-bottom:1rem;}
+.card-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--muted);line-height:1.9;}
+.card-bottom{padding:1.5rem 2.5rem;display:flex;justify-content:space-between;align-items:center;}
+.card-tag{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--green);background:var(--mimosa-soft);padding:.3rem .9rem;border-radius:20px;}
+.card-arrow{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--muted);letter-spacing:.1em;}
+
+footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--muted);}
+
+@media(max-width:640px){.labels{grid-template-columns:1fr;}.hero h1{font-size:30px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="brand" href="../index.html">
+      <span class="brand-text"><b>出版社ミモザ</b><span>PUBLISHER MIMOSA SHOP</span></span>
+    </a>
+    <a class="nav-link" href="../index.html">← サイトトップへ</a>
+  </div>
+</header>
+
+<section class="hero">
+  <p class="hero-label">Online Shop</p>
+  <h1>ミモザの本を、<br>あなたのもとへ。</h1>
+  <p>出版社ミモザが手がける2つのレーベルから、<br>それぞれのショップへお進みください。</p>
+</section>
+
+<div class="divider"></div>
+
+<div class="labels">
+  <a class="label-card" href="shobo/index.html">
+    <div class="card-top">
+      <p class="card-en">Mimosa Shobo</p>
+      <h2 class="card-name">ミモザ書房</h2>
+      <p class="card-desc">
+        文芸・小説・エッセイの商業出版レーベル。<br>
+        ミモザ書房が企画・編集した書籍を直接お届けします。
+      </p>
+    </div>
+    <div class="card-bottom">
+      <span class="card-tag">商業出版</span>
+      <span class="card-arrow">ショップへ →</span>
+    </div>
+  </a>
+  <a class="label-card" href="mimosado/index.html">
+    <div class="card-top">
+      <p class="card-en">Mimosado</p>
+      <h2 class="card-name">ミモザ堂</h2>
+      <p class="card-desc">
+        自費出版サポートのレーベル。<br>
+        つくり手からお預かりした書籍・雑貨を委託販売しています。
+      </p>
+    </div>
+    <div class="card-bottom">
+      <span class="card-tag">委託販売</span>
+      <span class="card-arrow">ショップへ →</span>
+    </div>
+  </a>
+</div>
+
+<footer>出版社ミモザ（ミモザパートナーズ合同会社）　|　お問い合わせ：info@mimosa-partners.com</footer>
+
+</body>
+</html>
