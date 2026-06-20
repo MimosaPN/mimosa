@@ -13,7 +13,6 @@
   html{scroll-behavior:smooth}
   body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased;}
 
-  /* ── ヘッダー ── */
   header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
   .bar{max-width:1100px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
   .brand{text-decoration:none;color:var(--ink);}
@@ -26,26 +25,22 @@
   .cart-btn:hover{background:var(--ink);color:#fff;}
   .cart-count{background:var(--mimosa);color:var(--ink);font-size:12px;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;font-weight:800;}
 
-  /* ── ヒーロー ── */
   .hero{max-width:1100px;margin:0 auto;padding:54px 22px 24px;}
   .eyebrow{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;letter-spacing:.28em;color:var(--mimosa);font-weight:700;margin-bottom:14px;}
   .hero h1{font-size:38px;font-weight:700;line-height:1.35;letter-spacing:.02em;}
   .hero p{margin-top:12px;color:var(--green);font-size:14px;max-width:580px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;}
 
-  /* ── タブ ── */
   .tabs{max-width:1100px;margin:0 auto;padding:24px 22px 0;display:flex;gap:0;border-bottom:2px solid var(--line);}
   .tab{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;padding:10px 28px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .18s,border-color .18s;}
   .tab:hover{color:var(--ink);}
   .tab.active{color:var(--ink);border-bottom-color:var(--mimosa);}
 
-  /* ── フィルター ── */
   .filter{max-width:1100px;margin:0 auto;padding:16px 22px 4px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
   .filter .lbl{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-right:4px;letter-spacing:.08em;}
   .chip{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:7px 16px;border-radius:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;transition:all .16s;}
   .chip:hover{border-color:var(--mimosa);}
   .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
-  /* ── 商品グリッド ── */
   .grid{max-width:1100px;margin:0 auto;padding:22px 22px 70px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
   .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;}
   .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(58,64,49,.10);}
@@ -67,7 +62,6 @@
   .soldout .add{background:var(--line);color:var(--muted);cursor:not-allowed;}
   .stock-info{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);margin-top:6px;}
 
-  /* ── カートドロワー ── */
   .overlay{position:fixed;inset:0;background:rgba(58,64,49,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;}
   .overlay.open{opacity:1;pointer-events:auto;}
   .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--cream);z-index:60;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.12);}
@@ -97,7 +91,6 @@
   .checkout-btn:hover{background:#2c3126;}
   .checkout-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
 
-  /* ── フッター・トースト ── */
   footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);}
   footer a{color:var(--muted);text-decoration:none;margin:0 8px;}
   footer a:hover{color:var(--ink);}
@@ -131,18 +124,15 @@
   <p>ミモザ書房・ミモザ堂の書籍をまとめてお買い求めいただけます。<br>カートに入れてまとめてお会計できます。</p>
 </section>
 
-<!-- タブ -->
 <div class="tabs">
   <button class="tab active" id="tab-shobo"    onclick="switchTab('shobo')">ミモザ書房</button>
   <button class="tab"        id="tab-mimosado" onclick="switchTab('mimosado')">ミモザ堂</button>
 </div>
 
-<!-- フィルター -->
 <div class="filter" id="filter">
   <span class="lbl" id="filter-lbl">ジャンルで絞る</span>
 </div>
 
-<!-- 商品グリッド -->
 <main class="grid" id="grid"></main>
 
 <footer>
@@ -152,7 +142,6 @@
   © 2026 ミモザパートナーズ合同会社
 </footer>
 
-<!-- カートドロワー -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
 <aside class="drawer" id="drawer" aria-label="カート">
   <h2>カート <button class="close" onclick="closeCart()">&times;</button></h2>
@@ -169,9 +158,8 @@
 
 <script src="cart.js"></script>
 <script>
-const GAS_URL_SHOP = GAS_URL; // cart.js の定数を流用
+const GAS_URL_SHOP = GAS_URL;
 
-// デモデータ
 const DEMO = {
   shobo: [
     { id:'sb01', label:'ミモザ書房', name:'夜の縁側で、あなたに会う', cat:'小説', price:1600, stock:10, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。' },
@@ -189,8 +177,17 @@ let PRODUCTS_MIMOSADO = [];
 let activeTab         = 'shobo';
 let activeFilter      = 'all';
 
-// bookSvgEl・yen は cart.js で定義済み
 const bookSvgEl = bookSvg;
+
+// ── ハッシュに応じた初期タブ設定 ──────────────────
+(function initTabFromHash() {
+  const hash = location.hash.slice(1); // '#shobo' → 'shobo'
+  if (hash === 'shobo' || hash === 'mimosado') {
+    activeTab = hash;
+    document.getElementById('tab-shobo').classList.toggle('active',    hash === 'shobo');
+    document.getElementById('tab-mimosado').classList.toggle('active', hash === 'mimosado');
+  }
+})();
 
 // ── 商品読み込み ──
 async function loadProducts() {
@@ -218,6 +215,8 @@ function switchTab(tab) {
   activeFilter = 'all';
   document.getElementById('tab-shobo').classList.toggle('active',    tab === 'shobo');
   document.getElementById('tab-mimosado').classList.toggle('active', tab === 'mimosado');
+  // URLハッシュを更新（ブラウザ履歴には残さない）
+  history.replaceState(null, '', '#' + tab);
   buildFilter();
   renderGrid();
 }
