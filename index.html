@@ -149,7 +149,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </p>
       <div class="label-links">
         <a class="label-arrow" href="/shobo/">ミモザ書房へ →</a>
-        <a class="label-arrow label-shop" href="/shop/shobo/">本を買う →</a>
+        <a class="label-arrow label-shop" href="/shop/#shobo">本を買う →</a>
       </div>
     </div>
     <div class="label-card">
@@ -162,7 +162,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </p>
       <div class="label-links">
         <a class="label-arrow" href="/mimosado/">ミモザ堂へ →</a>
-        <a class="label-arrow label-shop" href="/shop/mimosado/">本を買う →</a>
+        <a class="label-arrow label-shop" href="/shop/#mimosado">本を買う →</a>
       </div>
     </div>
   </div>
@@ -248,10 +248,8 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 </footer>
 
 <script>
-// ★ GASのウェブアプリURLをここに貼る
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
 
-// ── お問い合わせフォーム ──────────────────────────────────
 async function submitContact() {
   const shopName  = document.getElementById('c-shopname').value.trim();
   const name      = document.getElementById('c-name').value.trim();
