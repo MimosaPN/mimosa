@@ -94,6 +94,36 @@
   footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);}
   footer a{color:var(--muted);text-decoration:none;margin:0 8px;}
   footer a:hover{color:var(--ink);}
+  /* ── 商品詳細モーダル ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(58,64,49,.5);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s;}
+  .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);width:min(680px,92vw);max-height:90vh;background:var(--cream);z-index:90;overflow-y:auto;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.2);transition:transform .25s,opacity .25s;opacity:0;}
+  .modal.open{transform:translate(-50%,-50%);opacity:1;}
+  .modal-inner{display:grid;grid-template-columns:1fr 1fr;min-height:360px;}
+  .modal-img{background:var(--mimosa-soft);display:flex;align-items:center;justify-content:center;border-radius:14px 0 0 14px;min-height:320px;}
+  .modal-img img{width:100%;height:100%;object-fit:cover;border-radius:14px 0 0 14px;}
+  .modal-img svg{width:72px;height:72px;opacity:.4;}
+  .modal-body{padding:28px 28px 24px;display:flex;flex-direction:column;}
+  .modal-tag{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--mimosa);font-weight:700;letter-spacing:.1em;margin-bottom:6px;}
+  .modal-name{font-size:22px;font-weight:700;line-height:1.4;margin-bottom:4px;}
+  .modal-seller{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--muted);margin-bottom:16px;}
+  .modal-desc{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--ink);line-height:1.9;flex:1;border-top:1px solid var(--line);padding-top:14px;margin-bottom:16px;}
+  .modal-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
+  .modal-price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:800;font-size:24px;}
+  .modal-price small{font-size:13px;font-weight:400;color:var(--muted);}
+  .modal-stock{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;}
+  .modal-ship{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;}
+  .modal-add{width:100%;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;background:var(--mimosa);border:none;color:var(--ink);padding:13px;border-radius:30px;cursor:pointer;transition:background .16s;}
+  .modal-add:hover{background:#dba933;}
+  .modal-add:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+  .modal-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.8);border:none;font-size:20px;cursor:pointer;color:var(--ink);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:91;}
+  @media(max-width:560px){
+    .modal-inner{grid-template-columns:1fr;}
+    .modal-img{min-height:200px;border-radius:14px 14px 0 0;}
+    .modal-img img{border-radius:14px 14px 0 0;}
+    .modal-body{padding:20px 18px 20px;}
+  }
+
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -184,6 +214,29 @@
 </footer>
 
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- 商品詳細モーダル -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <div class="modal-inner">
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <p class="modal-tag" id="modal-tag"></p>
+      <p class="modal-name" id="modal-name"></p>
+      <p class="modal-seller" id="modal-seller"></p>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-price"></span>
+        <small>税込</small>
+      </div>
+      <p class="modal-stock" id="modal-stock"></p>
+      <p class="modal-ship" id="modal-ship"></p>
+      <button class="modal-add" id="modal-add-btn">カートに入れる</button>
+    </div>
+  </div>
+</div>
+
 <aside class="drawer" id="drawer" aria-label="カート">
   <h2>カート <button class="close" onclick="closeCart()">&times;</button></h2>
   <div class="items" id="items"></div>
@@ -365,7 +418,7 @@ function renderGrid() {
       ? `<img src="${p.image}" alt="${p.name}">`
       : bookSvgEl;
     return `
-      <article class="card${sold ? ' soldout' : ''}">
+      <article class="card${sold ? ' soldout' : ''}" onclick="openModal('${p.id}')" style="cursor:pointer;">
         <div class="thumb">
           <span class="brand-tag ${tagCls}">${tagText}</span>
           ${thumb}
@@ -376,7 +429,7 @@ function renderGrid() {
           <div class="desc">${p.desc || ''}</div>
           <div class="price-row">
             <div class="price">${yen(p.price)} <small>税込</small></div>
-            <button class="add" ${sold ? 'disabled' : ''} onclick="onAdd('${p.id}')">
+            <button class="add" ${sold ? 'disabled' : ''} onclick="event.stopPropagation();onAdd('${p.id}')">
               ${sold ? '完売' : 'カートに入れる'}
             </button>
           </div>
@@ -387,6 +440,51 @@ function renderGrid() {
         </div>
       </article>`;
   }).join('');
+}
+
+// ── 商品詳細モーダル ──
+let _modalProductId = null;
+
+function openModal(productId) {
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const p   = all.find(x => x.id === productId);
+  if (!p) return;
+  _modalProductId = productId;
+
+  const cart   = cartLoad();
+  const inCart = cart[productId] ? cart[productId].q : 0;
+  const sold   = p.stock <= 0;
+
+  document.getElementById('modal-tag').textContent    = p.label + '・' + p.cat;
+  document.getElementById('modal-name').textContent   = p.name;
+  document.getElementById('modal-seller').textContent = p.seller ? '著：' + p.seller : '';
+  document.getElementById('modal-desc').textContent   = p.desc || '';
+  document.getElementById('modal-price').innerHTML    = yen(p.price);
+  document.getElementById('modal-stock').textContent  = sold
+    ? 'ただいま在庫切れです'
+    : `残り ${p.stock - inCart} 点`;
+  document.getElementById('modal-ship').textContent   = `送料：${yen(p.shipFee)}（${p.shipMethod}）`;
+
+  const imgEl = document.getElementById('modal-img');
+  imgEl.innerHTML = p.image
+    ? `<img src="${p.image}" alt="${p.name}">`
+    : bookSvgEl;
+
+  const btn = document.getElementById('modal-add-btn');
+  btn.disabled    = sold;
+  btn.textContent = sold ? '完売' : 'カートに入れる';
+  btn.onclick     = () => { onAdd(productId); closeModal(); };
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+  _modalProductId = null;
 }
 
 // ── カート追加 ──
