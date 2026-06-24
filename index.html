@@ -3,372 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>出版社 ミモザ</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<title>ミモザショップ | 出版社 ミモザ</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --mimosa-yellow:#E8B84B;
-  --mimosa-gold:#C9962A;
-  --mimosa-soft:#FBF5E6;
-  --mimosa-deep:#7A5C1E;
-  --green-leaf:#4A6741;
-  --green-soft:#EBF0E4;
-  --ink:#2C2A24;
-  --ink-light:#6B6454;
-  --border:#DDD8C8;
-  --cream:#FAFAF5;
-  --white:#FFFFFF;
-  --muted:#A09880;
-}
-body{font-family:'Noto Serif JP',serif;background:var(--cream);color:var(--ink);line-height:1.7;}
+  :root{
+    --ink:#3A4031; --green:#5A6B3B; --mimosa:#E8B84B; --mimosa-soft:#FBF1D6;
+    --cream:#FFFDF7; --paper:#FFFFFF; --muted:#8A8A7A; --line:#E7E3D6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased;}
 
-nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);background:rgba(250,250,245,.95);position:sticky;top:0;z-index:40;backdrop-filter:blur(6px);}
-.nav-logo{text-decoration:none;color:var(--ink);}
-.nav-logo .en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);}
-.nav-logo .ja{font-size:20px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:block;}
-.nav-links{display:flex;gap:2rem;list-style:none;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.05em;}
-.nav-links a{color:var(--ink-light);text-decoration:none;transition:color .2s;}
-.nav-links a:hover{color:var(--mimosa-gold);}
+  header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .bar{max-width:1100px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{text-decoration:none;color:var(--ink);}
+  .brand-parent{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:10px;color:var(--muted);letter-spacing:.15em;}
+  .brand b{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:20px;letter-spacing:.06em;display:block;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .back-link{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
+  .back-link:hover{color:var(--ink);}
+  .cart-btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;padding:9px 18px 9px 16px;border-radius:30px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .18s,color .18s;}
+  .cart-btn:hover{background:var(--ink);color:#fff;}
+  .cart-count{background:var(--mimosa);color:var(--ink);font-size:12px;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;font-weight:800;}
 
-/* ── ハンバーガーボタン ── */
-.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;z-index:50;}
-.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:transform .25s, opacity .25s;}
-.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-.nav-hamburger.open span:nth-child(2){opacity:0;}
-.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+  .hero{max-width:1100px;margin:0 auto;padding:54px 22px 24px;}
+  .eyebrow{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;letter-spacing:.28em;color:var(--mimosa);font-weight:700;margin-bottom:14px;}
+  .hero h1{font-size:38px;font-weight:700;line-height:1.35;letter-spacing:.02em;}
+  .hero p{margin-top:12px;color:var(--green);font-size:14px;max-width:580px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;}
 
-/* ── モバイルメニュー（navの外に出してstacking context問題を回避） ── */
-.mobile-menu{
-  display:none;
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  flex-direction:column;justify-content:center;align-items:center;
-  gap:2.25rem;
-  background:rgba(250,248,244,0.93);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  z-index:100;
-  list-style:none;
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:17px;letter-spacing:.1em;
-}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{color:var(--ink-light);text-decoration:none;}
-.mobile-menu a:hover{color:var(--mimosa-gold);}
-.mobile-menu-close{
-  position:absolute;top:1.25rem;right:1.5rem;
-  background:none;border:none;font-size:26px;
-  cursor:pointer;color:var(--ink);line-height:1;
-}
+  .tabs{max-width:1100px;margin:0 auto;padding:24px 22px 0;display:flex;gap:0;border-bottom:2px solid var(--line);}
+  .tab{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;padding:10px 28px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .18s,border-color .18s;}
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--ink);border-bottom-color:var(--mimosa);}
 
-@media(max-width:640px){
-  .nav-hamburger{display:flex;}
-  .nav-links{display:none;}
-}
+  .filter{max-width:1100px;margin:0 auto;padding:16px 22px 4px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
+  .filter .lbl{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-right:4px;letter-spacing:.08em;}
+  .chip{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:7px 16px;border-radius:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;transition:all .16s;}
+  .chip:hover{border-color:var(--mimosa);}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
-.hero{padding:5rem 3rem 3rem;max-width:900px;margin:0 auto;text-align:center;}
-.hero-accent{display:inline-flex;align-items:center;gap:.5rem;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:1.5rem;}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--mimosa-yellow);}
-.hero h1{font-size:48px;font-weight:600;letter-spacing:.12em;line-height:1.3;color:var(--ink);margin-bottom:1.5rem;}
-.hero h1 em{font-style:normal;color:var(--mimosa-gold);}
-.hero-sub{font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--ink-light);line-height:2;max-width:560px;margin:0 auto 2.5rem;}
+  .grid{max-width:1100px;margin:0 auto;padding:22px 22px 70px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(58,64,49,.10);}
+  .thumb{aspect-ratio:3/4;background:var(--mimosa-soft);display:flex;align-items:center;justify-content:center;position:relative;}
+  .thumb svg{width:54px;height:54px;opacity:.55}
+  .thumb img{width:100%;height:100%;object-fit:cover;}
+  .brand-tag{position:absolute;top:12px;left:12px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;}
+  .tag-shobo{background:rgba(255,253,247,.92);color:#5A6B3B;}
+  .tag-mimosado{background:rgba(232,184,75,.18);color:#8a6f20;}
+  .body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1;}
+  .cat{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+  .name{font-size:17px;font-weight:700;margin:4px 0 6px;line-height:1.45;}
+  .desc{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12.5px;color:var(--muted);flex:1;}
+  .price-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;}
+  .price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:800;font-size:20px;}
+  .price small{font-size:12px;font-weight:500;color:var(--muted);}
+  .add{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;font-weight:700;background:var(--mimosa);border:none;color:var(--ink);padding:9px 16px;border-radius:24px;cursor:pointer;transition:background .16s;}
+  .add:hover{background:#dba933;}
+  .soldout .add{background:var(--line);color:var(--muted);cursor:not-allowed;}
+  .stock-info{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);margin-top:6px;}
 
-.mimosa-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2rem auto;max-width:300px;}
-.divider-line{flex:1;height:0.5px;background:var(--border);}
-.divider-flower{display:flex;gap:4px;}
-.petal{width:7px;height:7px;border-radius:50%;background:var(--mimosa-yellow);}
+  .overlay{position:fixed;inset:0;background:rgba(58,64,49,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--cream);z-index:60;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.12);}
+  .drawer.open{transform:translateX(0);}
+  .drawer h2{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:18px;padding:22px 22px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);}
+  .close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--ink);line-height:1;}
+  .items{flex:1;overflow-y:auto;padding:8px 22px;}
+  .empty{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--muted);font-size:14px;text-align:center;padding:60px 20px;}
+  .ci{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .ci-thumb{width:48px;height:60px;flex:none;background:var(--mimosa-soft);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+  .ci-thumb svg{width:24px;height:24px;opacity:.5}
+  .ci-info{flex:1;min-width:0;}
+  .ci-name{font-size:14px;font-weight:700;line-height:1.4;}
+  .ci-seller{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);}
+  .ci-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+  .qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:20px;overflow:hidden;}
+  .qty button{width:28px;height:28px;border:none;background:var(--paper);cursor:pointer;font-size:15px;color:var(--ink);}
+  .qty button:hover{background:var(--mimosa-soft);}
+  .qty span{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;min-width:30px;text-align:center;font-size:13px;}
+  .ci-price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:700;font-size:14px;}
+  .remove{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;text-decoration:underline;margin-top:4px;}
+  .foot{border-top:1px solid var(--line);padding:18px 22px 24px;background:var(--paper);}
+  .row{display:flex;justify-content:space-between;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .row.total{font-size:17px;color:var(--ink);font-weight:800;margin:10px 0 4px;}
+  .note{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);margin-bottom:14px;}
+  .checkout-btn{width:100%;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:15px;font-weight:700;background:var(--ink);color:#fff;border:none;padding:15px;border-radius:30px;cursor:pointer;transition:background .18s;}
+  .checkout-btn:hover{background:#2c3126;}
+  .checkout-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
 
-.labels-section{padding:2rem 3rem 5rem;max-width:880px;margin:0 auto;}
-.labels-heading{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
-.labels-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
-.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);color:inherit;display:block;transition:border-color .2s,transform .2s;}
-.label-card:hover{border-color:var(--mimosa-gold);transform:translateY(-2px);}
-.label-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
-.label-name{font-size:26px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:1rem;}
-.label-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:1.9;}
-.label-links{display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;flex-wrap:wrap;}
-.label-arrow{font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);text-decoration:none;}
-.label-arrow:hover{color:var(--mimosa-deep);}
-.label-shop{padding:0.35rem 1rem;border:0.5px solid var(--mimosa-gold);border-radius:2px;font-size:11px;}
+  footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);}
+  footer a{color:var(--muted);text-decoration:none;margin:0 8px;}
+  footer a:hover{color:var(--ink);}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-.isbn-section{background:var(--mimosa-soft);border-top:0.5px solid #E8D8A8;border-bottom:0.5px solid #E8D8A8;padding:4rem 3rem;scroll-margin-top:80px;}
-.isbn-inner{max-width:760px;margin:0 auto;}
-.isbn-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:2rem;text-align:center;}
-.isbn-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-.isbn-card{background:var(--white);border:0.5px solid #E8D8A8;padding:1.5rem 1.75rem;}
-.isbn-card-label{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);margin-bottom:.5rem;}
-.isbn-card-val{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.05em;}
-.isbn-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
-
-/* ── お問い合わせフォーム ── */
-.contact-section{padding:4rem 3rem;max-width:760px;margin:0 auto;scroll-margin-top:80px;}
-.contact-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
-.contact-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:2rem;text-align:center;}
-.form-box{background:var(--white);border:0.5px solid var(--border);padding:2.5rem;}
-.form-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-bottom:2rem;}
-.form-row{margin-bottom:1.25rem;}
-.form-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;display:block;}
-.form-label .req{color:#c87060;margin-left:.25rem;}
-.contact-section input[type=text],
-.contact-section input[type=email],
-.contact-section textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
-.contact-section input[type=text]:focus,
-.contact-section input[type=email]:focus,
-.contact-section textarea:focus{border-color:var(--mimosa-gold);}
-.contact-section textarea{resize:vertical;min-height:90px;}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.form-check{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
-.form-check label{display:flex;align-items:center;gap:.4rem;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
-.btn{display:inline-block;padding:.85rem 3rem;background:var(--ink);color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;border:none;cursor:pointer;margin-top:1.5rem;transition:background .2s;}
-.btn:hover{background:var(--mimosa-deep);}
-.btn:disabled{background:var(--muted);cursor:not-allowed;}
-.form-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1rem;display:none;}
-
-footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
-.footer-flower{display:flex;gap:3px;align-items:center;}
-.footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
-
-@media(max-width:640px){
-  .labels-grid,.isbn-grid,.form-row-2{grid-template-columns:1fr;}
-  .hero h1{font-size:34px;}
-  .hero h1 em{white-space:nowrap;}
-  nav{padding:1rem 1.5rem;}
-  .labels-section,.contact-section,.isbn-section,.feeling-section{padding:2rem 1.5rem;}
-  .form-box{padding:1.5rem;}
-}
+  @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);}.hero h1{font-size:28px;}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="#">
-    <span class="en">Publisher Mimosa</span>
-    <span class="ja">出版社 ミモザ</span>
-  </a>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#labels"    onclick="closeMenu()">レーベル</a></li>
-    <li><a href="#isbn"      onclick="closeMenu()">ISBNについて</a></li>
-    <li><a href="/trade.html"onclick="closeMenu()">書店員の方へ</a></li>
-    <li><a href="/shop/"     onclick="closeMenu()">ショップ</a></li>
-    <li><a href="#contact"   onclick="closeMenu()">お問い合わせ</a></li>
-    <li><a href="/feeling.html"onclick="closeMenu()">ご感想</a></li>
-  </ul>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- モバイルメニュー（nav外に配置してstacking context問題を回避） -->
-<ul class="mobile-menu" id="mobile-menu">
-  <button class="mobile-menu-close" onclick="closeMenu()" aria-label="閉じる">&times;</button>
-  <li><a href="#labels"      onclick="closeMenu()">レーベル</a></li>
-  <li><a href="#isbn"        onclick="closeMenu()">ISBNについて</a></li>
-  <li><a href="/trade.html"  onclick="closeMenu()">書店員の方へ</a></li>
-  <li><a href="/shop/"       onclick="closeMenu()">ショップ</a></li>
-  <li><a href="#contact"     onclick="closeMenu()">お問い合わせ</a></li>
-  <li><a href="/feeling.html"onclick="closeMenu()">ご感想</a></li>
-</ul>
+<header>
+  <div class="bar">
+    <a class="brand" href="/">
+      <span class="brand-parent">出版社 ミモザ</span>
+      <b>ミモザショップ</b>
+    </a>
+    <div class="header-right">
+      <a class="back-link" href="/">← 出版社 ミモザ</a>
+      <button class="cart-btn" onclick="openCart()">
+        カート <span class="cart-count" id="cc">0</span>
+      </button>
+    </div>
+  </div>
+</header>
 
 <section class="hero">
-  <div class="hero-accent"><div class="dot"></div>Publisher Mimosa<div class="dot"></div></div>
-  <h1>ことばを、<em>残す</em>。</h1>
-  <p class="hero-sub">
-    出版社 ミモザは、文学・エッセイから書籍出版サポートまで、<br>
-    書き手の声をかたちにする出版レーベルです。<br>
-    ミモザ書房とミモザ堂、2つのレーベルで刊行しています。
-  </p>
+  <div class="eyebrow">MIMOSA SHOP</div>
+  <h1>ミモザの本を、あなたの手に。</h1>
+  <p>ミモザ書房・ミモザ堂の書籍をまとめてお買い求めいただけます。<br>カートに入れてまとめてお会計できます。</p>
 </section>
 
-<div class="mimosa-divider">
-  <div class="divider-line"></div>
-  <div class="divider-flower"><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div></div>
-  <div class="divider-line"></div>
+<div class="tabs">
+  <button class="tab active" id="tab-shobo"    onclick="switchTab('shobo')">ミモザ書房</button>
+  <button class="tab"        id="tab-mimosado" onclick="switchTab('mimosado')">ミモザ堂</button>
 </div>
 
-<section class="labels-section" id="labels">
-  <p class="labels-heading">Our Labels</p>
-  <div class="labels-grid">
-    <div class="label-card">
-      <p class="label-en">Mimosa Shobo</p>
-      <h2 class="label-name">ミモザ書房</h2>
-      <p class="label-desc">
-        文芸・小説・エッセイの商業出版レーベル。<br>
-        書き手の個性と物語を丁寧に世に届けます。<br>
-        2025年秋、第1作刊行予定。
-      </p>
-      <div class="label-links">
-        <a class="label-arrow" href="/shobo/">ミモザ書房へ →</a>
-        <a class="label-arrow label-shop" href="/shop/#shobo">本を買う →</a>
-      </div>
-    </div>
-    <div class="label-card">
-      <p class="label-en">Mimosado</p>
-      <h2 class="label-name">ミモザ堂</h2>
-      <p class="label-desc">
-        書籍出版サポートのレーベル。<br>
-        あなたの原稿を、本というかたちに。<br>
-        個人の出版を丁寧にサポートします。
-      </p>
-      <div class="label-links">
-        <a class="label-arrow" href="/mimosado/">ミモザ堂へ →</a>
-        <a class="label-arrow label-shop" href="/shop/#mimosado">本を買う →</a>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="filter" id="filter">
+  <span class="lbl" id="filter-lbl">ジャンルで絞る</span>
+</div>
 
-<section class="isbn-section" id="isbn">
-  <div class="isbn-inner">
-    <p class="isbn-heading">ISBN について</p>
-    <div class="isbn-grid">
-      <div class="isbn-card">
-        <p class="isbn-card-label">登録出版社名</p>
-        <p class="isbn-card-val">ミモザ</p>
-      </div>
-      <div class="isbn-card">
-        <p class="isbn-card-label">レーベル</p>
-        <p class="isbn-card-val">ミモザ書房 ／ ミモザ堂</p>
-      </div>
-      <div class="isbn-card">
-        <p class="isbn-card-label">取次</p>
-        <p class="isbn-card-val">鍬谷書店</p>
-      </div>
-      <div class="isbn-card">
-        <p class="isbn-card-label">運営会社</p>
-        <p class="isbn-card-val">ミモザパートナーズ合同会社</p>
-      </div>
-    </div>
-    <p class="isbn-note">
-      書籍のISBNはすべて「出版社：ミモザ」名義で登録されています。<br>
-      取次・書店の方は<a href="/trade.html" style="color:var(--mimosa-gold);text-decoration:none;">書店員の方へ</a>よりご連絡ください。
-    </p>
-  </div>
-</section>
-
-<section class="contact-section" id="contact">
-  <p class="contact-heading">Contact</p>
-  <h2 class="contact-title">お問い合わせ</h2>
-  <div class="form-box">
-    <p class="form-note">
-      出版・取材・取次・著者応募など、お気軽にご連絡ください。<br>
-      2〜3営業日以内にご返信いたします。
-    </p>
-    <div class="form-row-2">
-      <div class="form-row">
-        <label class="form-label">会社・書店・取次名</label>
-        <input type="text" id="c-shopname" placeholder="株式会社〇〇">
-      </div>
-      <div class="form-row">
-        <label class="form-label">お名前<span class="req">*</span></label>
-        <input type="text" id="c-name" placeholder="山田 花子">
-      </div>
-    </div>
-    <div class="form-row">
-      <label class="form-label">メールアドレス<span class="req">*</span></label>
-      <input type="email" id="c-email" placeholder="info@example.com">
-    </div>
-    <div class="form-row">
-      <label class="form-label">お問い合わせの種類（複数選択可）</label>
-      <div class="form-check">
-        <label><input type="checkbox" class="c-material" value="出版について"> 出版について</label>
-        <label><input type="checkbox" class="c-material" value="取材について"> 取材について</label>
-        <label><input type="checkbox" class="c-material" value="取次について"> 取次について</label>
-        <label><input type="checkbox" class="c-material" value="著者募集について"> 著者募集について</label>
-        <label><input type="checkbox" class="c-material" value="その他"> その他</label>
-      </div>
-    </div>
-    <div class="form-row">
-      <label class="form-label">メッセージ<span class="req">*</span></label>
-      <textarea id="c-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
-    </div>
-    <button class="btn" id="c-submit" onclick="submitContact()">送信する</button>
-    <p class="form-result" id="c-result"></p>
-  </div>
-</section>
+<main class="grid" id="grid"></main>
 
 <footer>
-  <div class="footer-flower">
-    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
-  </div>
-  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
-  <div class="footer-flower">
-    <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
-  </div>
+  <a href="/shobo/">ミモザ書房</a>
+  <a href="/mimosado/">ミモザ堂</a>
+  <a href="/">出版社 ミモザ</a>
+  <a href="/shop/legal.html">特定商取引法に基づく表記</a>
+  © 2026 ミモザパートナーズ合同会社
 </footer>
 
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer" aria-label="カート">
+  <h2>カート <button class="close" onclick="closeCart()">&times;</button></h2>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="row"><span>商品小計</span><span id="subtotal">¥0</span></div>
+    <div class="row"><span>送料（まとめ発送）</span><span id="shipfee">—</span></div>
+    <div class="row total"><span>合計（税込）</span><span id="total">¥0</span></div>
+    <p class="note">送料は最も高い配送方法を1回分として計算します。<br>お支払いはSquareの安全な決済画面で行います。</p>
+    <button class="checkout-btn" id="checkout" onclick="checkout()" disabled>レジに進む</button>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="cart.js"></script>
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
+const GAS_URL_SHOP = GAS_URL;
 
-// ── ハンバーガーメニュー ──
-function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn  = document.getElementById('nav-hamburger');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
-  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-}
-function closeMenu() {
-  document.getElementById('mobile-menu').classList.remove('open');
-  document.getElementById('nav-hamburger').classList.remove('open');
-  document.body.style.overflow = '';
-}
+const DEMO = {
+  shobo: [
+    { id:'sb01', label:'ミモザ書房', name:'夜の縁側で、あなたに会う', cat:'小説', price:1600, stock:10, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。' },
+    { id:'sb02', label:'ミモザ書房', name:'喫茶店で生きている', cat:'エッセイ', price:1500, stock:0, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。' },
+  ],
+  mimosado: [
+    { id:'bk01', label:'ミモザ堂', name:'朝の余白', cat:'エッセイ', price:1500, stock:8, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'日々の小さな間（ま）を見つめた、静かな随筆集。' },
+    { id:'bk02', label:'ミモザ堂', name:'港の光', cat:'写真集', price:2200, stock:3, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'瀬戸内の港町を巡って撮りためた、朝夕の光の記録。' },
+    { id:'gd01', label:'ミモザ堂', name:'和綴じノート（藍）', cat:'文具', price:1800, stock:5, shipFee:700, shipMethod:'宅配便', image:'', desc:'職人が一冊ずつ手で綴じた、藍染め表紙のノート。' },
+  ]
+};
 
-async function submitContact() {
-  const shopName  = document.getElementById('c-shopname').value.trim();
-  const name      = document.getElementById('c-name').value.trim();
-  const email     = document.getElementById('c-email').value.trim();
-  const message   = document.getElementById('c-message').value.trim();
-  const materials = Array.from(document.querySelectorAll('.c-material:checked')).map(c => c.value);
-  const result    = document.getElementById('c-result');
-  const btn       = document.getElementById('c-submit');
+let PRODUCTS_SHOBO    = [];
+let PRODUCTS_MIMOSADO = [];
+let activeTab         = 'shobo';
+let activeFilter      = 'all';
 
-  if (!name || !email || !message) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'お名前・メールアドレス・メッセージは必須です。';
-    return;
+const bookSvgEl = bookSvg;
+
+// ── ハッシュに応じた初期タブ設定 ──────────────────
+(function initTabFromHash() {
+  const hash = location.hash.slice(1); // '#shobo' → 'shobo'
+  if (hash === 'shobo' || hash === 'mimosado') {
+    activeTab = hash;
+    document.getElementById('tab-shobo').classList.toggle('active',    hash === 'shobo');
+    document.getElementById('tab-mimosado').classList.toggle('active', hash === 'mimosado');
   }
-  if (email.indexOf('@') === -1) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'メールアドレスの形式が正しくありません。';
-    return;
-  }
+})();
 
-  btn.disabled = true;
-  btn.textContent = '送信中…';
-  result.style.display = 'none';
-
+// ── 商品読み込み ──
+async function loadProducts() {
+  document.getElementById('grid').innerHTML =
+    `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">商品を読み込んでいます…</div>`;
   try {
-    const res  = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
-    });
-    const data = await res.json();
-    if (data.status === 'ok') {
-      result.style.display = 'block';
-      result.style.color = '#4A6741';
-      result.textContent = 'ありがとうございます。2〜3営業日以内にご連絡いたします。';
-      btn.textContent = '送信しました';
-      document.getElementById('c-shopname').value = '';
-      document.getElementById('c-name').value = '';
-      document.getElementById('c-email').value = '';
-      document.getElementById('c-message').value = '';
-      document.querySelectorAll('.c-material').forEach(c => c.checked = false);
-    } else {
-      throw new Error(data.message || 'エラーが発生しました');
-    }
-  } catch(err) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
-    btn.disabled = false;
-    btn.textContent = '送信する';
+    const [r1, r2] = await Promise.all([
+      fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ書房')}`).then(r => r.json()),
+      fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ堂')}`).then(r => r.json())
+    ]);
+    PRODUCTS_SHOBO    = (r1.ok && r1.products) ? r1.products.map(p => ({...p, label:'ミモザ書房'})) : DEMO.shobo;
+    PRODUCTS_MIMOSADO = (r2.ok && r2.products) ? r2.products.map(p => ({...p, label:'ミモザ堂'}))   : DEMO.mimosado;
+  } catch {
+    PRODUCTS_SHOBO    = DEMO.shobo;
+    PRODUCTS_MIMOSADO = DEMO.mimosado;
   }
+  buildFilter();
+  renderGrid();
+  updateCartBadge();
 }
-</script>
 
+// ── タブ切り替え ──
+function switchTab(tab) {
+  activeTab    = tab;
+  activeFilter = 'all';
+  document.getElementById('tab-shobo').classList.toggle('active',    tab === 'shobo');
+  document.getElementById('tab-mimosado').classList.toggle('active', tab === 'mimosado');
+  // URLハッシュを更新（ブラウザ履歴には残さない）
+  history.replaceState(null, '', '#' + tab);
+  buildFilter();
+  renderGrid();
+}
+
+// ── フィルター生成 ──
+function buildFilter() {
+  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const lbl      = activeTab === 'shobo' ? 'ジャンルで絞る' : 'カテゴリで絞る';
+  const keys     = ['all', ...new Set(products.map(p => p.cat))];
+  const f        = document.getElementById('filter');
+  document.getElementById('filter-lbl').textContent = lbl;
+  f.querySelectorAll('.chip').forEach(c => c.remove());
+  keys.forEach(k => {
+    const b = document.createElement('button');
+    b.className   = 'chip' + (k === activeFilter ? ' active' : '');
+    b.textContent = k === 'all' ? 'すべて' : k;
+    b.onclick     = () => { activeFilter = k; buildFilter(); renderGrid(); };
+    f.appendChild(b);
+  });
+}
+
+// ── グリッド描画 ──
+function renderGrid() {
+  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const cart     = cartLoad();
+  const list     = products.filter(p => activeFilter === 'all' || p.cat === activeFilter);
+  const grid     = document.getElementById('grid');
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">現在、準備中です。</div>`;
+    return;
+  }
+
+  const tagCls  = activeTab === 'shobo' ? 'tag-shobo' : 'tag-mimosado';
+  const tagText = activeTab === 'shobo' ? 'ミモザ書房' : 'ミモザ堂';
+
+  grid.innerHTML = list.map(p => {
+    const sold   = p.stock <= 0;
+    const inCart = cart[p.id] ? cart[p.id].q : 0;
+    const thumb  = p.image
+      ? `<img src="${p.image}" alt="${p.name}">`
+      : bookSvgEl;
+    return `
+      <article class="card${sold ? ' soldout' : ''}">
+        <div class="thumb">
+          <span class="brand-tag ${tagCls}">${tagText}</span>
+          ${thumb}
+        </div>
+        <div class="body">
+          <div class="cat">${p.cat}</div>
+          <div class="name">${p.name}</div>
+          <div class="desc">${p.desc || ''}</div>
+          <div class="price-row">
+            <div class="price">${yen(p.price)} <small>税込</small></div>
+            <button class="add" ${sold ? 'disabled' : ''} onclick="onAdd('${p.id}')">
+              ${sold ? '完売' : 'カートに入れる'}
+            </button>
+          </div>
+          <div class="stock-info">${sold
+            ? 'ただいま在庫切れです'
+            : `残り ${p.stock - inCart} 点・送料 ${yen(p.shipFee)}（${p.shipMethod}）`
+          }</div>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+// ── カート追加 ──
+function onAdd(productId) {
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const p   = all.find(x => x.id === productId);
+  if (!p) return;
+  const result = cartAdd(productId, p);
+  if (!result.ok) { showToast(result.msg); return; }
+  renderGrid();
+  renderCartDrawer();
+  showToast('カートに追加しました');
+}
+
+loadProducts();
+</script>
 </body>
 </html>
