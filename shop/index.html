@@ -97,6 +97,18 @@
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+  /* ── ローディング ── */
+  .grid-loading{display:none;grid-column:1/-1;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;gap:16px;}
+  .grid-loading.show{display:flex;}
+  .loading-dots{display:flex;gap:8px;}
+  .loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--mimosa);animation:dotPulse 1.2s ease-in-out infinite;}
+  .loading-dots span:nth-child(2){animation-delay:.2s;}
+  .loading-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes dotPulse{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+  .loading-text{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);letter-spacing:.08em;}
+  .grid.fade-in{animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
   @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);}.hero h1{font-size:28px;}}
   @media(max-width:560px){.grid{grid-template-columns:1fr;}}
 </style>
@@ -133,7 +145,12 @@
   <span class="lbl" id="filter-lbl">ジャンルで絞る</span>
 </div>
 
-<main class="grid" id="grid"></main>
+<main class="grid" id="grid">
+  <div class="grid-loading show" id="grid-loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <p class="loading-text">商品を読み込んでいます</p>
+  </div>
+</main>
 
 <footer>
   <a href="/shobo/">ミモザ書房</a>
@@ -190,24 +207,88 @@ const bookSvgEl = bookSvg;
   }
 })();
 
-// ── 商品読み込み ──
-async function loadProducts() {
-  document.getElementById('grid').innerHTML =
-    `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">商品を読み込んでいます…</div>`;
+const CACHE_TTL      = 60 * 60 * 1000; // 1時間
+const CACHE_KEY_SB   = 'mimosa_products_shobo';
+const CACHE_KEY_MD   = 'mimosa_products_mimosado';
+
+// ── キャッシュ読み書き ──
+function loadCache(key) {
   try {
-    const [r1, r2] = await Promise.all([
-      fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ書房')}`).then(r => r.json()),
-      fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ堂')}`).then(r => r.json())
-    ]);
-    PRODUCTS_SHOBO    = (r1.ok && r1.products) ? r1.products.map(p => ({...p, label:'ミモザ書房'})) : DEMO.shobo;
-    PRODUCTS_MIMOSADO = (r2.ok && r2.products) ? r2.products.map(p => ({...p, label:'ミモザ堂'}))   : DEMO.mimosado;
-  } catch {
-    PRODUCTS_SHOBO    = DEMO.shobo;
-    PRODUCTS_MIMOSADO = DEMO.mimosado;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { data, timestamp } = JSON.parse(raw);
+    if (Date.now() - timestamp > CACHE_TTL) return null;
+    return data;
+  } catch { return null; }
+}
+function saveCache(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() })); } catch {}
+}
+
+// ── ローディング制御 ──
+function showLoading() {
+  document.getElementById('grid-loading').classList.add('show');
+}
+function hideLoading() {
+  const el = document.getElementById('grid-loading');
+  el.style.transition = 'opacity .25s';
+  el.style.opacity = '0';
+  setTimeout(() => { el.classList.remove('show'); el.style.opacity = ''; }, 260);
+}
+
+// ── GASからデータ取得 ──
+async function fetchFromGas() {
+  const [r1, r2] = await Promise.all([
+    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ書房')}`).then(r => r.json()),
+    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ堂')}`).then(r => r.json())
+  ]);
+  const sb = (r1.ok && r1.products) ? r1.products.map(p => ({...p, label:'ミモザ書房'})) : null;
+  const md = (r2.ok && r2.products) ? r2.products.map(p => ({...p, label:'ミモザ堂'}))   : null;
+  return { sb, md };
+}
+
+// ── 商品読み込み（キャッシュ対応） ──
+async function loadProducts() {
+  const cachedSb = loadCache(CACHE_KEY_SB);
+  const cachedMd = loadCache(CACHE_KEY_MD);
+
+  if (cachedSb && cachedMd) {
+    // キャッシュあり → 即表示
+    PRODUCTS_SHOBO    = cachedSb;
+    PRODUCTS_MIMOSADO = cachedMd;
+    hideLoading();
+    buildFilter();
+    renderGrid();
+    updateCartBadge();
+
+    // バックグラウンドで静かに更新
+    fetchFromGas().then(({ sb, md }) => {
+      if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
+      if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
+      renderGrid();
+    }).catch(() => {});
+
+  } else {
+    // キャッシュなし → ローディング表示してから描画
+    showLoading();
+    try {
+      const { sb, md } = await fetchFromGas();
+      PRODUCTS_SHOBO    = sb || DEMO.shobo;
+      PRODUCTS_MIMOSADO = md || DEMO.mimosado;
+      if (sb) saveCache(CACHE_KEY_SB, sb);
+      if (md) saveCache(CACHE_KEY_MD, md);
+    } catch {
+      PRODUCTS_SHOBO    = DEMO.shobo;
+      PRODUCTS_MIMOSADO = DEMO.mimosado;
+    }
+    hideLoading();
+    setTimeout(() => {
+      buildFilter();
+      document.getElementById('grid').classList.add('fade-in');
+      renderGrid();
+      updateCartBadge();
+    }, 280);
   }
-  buildFilter();
-  renderGrid();
-  updateCartBadge();
 }
 
 // ── タブ切り替え ──
