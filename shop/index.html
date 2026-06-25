@@ -1,416 +1,505 @@
-/**
- * ミモザ 統合商品マスタ API
- *
- * 商品マスタ列構成（1行目ヘッダー）:
- *   A: 商品ID
- *   B: 公開（"公開" / "非公開"）
- *   C: レーベル（"ミモザ書房" / "ミモザ堂"）
- *   D: 種別（"書籍" / "雑貨"）
- *   E: 分類/ジャンル（小説/エッセイ/文具/雑貨 など）
- *   F: 著者名
- *   G: 略名
- *   H: 商品名/タイトル
- *   I: 説明/あらすじ
- *   J: 価格
- *   K: 在庫数（Square未登録商品のフォールバック用）
- *   L: 配送方法
- *   M: 送料
- *   N: 画像URL
- *   O: ステータス
- *   P: 刊行予定日
- *   Q: Square Variation ID
- */
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ミモザショップ | 出版社 ミモザ</title>
+<style>
+  :root{
+    --ink:#3A4031; --green:#5A6B3B; --mimosa:#E8B84B; --mimosa-soft:#FBF1D6;
+    --cream:#FFFDF7; --paper:#FFFFFF; --muted:#8A8A7A; --line:#E7E3D6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased;}
 
-const SHOP_SHEET_ID    = '1PGrMHNy-Mo3De-uthKlkQFXdodWL6F9jPSrgk5zAOKo';
-const CONTACT_SHEET_ID = '1eB-bEPG4Q9OLZOTE48KuowBBZdXaNkwVnk1dBZGa9dg';
-const SHEET_NAME       = '商品マスタ';
+  header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .bar{max-width:1100px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{text-decoration:none;color:var(--ink);}
+  .brand-parent{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:10px;color:var(--muted);letter-spacing:.15em;}
+  .brand b{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:20px;letter-spacing:.06em;display:block;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .back-link{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
+  .back-link:hover{color:var(--ink);}
+  .cart-btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;padding:9px 18px 9px 16px;border-radius:30px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .18s,color .18s;}
+  .cart-btn:hover{background:var(--ink);color:#fff;}
+  .cart-count{background:var(--mimosa);color:var(--ink);font-size:12px;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;font-weight:800;}
 
-function props_() { return PropertiesService.getScriptProperties().getProperties(); }
-function squareBase_() {
-  const env = (props_().SQUARE_ENV || 'sandbox').toLowerCase();
-  return env === 'production'
-    ? 'https://connect.squareup.com'
-    : 'https://connect.squareupsandbox.com';
+  .hero{max-width:1100px;margin:0 auto;padding:54px 22px 24px;}
+  .eyebrow{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;letter-spacing:.28em;color:var(--mimosa);font-weight:700;margin-bottom:14px;}
+  .hero h1{font-size:38px;font-weight:700;line-height:1.35;letter-spacing:.02em;}
+  .hero p{margin-top:12px;color:var(--green);font-size:14px;max-width:580px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;}
+
+  .tabs{max-width:1100px;margin:0 auto;padding:24px 22px 0;display:flex;gap:0;border-bottom:2px solid var(--line);}
+  .tab{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;padding:10px 28px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .18s,border-color .18s;}
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--ink);border-bottom-color:var(--mimosa);}
+
+  .filter{max-width:1100px;margin:0 auto;padding:16px 22px 4px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
+  .filter .lbl{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-right:4px;letter-spacing:.08em;}
+  .chip{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:7px 16px;border-radius:30px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;transition:all .16s;}
+  .chip:hover{border-color:var(--mimosa);}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .grid{max-width:1100px;margin:0 auto;padding:22px 22px 70px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(58,64,49,.10);}
+  .thumb{aspect-ratio:3/4;background:var(--mimosa-soft);display:flex;align-items:center;justify-content:center;position:relative;}
+  .thumb svg{width:54px;height:54px;opacity:.55}
+  .thumb img{width:100%;height:100%;object-fit:cover;}
+  .brand-tag{position:absolute;top:12px;left:12px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;}
+  .tag-shobo{background:rgba(255,253,247,.92);color:#5A6B3B;}
+  .tag-mimosado{background:rgba(232,184,75,.18);color:#8a6f20;}
+  .body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1;}
+  .cat{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+  .name{font-size:17px;font-weight:700;margin:4px 0 6px;line-height:1.45;}
+  .desc{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12.5px;color:var(--muted);flex:1;}
+  .price-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:14px;}
+  .price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:800;font-size:20px;}
+  .price small{font-size:12px;font-weight:500;color:var(--muted);}
+  .add{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;font-weight:700;background:var(--mimosa);border:none;color:var(--ink);padding:9px 16px;border-radius:24px;cursor:pointer;transition:background .16s;}
+  .add:hover{background:#dba933;}
+  .soldout .add{background:var(--line);color:var(--muted);cursor:not-allowed;}
+  .stock-info{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);margin-top:6px;}
+
+  .overlay{position:fixed;inset:0;background:rgba(58,64,49,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--cream);z-index:60;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.12);}
+  .drawer.open{transform:translateX(0);}
+  .drawer h2{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:18px;padding:22px 22px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);}
+  .close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--ink);line-height:1;}
+  .items{flex:1;overflow-y:auto;padding:8px 22px;}
+  .empty{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--muted);font-size:14px;text-align:center;padding:60px 20px;}
+  .ci{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .ci-thumb{width:48px;height:60px;flex:none;background:var(--mimosa-soft);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+  .ci-thumb svg{width:24px;height:24px;opacity:.5}
+  .ci-info{flex:1;min-width:0;}
+  .ci-name{font-size:14px;font-weight:700;line-height:1.4;}
+  .ci-seller{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);}
+  .ci-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+  .qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:20px;overflow:hidden;}
+  .qty button{width:28px;height:28px;border:none;background:var(--paper);cursor:pointer;font-size:15px;color:var(--ink);}
+  .qty button:hover{background:var(--mimosa-soft);}
+  .qty span{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;min-width:30px;text-align:center;font-size:13px;}
+  .ci-price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:700;font-size:14px;}
+  .remove{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;text-decoration:underline;margin-top:4px;}
+  .foot{border-top:1px solid var(--line);padding:18px 22px 24px;background:var(--paper);}
+  .row{display:flex;justify-content:space-between;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .row.total{font-size:17px;color:var(--ink);font-weight:800;margin:10px 0 4px;}
+  .note{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--muted);margin-bottom:14px;}
+  .checkout-btn{width:100%;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:15px;font-weight:700;background:var(--ink);color:#fff;border:none;padding:15px;border-radius:30px;cursor:pointer;transition:background .18s;}
+  .checkout-btn:hover{background:#2c3126;}
+  .checkout-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+
+  footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);}
+  footer a{color:var(--muted);text-decoration:none;margin:0 8px;}
+  footer a:hover{color:var(--ink);}
+  /* ── 商品詳細モーダル ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(58,64,49,.5);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s;}
+  .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);width:min(680px,92vw);max-height:90vh;background:var(--cream);z-index:90;overflow-y:auto;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.2);transition:transform .25s,opacity .25s;opacity:0;}
+  .modal.open{transform:translate(-50%,-50%);opacity:1;}
+  .modal-inner{display:grid;grid-template-columns:1fr 1fr;min-height:360px;}
+  .modal-img{background:var(--mimosa-soft);display:flex;align-items:center;justify-content:center;border-radius:14px 0 0 14px;min-height:320px;}
+  .modal-img img{width:100%;height:100%;object-fit:cover;border-radius:14px 0 0 14px;}
+  .modal-img svg{width:72px;height:72px;opacity:.4;}
+  .modal-body{padding:28px 28px 24px;display:flex;flex-direction:column;}
+  .modal-tag{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;color:var(--mimosa);font-weight:700;letter-spacing:.1em;margin-bottom:6px;}
+  .modal-name{font-size:22px;font-weight:700;line-height:1.4;margin-bottom:4px;}
+  .modal-seller{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--muted);margin-bottom:16px;}
+  .modal-desc{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:var(--ink);line-height:1.9;flex:1;border-top:1px solid var(--line);padding-top:14px;margin-bottom:16px;}
+  .modal-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
+  .modal-price{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:800;font-size:24px;}
+  .modal-price small{font-size:13px;font-weight:400;color:var(--muted);}
+  .modal-stock{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;}
+  .modal-ship{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;}
+  .modal-add{width:100%;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:14px;font-weight:700;background:var(--mimosa);border:none;color:var(--ink);padding:13px;border-radius:30px;cursor:pointer;transition:background .16s;}
+  .modal-add:hover{background:#dba933;}
+  .modal-add:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+  .modal-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.8);border:none;font-size:20px;cursor:pointer;color:var(--ink);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:91;}
+  @media(max-width:560px){
+    .modal-inner{grid-template-columns:1fr;}
+    .modal-img{min-height:200px;border-radius:14px 14px 0 0;}
+    .modal-img img{border-radius:14px 14px 0 0;}
+    .modal-body{padding:20px 18px 20px;}
+  }
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ── ローディング ── */
+  .grid-loading{display:none;grid-column:1/-1;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;gap:16px;}
+  .grid-loading.show{display:flex;}
+  .loading-dots{display:flex;gap:8px;}
+  .loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--mimosa);animation:dotPulse 1.2s ease-in-out infinite;}
+  .loading-dots span:nth-child(2){animation-delay:.2s;}
+  .loading-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes dotPulse{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+  .loading-text{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);letter-spacing:.08em;}
+  .grid.fade-in{animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  @media(max-width:860px){.grid{grid-template-columns:repeat(2,1fr);}.hero h1{font-size:28px;}}
+  @media(max-width:560px){
+    .bar{padding:10px 14px;}
+    .brand b{font-size:15px;}
+    .brand-parent{font-size:9px;}
+    .back-link{font-size:11px;}
+    .hero{padding:32px 16px 20px;}
+    .hero h1{font-size:22px;line-height:1.4;}
+    .eyebrow{font-size:10px;margin-bottom:8px;}
+    .hero p{font-size:12px;}
+    .tabs{padding:16px 14px 0;}
+    .tab{font-size:13px;padding:8px 18px;}
+    .filter{padding:12px 14px 4px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .filter::-webkit-scrollbar{display:none;}
+    .filter .lbl{white-space:nowrap;flex-shrink:0;}
+    .chip{white-space:nowrap;flex-shrink:0;font-size:12px;padding:6px 12px;}
+    .grid{padding:14px 14px 60px;gap:10px;grid-template-columns:repeat(2,1fr);}
+    .name{font-size:13px;}
+    .desc{display:none;}
+    .price{font-size:15px;}
+    .add{font-size:11px;padding:7px 8px;}
+    .body{padding:10px 10px 12px;}
+    .stock-info{font-size:10px;}
+    .cart-btn{font-size:12px;padding:7px 12px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="brand" href="/">
+      <span class="brand-parent">出版社 ミモザ</span>
+      <b>ミモザショップ</b>
+    </a>
+    <div class="header-right">
+      <a class="back-link" href="/">← 出版社 ミモザ</a>
+      <button class="cart-btn" onclick="openCart()">
+        カート <span class="cart-count" id="cc">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">MIMOSA SHOP</div>
+  <h1>ミモザの本を、あなたの手に。</h1>
+  <p>ミモザ書房・ミモザ堂の書籍をまとめてお買い求めいただけます。<br>カートに入れてまとめてお会計できます。</p>
+</section>
+
+<div class="tabs">
+  <button class="tab active" id="tab-shobo"    onclick="switchTab('shobo')">ミモザ書房</button>
+  <button class="tab"        id="tab-mimosado" onclick="switchTab('mimosado')">ミモザ堂</button>
+</div>
+
+<div class="filter" id="filter">
+  <span class="lbl" id="filter-lbl">ジャンルで絞る</span>
+</div>
+
+<main class="grid" id="grid">
+  <div class="grid-loading show" id="grid-loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <p class="loading-text">商品を読み込んでいます</p>
+  </div>
+</main>
+
+<footer>
+  <a href="/shobo/">ミモザ書房</a>
+  <a href="/mimosado/">ミモザ堂</a>
+  <a href="/">出版社 ミモザ</a>
+  <a href="/shop/legal.html">特定商取引法に基づく表記</a>
+  © 2026 ミモザパートナーズ合同会社
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- 商品詳細モーダル -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <div class="modal-inner">
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <p class="modal-tag" id="modal-tag"></p>
+      <p class="modal-name" id="modal-name"></p>
+      <p class="modal-seller" id="modal-seller"></p>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-price"></span>
+        <small>税込</small>
+      </div>
+      <p class="modal-stock" id="modal-stock"></p>
+      <p class="modal-ship" id="modal-ship"></p>
+      <button class="modal-add" id="modal-add-btn">カートに入れる</button>
+    </div>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="カート">
+  <h2>カート <button class="close" onclick="closeCart()">&times;</button></h2>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="row"><span>商品小計</span><span id="subtotal">¥0</span></div>
+    <div class="row"><span>送料（まとめ発送）</span><span id="shipfee">—</span></div>
+    <div class="row total"><span>合計（税込）</span><span id="total">¥0</span></div>
+    <p class="note">送料は最も高い配送方法を1回分として計算します。<br>お支払いはSquareの安全な決済画面で行います。</p>
+    <button class="checkout-btn" id="checkout" onclick="checkout()" disabled>レジに進む</button>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="cart.js"></script>
+<script>
+const GAS_URL_SHOP = GAS_URL;
+
+const DEMO = {
+  shobo: [
+    { id:'sb01', label:'ミモザ書房', name:'夜の縁側で、あなたに会う', cat:'小説', price:1600, stock:10, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。' },
+    { id:'sb02', label:'ミモザ書房', name:'喫茶店で生きている', cat:'エッセイ', price:1500, stock:0, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。' },
+  ],
+  mimosado: [
+    { id:'bk01', label:'ミモザ堂', name:'朝の余白', cat:'エッセイ', price:1500, stock:8, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'日々の小さな間（ま）を見つめた、静かな随筆集。' },
+    { id:'bk02', label:'ミモザ堂', name:'港の光', cat:'写真集', price:2200, stock:3, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'瀬戸内の港町を巡って撮りためた、朝夕の光の記録。' },
+    { id:'gd01', label:'ミモザ堂', name:'和綴じノート（藍）', cat:'文具', price:1800, stock:5, shipFee:700, shipMethod:'宅配便', image:'', desc:'職人が一冊ずつ手で綴じた、藍染め表紙のノート。' },
+  ]
+};
+
+let PRODUCTS_SHOBO    = [];
+let PRODUCTS_MIMOSADO = [];
+let activeTab         = 'shobo';
+let activeFilter      = 'all';
+
+const bookSvgEl = bookSvg;
+
+// ── ハッシュに応じた初期タブ設定 ──────────────────
+(function initTabFromHash() {
+  const hash = location.hash.slice(1); // '#shobo' → 'shobo'
+  if (hash === 'shobo' || hash === 'mimosado') {
+    activeTab = hash;
+    document.getElementById('tab-shobo').classList.toggle('active',    hash === 'shobo');
+    document.getElementById('tab-mimosado').classList.toggle('active', hash === 'mimosado');
+  }
+})();
+
+const CACHE_TTL      = 60 * 60 * 1000; // 1時間
+const CACHE_KEY_SB   = 'mimosa_products_shobo';
+const CACHE_KEY_MD   = 'mimosa_products_mimosado';
+
+// ── キャッシュ読み書き ──
+function loadCache(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { data, timestamp } = JSON.parse(raw);
+    if (Date.now() - timestamp > CACHE_TTL) return null;
+    return data;
+  } catch { return null; }
+}
+function saveCache(key, data) {
+  try { localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() })); } catch {}
 }
 
-// ===================================
-// doGet：商品一覧を返す
-// ===================================
-function doGet(e) {
-  const type  = e.parameter.type  || 'shop';
-  const label = e.parameter.label || '';
+// ── ローディング制御 ──
+function showLoading() {
+  document.getElementById('grid-loading').classList.add('show');
+}
+function hideLoading() {
+  const el = document.getElementById('grid-loading');
+  el.style.transition = 'opacity .25s';
+  el.style.opacity = '0';
+  setTimeout(() => { el.classList.remove('show'); el.style.opacity = ''; }, 260);
+}
 
-  const ss    = SpreadsheetApp.openById(SHOP_SHEET_ID);
-  const sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) return json_({ ok: false, error: '商品マスタが見つかりません' });
+// ── GASからデータ取得 ──
+async function fetchFromGas() {
+  const [r1, r2] = await Promise.all([
+    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ書房')}`).then(r => r.json()),
+    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ堂')}`).then(r => r.json())
+  ]);
+  const sb = (r1.ok && r1.products) ? r1.products.map(p => ({...p, label:'ミモザ書房'})) : null;
+  const md = (r2.ok && r2.products) ? r2.products.map(p => ({...p, label:'ミモザ堂'}))   : null;
+  return { sb, md };
+}
 
-  const rows    = sheet.getDataRange().getValues();
-  const headers = rows[0];
+// ── 商品読み込み（キャッシュ対応） ──
+async function loadProducts() {
+  const cachedSb = loadCache(CACHE_KEY_SB);
+  const cachedMd = loadCache(CACHE_KEY_MD);
 
-  const C = {
-    id:          headers.indexOf('商品ID'),
-    open:        headers.indexOf('公開'),
-    label:       headers.indexOf('レーベル'),
-    kind:        headers.indexOf('種別'),
-    genre:       headers.indexOf('分類'),
-    author:      headers.indexOf('著者名'),
-    abbr:        headers.indexOf('略名'),
-    name:        headers.indexOf('商品名／タイトル'),
-    desc:        headers.indexOf('説明／あらすじ'),
-    price:       headers.indexOf('価格'),
-    stock:       headers.indexOf('在庫数'),
-    shipMethod:  headers.indexOf('配送方法'),
-    shipFee:     headers.indexOf('送料'),
-    image:       headers.indexOf('画像URL'),
-    status:      headers.indexOf('ステータス'),
-    pubDate:     headers.indexOf('刊行予定日'),
-    variationId: headers.indexOf('Square Variation ID'),
-  };
+  if (cachedSb && cachedMd) {
+    // キャッシュあり → 即表示
+    PRODUCTS_SHOBO    = cachedSb;
+    PRODUCTS_MIMOSADO = cachedMd;
+    hideLoading();
+    buildFilter();
+    renderGrid();
+    updateCartBadge();
 
-  const data = rows.slice(1).filter(r => {
-    if (r[C.open] !== '公開') return false;
-    if (label && r[C.label] !== label) return false;
-    if (type === 'books' && r[C.kind] !== '書籍') return false;
-    return true;
-  });
-
-  if (type === 'books') {
-    const books = data.map(r => ({
-      id:      r[C.id],
-      label:   r[C.label],
-      genre:   r[C.genre],
-      abbr:    r[C.abbr],
-      title:   r[C.name],
-      author:  r[C.author],
-      desc:    r[C.desc],
-      status:  r[C.status],
-      pubDate: r[C.pubDate],
-      image:   r[C.image] || '',
-    }));
-    return json_({ ok: true, books });
+    // バックグラウンドで静かに更新
+    fetchFromGas().then(({ sb, md }) => {
+      if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
+      if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
+      renderGrid();
+    }).catch(() => {});
 
   } else {
-    // Square在庫を取得（Variation IDがある商品のみ）
-    const variationIds = data
-      .map(r => String(r[C.variationId] || '').trim())
-      .filter(id => id);
-    const squareStock = variationIds.length ? fetchSquareStock_(variationIds) : {};
-
-    const products = data.map(r => {
-      const varId = String(r[C.variationId] || '').trim();
-      const stock = (varId && squareStock[varId] !== undefined)
-        ? squareStock[varId]
-        : Number(r[C.stock]) || 0;
-      return {
-        id:          r[C.id],
-        label:       r[C.label],
-        kind:        r[C.kind],
-        cat:         r[C.genre],
-        seller:      r[C.author],
-        abbr:        r[C.abbr],
-        name:        r[C.name],
-        desc:        r[C.desc],
-        price:       Number(r[C.price]),
-        stock:       stock,
-        shipMethod:  r[C.shipMethod],
-        shipFee:     Number(r[C.shipFee]),
-        image:       r[C.image] || '',
-        variationId: varId,
-      };
-    });
-    return json_({ ok: true, products });
-  }
-}
-
-// ===================================
-// Square在庫数を取得
-// ===================================
-function fetchSquareStock_(variationIds) {
-  try {
-    const p   = props_();
-    const res = UrlFetchApp.fetch(squareBase_() + '/v2/inventory/counts/batch-retrieve', {
-      method:      'post',
-      contentType: 'application/json',
-      headers: {
-        'Square-Version': '2024-12-18',
-        'Authorization':  'Bearer ' + p.SQUARE_TOKEN
-      },
-      payload:            JSON.stringify({ catalog_object_ids: variationIds }),
-      muteHttpExceptions: true
-    });
-    const data = JSON.parse(res.getContentText());
-    const map  = {};
-    (data.counts || []).forEach(c => {
-      if (c.state === 'IN_STOCK') {
-        map[c.catalog_object_id] = Number(c.quantity) || 0;
-      }
-    });
-    return map;
-  } catch (err) {
-    Logger.log('Square在庫取得エラー: ' + err);
-    return {}; // エラー時はスプシの値にフォールバック
-  }
-}
-
-// ===================================
-// doPost：Square決済URL生成 / 問い合わせ
-// ===================================
-function doPost(e) {
-  try {
-    const body = JSON.parse(e.postData.contents);
-    if (body.type === 'contact' || body.type === 'trade') return handleContact_(body);
-
-    const p = props_();
-    if (!p.SQUARE_TOKEN || !p.SQUARE_LOCATION) {
-      return json_({ ok: false, error: 'Squareのトークン未設定' });
+    // キャッシュなし → ローディング表示してから描画
+    showLoading();
+    try {
+      const { sb, md } = await fetchFromGas();
+      PRODUCTS_SHOBO    = sb || DEMO.shobo;
+      PRODUCTS_MIMOSADO = md || DEMO.mimosado;
+      if (sb) saveCache(CACHE_KEY_SB, sb);
+      if (md) saveCache(CACHE_KEY_MD, md);
+    } catch {
+      PRODUCTS_SHOBO    = DEMO.shobo;
+      PRODUCTS_MIMOSADO = DEMO.mimosado;
     }
-
-    const items       = body.items || [];
-    const shippingFee = Number(body.shippingFee) || 0;
-    if (items.length === 0) return json_({ ok: false, error: 'カートが空です' });
-
-    const stockMap = readStock_();
-    for (const it of items) {
-      const s = stockMap[it.id];
-      if (s === undefined) return json_({ ok: false, error: '取り扱いのない商品が含まれています' });
-      if (it.qty > s)      return json_({ ok: false, error: `「${it.name}」は在庫が不足しています（残り${s}点）` });
-    }
-
-    const lineItems = items.map(it => ({
-      name:             it.name,
-      quantity:         String(it.qty),
-      base_price_money: { amount: Math.round(it.price), currency: 'JPY' }
-    }));
-
-    const order = { location_id: p.SQUARE_LOCATION, line_items: lineItems };
-    if (shippingFee > 0) {
-      order.service_charges = [{
-        name:             '送料',
-        amount_money:     { amount: Math.round(shippingFee), currency: 'JPY' },
-        calculation_phase:'TOTAL_PHASE'
-      }];
-    }
-
-    const res = UrlFetchApp.fetch(squareBase_() + '/v2/online-checkout/payment-links', {
-      method:      'post',
-      contentType: 'application/json',
-      headers: {
-        'Square-Version': '2024-12-18',
-        'Authorization':  'Bearer ' + p.SQUARE_TOKEN
-      },
-      payload: JSON.stringify({
-        idempotency_key:  Utilities.getUuid(),
-        order,
-        checkout_options: { ask_for_shipping_address: true }
-      }),
-      muteHttpExceptions: true
-    });
-
-    const data = JSON.parse(res.getContentText());
-    if (res.getResponseCode() >= 300 || !data.payment_link) {
-      const msg = (data.errors && data.errors[0] && data.errors[0].detail) || 'Square APIエラー';
-      return json_({ ok: false, error: msg });
-    }
-    return json_({ ok: true, url: data.payment_link.url });
-
-  } catch (err) {
-    return json_({ ok: false, error: String(err) });
+    hideLoading();
+    setTimeout(() => {
+      buildFilter();
+      document.getElementById('grid').classList.add('fade-in');
+      renderGrid();
+      updateCartBadge();
+    }, 280);
   }
 }
 
-// ===================================
-// 在庫マップ取得（決済時の在庫チェック用）
-// Square登録済み → Squareから取得
-// 未登録 → スプシから取得
-// ===================================
-function readStock_() {
-  const sheet   = SpreadsheetApp.openById(SHOP_SHEET_ID).getSheetByName(SHEET_NAME);
-  const rows    = sheet.getDataRange().getValues();
-  const headers = rows[0];
-  const idCol   = headers.indexOf('商品ID');
-  const stockCol= headers.indexOf('在庫数');
-  const varCol  = headers.indexOf('Square Variation ID');
-
-  const varIds  = [];
-  const varToId = {};
-  rows.slice(1).forEach(r => {
-    const varId = String(r[varCol] || '').trim();
-    const id    = String(r[idCol]  || '').trim();
-    if (varId && id) { varIds.push(varId); varToId[varId] = id; }
-  });
-  const squareStock = varIds.length ? fetchSquareStock_(varIds) : {};
-
-  const map = {};
-  rows.slice(1).forEach(r => {
-    const id    = String(r[idCol]  || '').trim();
-    const varId = String(r[varCol] || '').trim();
-    if (!id) return;
-    map[id] = (varId && squareStock[varId] !== undefined)
-      ? squareStock[varId]
-      : Number(r[stockCol]) || 0;
-  });
-  return map;
+// ── タブ切り替え ──
+function switchTab(tab) {
+  activeTab    = tab;
+  activeFilter = 'all';
+  document.getElementById('tab-shobo').classList.toggle('active',    tab === 'shobo');
+  document.getElementById('tab-mimosado').classList.toggle('active', tab === 'mimosado');
+  // URLハッシュを更新（ブラウザ履歴には残さない）
+  history.replaceState(null, '', '#' + tab);
+  buildFilter();
+  renderGrid();
 }
 
-// ===================================
-// 問い合わせ処理
-// ===================================
-const NOTIFY_MAIL = 'info@mimosa-partners.com';
-const FROM_MAIL   = 'info@mimosa-partners.com';
+// ── フィルター生成 ──
+function buildFilter() {
+  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const lbl      = activeTab === 'shobo' ? 'ジャンルで絞る' : 'カテゴリで絞る';
+  const keys     = ['all', ...new Set(products.map(p => p.cat))];
+  const f        = document.getElementById('filter');
+  document.getElementById('filter-lbl').textContent = lbl;
+  f.querySelectorAll('.chip').forEach(c => c.remove());
+  keys.forEach(k => {
+    const b = document.createElement('button');
+    b.className   = 'chip' + (k === activeFilter ? ' active' : '');
+    b.textContent = k === 'all' ? 'すべて' : k;
+    b.onclick     = () => { activeFilter = k; buildFilter(); renderGrid(); };
+    f.appendChild(b);
+  });
+}
 
-function getLastRowByColA(sheet) {
-  const vals = sheet.getRange(1, 1, sheet.getMaxRows(), 1).getValues();
-  for (let i = vals.length - 1; i >= 0; i--) {
-    if (vals[i][0] !== '') return i + 1;
+// ── グリッド描画 ──
+function renderGrid() {
+  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const cart     = cartLoad();
+  const list     = products.filter(p => activeFilter === 'all' || p.cat === activeFilter);
+  const grid     = document.getElementById('grid');
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted);font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;">現在、準備中です。</div>`;
+    return;
   }
-  return 0;
+
+  const tagCls  = activeTab === 'shobo' ? 'tag-shobo' : 'tag-mimosado';
+  const tagText = activeTab === 'shobo' ? 'ミモザ書房' : 'ミモザ堂';
+
+  grid.innerHTML = list.map(p => {
+    const sold   = p.stock <= 0;
+    const inCart = cart[p.id] ? cart[p.id].q : 0;
+    const thumb  = p.image
+      ? `<img src="${p.image}" alt="${p.name}">`
+      : bookSvgEl;
+    return `
+      <article class="card${sold ? ' soldout' : ''}" onclick="openModal('${p.id}')" style="cursor:pointer;">
+        <div class="thumb">
+          <span class="brand-tag ${tagCls}">${tagText}</span>
+          ${thumb}
+        </div>
+        <div class="body">
+          <div class="cat">${p.cat}</div>
+          <div class="name">${p.name}</div>
+          <div class="desc">${p.desc || ''}</div>
+          <div class="price-row">
+            <div class="price">${yen(p.price)} <small>税込</small></div>
+            <button class="add" ${sold ? 'disabled' : ''} onclick="event.stopPropagation();onAdd('${p.id}')">
+              ${sold ? '完売' : 'カートに入れる'}
+            </button>
+          </div>
+          <div class="stock-info">${sold
+            ? 'ただいま在庫切れです'
+            : `残り ${p.stock - inCart} 点・送料 ${yen(p.shipFee)}（${p.shipMethod}）`
+          }</div>
+        </div>
+      </article>`;
+  }).join('');
 }
 
-function handleContact_(data) {
-  const ss = SpreadsheetApp.openById(CONTACT_SHEET_ID);
-  if (data.type === 'trade') {
-    writeToTradeSheet_(ss, data); sendTradeAutoReply_(data); sendTradeNotification_(data);
-  } else {
-    writeToContactSheet_(ss, data); sendContactAutoReply_(data); sendContactNotification_(data);
-  }
-  return json_({ status: 'ok' });
+// ── 商品詳細モーダル ──
+let _modalProductId = null;
+
+function openModal(productId) {
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const p   = all.find(x => x.id === productId);
+  if (!p) return;
+  _modalProductId = productId;
+
+  const cart   = cartLoad();
+  const inCart = cart[productId] ? cart[productId].q : 0;
+  const sold   = p.stock <= 0;
+
+  document.getElementById('modal-tag').textContent    = p.label + '・' + p.cat;
+  document.getElementById('modal-name').textContent   = p.name;
+  document.getElementById('modal-seller').textContent = p.seller ? '著：' + p.seller : '';
+  document.getElementById('modal-desc').textContent   = p.desc || '';
+  document.getElementById('modal-price').innerHTML    = yen(p.price);
+  document.getElementById('modal-stock').textContent  = sold
+    ? 'ただいま在庫切れです'
+    : `残り ${p.stock - inCart} 点`;
+  document.getElementById('modal-ship').textContent   = `送料：${yen(p.shipFee)}（${p.shipMethod}）`;
+
+  const imgEl = document.getElementById('modal-img');
+  imgEl.innerHTML = p.image
+    ? `<img src="${p.image}" alt="${p.name}">`
+    : bookSvgEl;
+
+  const btn = document.getElementById('modal-add-btn');
+  btn.disabled    = sold;
+  btn.textContent = sold ? '完売' : 'カートに入れる';
+  btn.onclick     = () => { onAdd(productId); closeModal(); };
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
-function writeToContactSheet_(ss, data) {
-  let sheet = ss.getSheetByName('HP問合せ') || ss.insertSheet('HP問合せ');
-  if (getLastRowByColA(sheet) === 0) {
-    sheet.appendRow(['受付日時','会社名','お名前','メール','種類','メッセージ']);
-    sheet.getRange(1,1,1,6).setBackground('#f5c842').setFontWeight('bold');
-    sheet.setFrozenRows(1);
-  }
-  sheet.appendRow([new Date(), data.shopName||'', data.name||'', data.email||'', (data.materials||[]).join('、'), data.message||'']);
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+  _modalProductId = null;
 }
 
-function writeToTradeSheet_(ss, data) {
-  let sheet = ss.getSheetByName('取引先問合せ') || ss.insertSheet('取引先問合せ');
-  if (getLastRowByColA(sheet) === 0) {
-    sheet.appendRow(['受付日時','書店・取次名','担当者名','メール','希望資料','質問・備考','対応ステータス']);
-    sheet.getRange(1,1,1,7).setBackground('#f5c842').setFontWeight('bold');
-    sheet.setFrozenRows(1);
-    sheet.setColumnWidth(1,160); sheet.setColumnWidth(2,160);
-    sheet.setColumnWidth(5,220); sheet.setColumnWidth(6,260); sheet.setColumnWidth(7,120);
-  }
-  sheet.appendRow([new Date(), data.shopName||'', data.name||'', data.email||'', (data.materials||[]).join('、'), data.message||'', '未対応']);
+// ── カート追加 ──
+function onAdd(productId) {
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const p   = all.find(x => x.id === productId);
+  if (!p) return;
+  const result = cartAdd(productId, p);
+  if (!result.ok) { showToast(result.msg); return; }
+  renderGrid();
+  renderCartDrawer();
+  showToast('カートに追加しました');
 }
 
-function sendContactAutoReply_(data) {
-  GmailApp.sendEmail(data.email, '【出版社 ミモザ】お問い合わせありがとうございます',
-`${data.name} 様\n\nお問い合わせいただき、誠にありがとうございます。\n出版社 ミモザでございます。\n\n以下の内容でお問い合わせを承りました。\n2〜3営業日以内にご連絡いたします。\n\n━━━━━━━━━━━━━━━━━━━━━━\n■ お問い合わせ内容\n━━━━━━━━━━━━━━━━━━━━━━\n${data.message||'なし'}\n━━━━━━━━━━━━━━━━━━━━━━\n出版社 ミモザ\n担　当：石井 絵里加\nEmail：info@mimosa-partners.com`,
-  { from: FROM_MAIL, name: '出版社 ミモザ' });
-}
-
-function sendContactNotification_(data) {
-  GmailApp.sendEmail(NOTIFY_MAIL, `【新規お問い合わせ】${data.name}様`,
-`新しいお問い合わせが届きました。\n\n━━━━━━━━━━━━━━━━━━━━━━\n会社名　：${data.shopName||'なし'}\nお名前　：${data.name}\nメール　：${data.email}\n種類　　：${(data.materials||[]).join('、')||'なし'}\n━━━━━━━━━━━━━━━━━━━━━━\n${data.message||'なし'}`,
-  { from: FROM_MAIL, name: '出版社 ミモザ' });
-}
-
-function sendTradeAutoReply_(data) {
-  const mat = (data.materials&&data.materials.length) ? data.materials.join('、') : 'なし';
-  GmailApp.sendEmail(data.email, '【出版社 ミモザ】資料請求・お問い合わせを承りました',
-`${data.shopName} ${data.name} 様\n\nお問い合わせいただき、誠にありがとうございます。\n出版社 ミモザ（ミモザ書房）でございます。\n\n以下の内容でご依頼を承りました。\n2営業日以内にご連絡・資料をお送りいたします。\n\n━━━━━━━━━━━━━━━━━━━━━━\n書店・取次名　：${data.shopName||''}\n担当者名　　　：${data.name||''}\nご希望の資料　：${mat}\nご質問・備考　：${data.message||'なし'}\n━━━━━━━━━━━━━━━━━━━━━━\n出版社 ミモザ（ミモザ書房）\n担　当：石井 絵里加\nEmail：info@mimosa-partners.com`,
-  { from: FROM_MAIL, name: '出版社 ミモザ' });
-}
-
-function sendTradeNotification_(data) {
-  const mat = (data.materials&&data.materials.length) ? data.materials.join('、') : 'なし';
-  GmailApp.sendEmail(NOTIFY_MAIL, `【取引先問合せ】${data.shopName||''} ${data.name||''}様`,
-`取引先からの新しいお問い合わせが届きました。\n\n━━━━━━━━━━━━━━━━━━━━━━\n書店・取次名　：${data.shopName||''}\n担当者名　　　：${data.name||''}\nメール　　　　：${data.email||''}\nご希望の資料　：${mat}\n━━━━━━━━━━━━━━━━━━━━━━\n${data.message||'なし'}\n\nスプレッドシートで確認：\nhttps://docs.google.com/spreadsheets/d/${SHOP_SHEET_ID}/`,
-  { from: FROM_MAIL, name: '出版社 ミモザ' });
-}
-
-// ===================================
-// onEdit：画像URLをDriveリンクから直リンクに変換
-// ===================================
-function onEdit(e) {
-  const sheet = e.range.getSheet();
-  if (sheet.getName() !== SHEET_NAME) return;
-  const headers  = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
-  const imageCol = headers.indexOf('画像URL') + 1;
-  if (e.range.getColumn() !== imageCol) return;
-  const match = (e.value||'').match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (match) e.range.setValue('https://lh3.googleusercontent.com/d/' + match[1]);
-}
-
-// ===================================
-// Square SKU照合 → Variation ID同期
-// ===================================
-function syncSquareIds() {
-  const p   = props_();
-  const res = UrlFetchApp.fetch(squareBase_() + '/v2/catalog/list?types=ITEM', {
-    headers: { 'Square-Version':'2024-12-18', 'Authorization':'Bearer ' + p.SQUARE_TOKEN }
-  });
-  const data    = JSON.parse(res.getContentText());
-  const skuMap  = {};
-  (data.objects||[]).forEach(item => {
-    (item.item_data.variations||[]).forEach(v => {
-      const sku = v.item_variation_data.sku || '';
-      if (sku) skuMap[sku] = v.id;
-    });
-  });
-
-  const ss      = SpreadsheetApp.openById(SHOP_SHEET_ID);
-  const sheet   = ss.getSheetByName(SHEET_NAME);
-  const rows    = sheet.getDataRange().getValues();
-  const headers = rows[0];
-  const idCol   = headers.indexOf('商品ID') + 1;
-  const varCol  = headers.indexOf('Square Variation ID') + 1;
-
-  let updated = 0;
-  rows.slice(1).forEach((r, i) => {
-    const productId = String(r[idCol-1]).trim();
-    if (productId && skuMap[productId]) {
-      sheet.getRange(i+2, varCol).setValue(skuMap[productId]);
-      updated++;
-    }
-  });
-  SpreadsheetApp.getUi().alert(`✅ ${updated}件のVariation IDを同期しました。`);
-}
-
-// ===================================
-// カスタムメニュー
-// ===================================
-function onOpen() {
-  SpreadsheetApp.getUi()
-    .createMenu('ミモザ管理')
-    .addItem('Square IDを同期', 'syncSquareIds')
-    .addToUi();
-}
-
-// ===================================
-// ユーティリティ
-// ===================================
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
-
-// ===================================
-// テスト・デバッグ用
-// ===================================
-function testContact() {
-  handleContact_({ type:'contact', shopName:'株式会社テスト', name:'山田花子', email:'info@mimosa-partners.com', materials:['出版について'], message:'テスト送信' });
-}
-function testTrade() {
-  handleContact_({ type:'trade', shopName:'テスト書店', name:'山田花子', email:'info@mimosa-partners.com', materials:['会社概要'], message:'テスト送信' });
-}
-function debugHeaders() {
-  const sheet = SpreadsheetApp.openById(SHOP_SHEET_ID).getSheetByName(SHEET_NAME);
-  Logger.log(sheet.getDataRange().getValues()[0]);
-}
-function getSquareCatalogIds() {
-  const p   = props_();
-  const res = UrlFetchApp.fetch(squareBase_() + '/v2/catalog/list?types=ITEM', {
-    headers: { 'Square-Version':'2024-12-18', 'Authorization':'Bearer ' + p.SQUARE_TOKEN }
-  });
-  const data = JSON.parse(res.getContentText());
-  data.objects.forEach(item => {
-    item.item_data.variations.forEach(v => {
-      Logger.log(item.item_data.name + ' → SKU:' + (v.item_variation_data.sku||'なし') + ' / ID:' + v.id);
-    });
-  });
-}
+loadProducts();
+</script>
+</body>
+</html>
