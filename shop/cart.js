@@ -7,6 +7,20 @@
 // ============================================================
 
 const CART_KEY = 'mimosa_cart'; // localStorage のキー
+const CART_EXPIRE_MS = 24 * 60 * 60 * 1000; // 24時間
+const CART_TS_KEY    = 'mimosa_cart_ts';
+
+function cartCheckExpire() {
+  const ts = localStorage.getItem(CART_TS_KEY);
+  if (ts && Date.now() - Number(ts) > CART_EXPIRE_MS) {
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem(CART_TS_KEY);
+  }
+}
+
+function cartUpdateTs() {
+  localStorage.setItem(CART_TS_KEY, Date.now());
+}
 const GAS_URL  = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
 
 // ============================================================
@@ -21,6 +35,7 @@ function cartLoad() {
 
 function cartSave(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  cartUpdateTs();
 }
 
 function cartArray(cart) {
@@ -33,12 +48,6 @@ function cartCount(cart) {
 
 function cartSubtotal(cart) {
   return cartArray(cart).reduce((s, { p, q }) => s + p.price * q, 0);
-}
-
-function cartShipping(cart) {
-  const arr = cartArray(cart);
-  if (arr.length === 0) return 0;
-  return Math.max(...arr.map(({ p }) => p.shipFee || 0));
 }
 
 // ============================================================
@@ -174,7 +183,6 @@ async function checkout() {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         items:       arr.map(({ p, q }) => ({ id: p.id, name: p.name, price: p.price, qty: q })),
-        shippingFee: cartShipping(cart)
       })
     });
     const data = await res.json();
@@ -209,4 +217,7 @@ function showToast(msg) {
 }
 
 // ページ読み込み時にバッジを更新
-document.addEventListener('DOMContentLoaded', updateCartBadge);
+document.addEventListener('DOMContentLoaded', () => {
+  cartCheckExpire();
+  updateCartBadge();
+});
