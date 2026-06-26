@@ -186,7 +186,7 @@
 <section class="hero">
   <div class="eyebrow">MIMOSA SHOP</div>
   <h1>素敵な読書体験を、あなたに。</h1>
-  <p>本を読むだけでなく、本を楽しめる空間づくりを。<br>ミモザ書房・ミモザ堂の書籍や読書空間を豊かにする雑貨など、まとめてお買い求めいただけます。</p>
+  <p>本を読むだけでなく、本を楽しめる空間づくりを。<br>ミモザ書房・ミモザ堂の書籍や読書空間を豊かにする雑貨など、<br>まとめてお買い求めいただけます。</p>
 </section>
 
 <div class="tabs">
@@ -492,6 +492,7 @@ function onAdd(productId) {
   if (!p) return;
   const result = cartAdd(productId, p);
   if (!result.ok) { showToast(result.msg); return; }
+  updateCartBadge();
   renderGrid();
   renderCartDrawer();
   showToast('カートに追加しました');
