@@ -130,11 +130,8 @@ function renderCartDrawer() {
   }
 
   const st = cartSubtotal(cart);
-  const sh = cartShipping(cart);
   const el = id => document.getElementById(id);
   if (el('subtotal')) el('subtotal').textContent = yen(st);
-  if (el('shipfee'))  el('shipfee').textContent  = arr.length ? yen(sh) : '—';
-  if (el('total'))    el('total').textContent    = yen(st + sh);
   if (el('checkout')) el('checkout').disabled    = arr.length === 0;
   updateCartBadge();
 }
