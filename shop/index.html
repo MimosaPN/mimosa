@@ -231,7 +231,6 @@
         <small>税込</small>
       </div>
       <p class="modal-stock" id="modal-stock"></p>
-      <p class="modal-ship" id="modal-ship"></p>
       <button class="modal-add" id="modal-add-btn">カートに入れる</button>
     </div>
   </div>
@@ -242,9 +241,9 @@
   <div class="items" id="items"></div>
   <div class="foot">
     <div class="row"><span>商品小計</span><span id="subtotal">¥0</span></div>
-    <div class="row"><span>送料（まとめ発送）</span><span id="shipfee">—</span></div>
+    <div class="row"><span>送料</span><span>Squareで計算</span></div>
     <div class="row total"><span>合計（税込）</span><span id="total">¥0</span></div>
-    <p class="note">送料は最も高い配送方法を1回分として計算します。<br>お支払いはSquareの安全な決済画面で行います。</p>
+    <p class="note">送料はSquareの決済画面で自動計算されます。<br>お支払いはSquareの安全な決済画面で行います。</p>
     <button class="checkout-btn" id="checkout" onclick="checkout()" disabled>レジに進む</button>
   </div>
 </aside>
@@ -435,7 +434,7 @@ function renderGrid() {
           </div>
           <div class="stock-info">${sold
             ? 'ただいま在庫切れです'
-            : `残り ${p.stock - inCart} 点・送料 ${yen(p.shipFee)}（${p.shipMethod}）`
+            : `残り ${p.stock - inCart} 点`
           }</div>
         </div>
       </article>`;
@@ -463,8 +462,7 @@ function openModal(productId) {
   document.getElementById('modal-stock').textContent  = sold
     ? 'ただいま在庫切れです'
     : `残り ${p.stock - inCart} 点`;
-  document.getElementById('modal-ship').textContent   = `送料：${yen(p.shipFee)}（${p.shipMethod}）`;
-
+  
   const imgEl = document.getElementById('modal-img');
   imgEl.innerHTML = p.image
     ? `<img src="${p.image}" alt="${p.name}">`
