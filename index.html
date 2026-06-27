@@ -128,6 +128,19 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
 .footer-flower{display:flex;gap:3px;align-items:center;}
 .footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
+.footer-center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.25rem;}
+.footer-logo{height:56px;width:auto;object-fit:contain;}
+.footer-company{font-size:11px;color:var(--ink-light);letter-spacing:0.05em;}
+.footer-copy{font-size:10px;color:var(--muted);}
+
+/* ── ヒーローロゴ ── */
+.hero-logo{
+  display:block;
+  width:min(320px, 70vw);
+  height:auto;
+  margin:0 auto 1.5rem;
+  object-fit:contain;
+}
 
 @media(max-width:640px){
   .labels-grid,.isbn-grid,.form-row-2{grid-template-columns:1fr;}
@@ -171,12 +184,13 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 </ul>
 
 <section class="hero">
+  <img src="/logo.png" alt="出版社 ミモザ" class="hero-logo">
   <div class="hero-accent"><div class="dot"></div>Publisher Mimosa<div class="dot"></div></div>
   <h1>ことばを、<em>残す</em>。</h1>
   <p class="hero-sub">
-    出版社 ミモザは、文学・エッセイから書籍出版サポートまで、<br>
-    書き手の声をかたちにする出版レーベルです。<br>
-    ミモザ書房とミモザ堂、2つのレーベルで刊行しています。
+    出版社 ミモザは、文学・エッセイから<br>書籍出版サポートまで、<br>
+    書き手の声をかたちにする<br>出版レーベルです。<br>
+    ミモザ書房とミモザ堂<br>2つのレーベルで刊行しています。
   </p>
 </section>
 
@@ -240,7 +254,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </div>
     </div>
     <p class="isbn-note">
-      書籍のISBNはすべて「出版社：ミモザ」名義で登録されています。<br>
+      書籍のISBNはすべて<br>「出版社：ミモザ」名義で登録されています。<br>
       取次・書店の方は<a href="/trade.html" style="color:var(--mimosa-gold);text-decoration:none;">書店員の方へ</a>よりご連絡ください。
     </p>
   </div>
@@ -251,7 +265,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <h2 class="contact-title">お問い合わせ</h2>
   <div class="form-box">
     <p class="form-note">
-      出版・取材・取次・著者応募など、お気軽にご連絡ください。<br>
+      出版・取材・取次・著者応募など、<br>お気軽にご連絡ください。<br>
       2〜3営業日以内にご返信いたします。
     </p>
     <div class="form-row-2">
@@ -291,7 +305,11 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <div class="footer-flower">
     <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
   </div>
-  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
+  <div class="footer-center">
+    <img src="/logo.png" alt="出版社 ミモザ" class="footer-logo">
+    <p class="footer-company">ミモザパートナーズ合同会社</p>
+    <p class="footer-copy">© 2026 ミモザパートナーズ合同会社　<br>　mimosa.mimosa-partners.com</p>
+  </div>
   <div class="footer-flower">
     <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
   </div>
