@@ -10,6 +10,17 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
 
+/* ── 準備中画面 ── */
+.coming-soon{position:fixed;inset:0;background:#faf8f4;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;}
+.coming-soon.hidden{display:none;}
+.coming-soon-logo{width:min(220px,60vw);height:auto;margin-bottom:2rem;}
+.coming-soon-dots{display:flex;gap:6px;justify-content:center;margin-bottom:2rem;}
+.coming-soon-dots span{width:7px;height:7px;border-radius:50%;background:#E8B84B;}
+.coming-soon-title{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:600;letter-spacing:.08em;color:#1e1c18;margin-bottom:1rem;}
+.coming-soon-body{font-size:13px;color:#a09880;line-height:2.1;margin-bottom:2.5rem;}
+.coming-soon-back{font-size:12px;color:#a09880;text-decoration:none;border-bottom:0.5px solid #d8d4c8;padding-bottom:2px;}
+.coming-soon-back:hover{color:#8a6f4e;}
+
 .nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: rgba(250,250,245,.95); position: sticky; top: 0; z-index: 40; backdrop-filter: blur(6px); }
 .nav-logo { text-decoration: none; color: inherit; }
 .nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; }
@@ -30,7 +41,6 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .section-block { margin-bottom: 4rem; }
 .section-title { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; padding-bottom: 1rem; border-bottom: 0.5px solid #d8d4c8; margin-bottom: 2rem; }
 
-/* 注文書ダウンロード */
 .download-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .download-label { font-size: 10px; letter-spacing: 0.25em; color: #C9962A; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1rem; }
 .download-group { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.75rem; }
@@ -43,14 +53,12 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .download-btn:hover { background: #C9962A; color: #fff; }
 .download-note { font-size: 12px; color: #a09880; margin-top: 1.25rem; line-height: 1.8; }
 
-/* 取次 */
 .tonya-box { background: #f5f0e8; border-left: 3px solid #c8b89a; padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
 .tonya-name { font-size: 15px; font-weight: 500; color: #1e1c18; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
 .tonya-desc { font-size: 13px; color: #6b6454; line-height: 1.9; }
 .tonya-link { display: inline-block; margin-top: 0.75rem; font-size: 12px; color: #8a6f4e; letter-spacing: 0.05em; text-decoration: underline; }
 .tonya-note { font-size: 12px; color: #6b6454; line-height: 1.9; padding: 1rem 0; }
 
-/* 取引条件 */
 .trade-table { width: 100%; border-collapse: collapse; }
 .trade-table tr { border-bottom: 0.5px solid #e8e4da; }
 .trade-table th { width: 140px; padding: 1rem 0; font-size: 12px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; vertical-align: top; text-align: left; }
@@ -58,7 +66,6 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .trade-table td .note { font-size: 11px; color: #a09880; margin-top: 0.25rem; }
 .highlight { color: #8a6f4e; font-weight: 500; }
 
-/* フロー */
 .flow { display: flex; flex-direction: column; }
 .flow-step { display: flex; gap: 1.5rem; align-items: flex-start; }
 .flow-line { display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0; }
@@ -73,14 +80,12 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .return-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.5rem 2rem; }
 .return-box p { font-size: 13px; color: #2c2a24; line-height: 2; }
 
-/* 会社概要 */
 .company-grid { width: 100%; border-collapse: collapse; border: 0.5px solid #d8d4c8; }
 .company-grid tr { border-bottom: 0.5px solid #e8e4da; }
 .company-grid tr:last-child { border-bottom: none; }
 .company-grid th { background: #f5f0e8; padding: 0.9rem 1.25rem; font-size: 11px; color: #a09880; font-weight: 400; letter-spacing: 0.1em; text-align: left; width: 180px; }
 .company-grid td { padding: 0.9rem 1.25rem; font-size: 13px; color: #2c2a24; line-height: 1.8; }
 
-/* 担当者 */
 .contact-card { background: #fff; border: 0.5px solid #d8d4c8; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start; }
 .contact-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e8e0d4; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #8a6f4e; flex-shrink: 0; }
 .contact-info .name { font-size: 16px; font-weight: 500; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 0.25rem; }
@@ -88,7 +93,6 @@ body { font-family: 'Noto Sans JP', sans-serif; background: #faf8f4; color: #2c2
 .contact-info .detail { font-size: 13px; color: #4a4438; line-height: 1.9; }
 .contact-info .detail span { display: block; }
 
-/* フォーム */
 .form-box { background: #fff; border: 0.5px solid #d8d4c8; padding: 2.5rem; }
 .form-note { font-size: 12px; color: #6b6454; line-height: 1.9; margin-bottom: 2rem; }
 .form-row { margin-bottom: 1.25rem; }
@@ -116,6 +120,20 @@ footer a { color: #c8b89a; text-decoration: none; }
 </head>
 <body>
 
+<!-- 準備中画面 -->
+<div class="coming-soon" id="coming-soon">
+  <img src="/images/logo.png" alt="出版社 ミモザ" class="coming-soon-logo">
+  <div class="coming-soon-dots">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <h1 class="coming-soon-title">ただいま準備中です</h1>
+  <p class="coming-soon-body">
+    書店員の方へのページは近日公開予定です。<br>
+    もうしばらくお待ちください。
+  </p>
+  <a class="coming-soon-back" href="/">← 出版社 ミモザ トップへ</a>
+</div>
+
 <nav class="nav">
   <a class="nav-logo" href="/index.html">
     <span class="parent">Publisher Mimosa</span>
@@ -140,11 +158,9 @@ footer a { color: #c8b89a; text-decoration: none; }
 
 <div class="content">
 
-  <!-- 注文書ダウンロード -->
   <div class="section-block">
     <h2 class="section-title">注文書ダウンロード</h2>
     <div class="download-grid">
-
       <div class="download-group">
         <p class="download-label">Mimosa Shobo</p>
         <h3 class="download-group-title">ミモザ書房</h3>
@@ -155,18 +171,7 @@ footer a { color: #c8b89a; text-decoration: none; }
           </div>
           <a class="download-btn" href="/files/order-shobo.pdf" download>↓ PDF</a>
         </div>
-        <!-- 書籍が増えたらここに追加 -->
-        <!-- 例：
-        <div class="download-item">
-          <div>
-            <p class="download-item-name">『書名』注文書</p>
-            <p class="download-item-meta">2025年秋刊行</p>
-          </div>
-          <a class="download-btn" href="/files/order-shobo-01.pdf" download>↓ PDF</a>
-        </div>
-        -->
       </div>
-
       <div class="download-group">
         <p class="download-label">Mimosado</p>
         <h3 class="download-group-title">ミモザ堂</h3>
@@ -177,9 +182,7 @@ footer a { color: #c8b89a; text-decoration: none; }
           </div>
           <a class="download-btn" href="/files/order-mimosado.pdf" download>↓ PDF</a>
         </div>
-        <!-- 商品が増えたらここに追加 -->
       </div>
-
     </div>
     <p class="download-note">
       ※ PDFが開かない場合はブラウザを更新してお試しください。<br>
@@ -187,7 +190,6 @@ footer a { color: #c8b89a; text-decoration: none; }
     </p>
   </div>
 
-  <!-- 取次取引 -->
   <div class="section-block">
     <h2 class="section-title">取次取引</h2>
     <div class="tonya-box">
@@ -201,38 +203,18 @@ footer a { color: #c8b89a; text-decoration: none; }
     <p class="tonya-note">※取次経由でのお取引に関するご質問は、担当者までメールにてお問い合わせください。</p>
   </div>
 
-  <!-- 直取引条件 -->
   <div class="section-block">
     <h2 class="section-title">直取引条件</h2>
     <table class="trade-table">
-      <tr>
-        <th>条件</th>
-        <td>買切<div class="note">※委託条件・イベント販売は別途ご相談ください</div></td>
-      </tr>
-      <tr>
-        <th>注文ロット</th>
-        <td><span class="highlight">2冊より</span><div class="note">6冊以下は偶数冊でお願いします</div></td>
-      </tr>
-      <tr>
-        <th>掛率</th>
-        <td><span class="highlight">70%</span>（20冊以上は <span class="highlight">65%</span>）</td>
-      </tr>
-      <tr>
-        <th>送料</th>
-        <td>元払い（当社負担）</td>
-      </tr>
-      <tr>
-        <th>支払</th>
-        <td>月末締め・翌月末精算<div class="note">振込手数料はご負担ください</div></td>
-      </tr>
-      <tr>
-        <th>返品</th>
-        <td>無期限で受付<div class="note">長期にわたってご販売いただけますようお願いします</div></td>
-      </tr>
+      <tr><th>条件</th><td>買切<div class="note">※委託条件・イベント販売は別途ご相談ください</div></td></tr>
+      <tr><th>注文ロット</th><td><span class="highlight">2冊より</span><div class="note">6冊以下は偶数冊でお願いします</div></td></tr>
+      <tr><th>掛率</th><td><span class="highlight">70%</span>（20冊以上は <span class="highlight">65%</span>）</td></tr>
+      <tr><th>送料</th><td>元払い（当社負担）</td></tr>
+      <tr><th>支払</th><td>月末締め・翌月末精算<div class="note">振込手数料はご負担ください</div></td></tr>
+      <tr><th>返品</th><td>無期限で受付<div class="note">長期にわたってご販売いただけますようお願いします</div></td></tr>
     </table>
   </div>
 
-  <!-- 注文・返品フロー -->
   <div class="section-block">
     <h2 class="section-title">注文・返品フロー</h2>
     <p class="flow-section-label">■ ご注文の流れ</p>
@@ -276,7 +258,6 @@ footer a { color: #c8b89a; text-decoration: none; }
     </div>
   </div>
 
-  <!-- 会社概要・ISBN -->
   <div class="section-block">
     <h2 class="section-title">会社概要・ISBN情報</h2>
     <table class="company-grid">
@@ -290,7 +271,6 @@ footer a { color: #c8b89a; text-decoration: none; }
     </table>
   </div>
 
-  <!-- 担当者 -->
   <div class="section-block">
     <h2 class="section-title">担当者</h2>
     <div class="contact-card">
@@ -306,7 +286,6 @@ footer a { color: #c8b89a; text-decoration: none; }
     </div>
   </div>
 
-  <!-- 資料請求・問い合わせ -->
   <div class="section-block">
     <h2 class="section-title">資料請求・お問い合わせ</h2>
     <div class="form-box">
@@ -354,7 +333,24 @@ footer a { color: #c8b89a; text-decoration: none; }
 </footer>
 
 <script>
-const TRADE_GAS_URL = '【GASのウェブアプリURLをここに貼る】';
+// ── 準備中画面の制御 ──
+const PREVIEW_KEY    = 'mimosa_trade_preview';
+const PREVIEW_SECRET = 'mimosa2026';
+
+(function checkPreview() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('preview') === PREVIEW_SECRET) {
+    localStorage.setItem(PREVIEW_KEY, '1');
+    history.replaceState(null, '', location.pathname);
+  }
+  if (!localStorage.getItem(PREVIEW_KEY)) {
+    document.getElementById('coming-soon').classList.remove('hidden');
+  } else {
+    document.getElementById('coming-soon').classList.add('hidden');
+  }
+})();
+
+const TRADE_GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
 
 async function submitTradeForm() {
   const shopName  = document.getElementById('f-shopname').value.trim();
