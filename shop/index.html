@@ -124,6 +124,37 @@
     .modal-body{padding:20px 18px 20px;}
   }
 
+  /* ── 準備中画面 ── */
+  .coming-soon{
+    position:fixed;inset:0;background:var(--cream);
+    z-index:200;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;padding:2rem;
+  }
+  .coming-soon.hidden{display:none;}
+  .coming-soon-logo{width:min(240px,60vw);height:auto;margin-bottom:2rem;}
+  .coming-soon-title{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:28px;font-weight:700;letter-spacing:.08em;
+    color:var(--ink);margin-bottom:1rem;
+  }
+  .coming-soon-body{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:14px;color:var(--muted);line-height:2;
+    margin-bottom:2.5rem;
+  }
+  .coming-soon-back{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    font-size:13px;color:var(--muted);text-decoration:none;
+    border-bottom:1px solid var(--line);padding-bottom:2px;
+  }
+  .coming-soon-back:hover{color:var(--ink);}
+  .coming-soon-dots{display:flex;gap:6px;justify-content:center;margin-bottom:2rem;}
+  .coming-soon-dots span{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--mimosa);
+  }
+
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;padding:12px 22px;border-radius:30px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -168,6 +199,20 @@
 </head>
 <body>
 
+<!-- 準備中画面 -->
+<div class="coming-soon" id="coming-soon">
+  <img src="/logo.png" alt="出版社 ミモザ" class="coming-soon-logo">
+  <div class="coming-soon-dots">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <h1 class="coming-soon-title">ただいま準備中です</h1>
+  <p class="coming-soon-body">
+    ミモザショップは近日公開予定です。<br>
+    もうしばらくお待ちください。
+  </p>
+  <a class="coming-soon-back" href="/">← 出版社 ミモザ トップへ</a>
+</div>
+
 <header>
   <div class="bar">
     <a class="brand" href="/">
@@ -185,8 +230,8 @@
 
 <section class="hero">
   <div class="eyebrow">MIMOSA SHOP</div>
-  <h1>素敵な読書体験を、あなたに。</h1>
-  <p>本を読むだけでなく、本を楽しめる空間づくりを。<br>ミモザ書房・ミモザ堂の書籍や読書空間を豊かにする雑貨など、<br>まとめてお買い求めいただけます。</p>
+  <h1>ミモザの本を、あなたの手に。</h1>
+  <p>ミモザ書房・ミモザ堂の書籍をまとめてお買い求めいただけます。<br>カートに入れてまとめてお会計できます。</p>
 </section>
 
 <div class="tabs">
@@ -231,6 +276,7 @@
         <small>税込</small>
       </div>
       <p class="modal-stock" id="modal-stock"></p>
+      <p class="modal-ship" id="modal-ship"></p>
       <button class="modal-add" id="modal-add-btn">カートに入れる</button>
     </div>
   </div>
@@ -241,9 +287,9 @@
   <div class="items" id="items"></div>
   <div class="foot">
     <div class="row"><span>商品小計</span><span id="subtotal">¥0</span></div>
-    <div class="row"><span>送料</span><span>Squareで計算</span></div>
+    <div class="row"><span>送料（まとめ発送）</span><span id="shipfee">—</span></div>
     <div class="row total"><span>合計（税込）</span><span id="total">¥0</span></div>
-    <p class="note">送料はSquareの決済画面で自動計算されます。<br>カートの内容は最後の操作から24時間で自動的に削除されます。</p>
+    <p class="note">送料は最も高い配送方法を1回分として計算します。<br>お支払いはSquareの安全な決済画面で行います。</p>
     <button class="checkout-btn" id="checkout" onclick="checkout()" disabled>レジに進む</button>
   </div>
 </aside>
@@ -251,6 +297,25 @@
 
 <script src="cart.js"></script>
 <script>
+// ── 準備中画面の制御 ──
+const PREVIEW_KEY    = 'mimosa_shop_preview';
+const PREVIEW_SECRET = 'mimosa2026';
+
+(function checkPreview() {
+  // URLに ?preview=mimosa2026 があればLocalStorageに保存
+  const params = new URLSearchParams(location.search);
+  if (params.get('preview') === PREVIEW_SECRET) {
+    localStorage.setItem(PREVIEW_KEY, '1');
+    // パラメータを消してリダイレクト
+    history.replaceState(null, '', location.pathname);
+  }
+  // LocalStorageにフラグがなければ準備中画面を表示
+  if (!localStorage.getItem(PREVIEW_KEY)) {
+    document.getElementById('coming-soon').classList.remove('hidden');
+  } else {
+    document.getElementById('coming-soon').classList.add('hidden');
+  }
+})();
 const GAS_URL_SHOP = GAS_URL;
 
 const DEMO = {
@@ -434,7 +499,7 @@ function renderGrid() {
           </div>
           <div class="stock-info">${sold
             ? 'ただいま在庫切れです'
-            : `残り ${p.stock - inCart} 点`
+            : `残り ${p.stock - inCart} 点・送料 ${yen(p.shipFee)}（${p.shipMethod}）`
           }</div>
         </div>
       </article>`;
@@ -462,7 +527,8 @@ function openModal(productId) {
   document.getElementById('modal-stock').textContent  = sold
     ? 'ただいま在庫切れです'
     : `残り ${p.stock - inCart} 点`;
-  
+  document.getElementById('modal-ship').textContent   = `送料：${yen(p.shipFee)}（${p.shipMethod}）`;
+
   const imgEl = document.getElementById('modal-img');
   imgEl.innerHTML = p.image
     ? `<img src="${p.image}" alt="${p.name}">`
@@ -492,7 +558,6 @@ function onAdd(productId) {
   if (!p) return;
   const result = cartAdd(productId, p);
   if (!result.ok) { showToast(result.msg); return; }
-  updateCartBadge();
   renderGrid();
   renderCartDrawer();
   showToast('カートに追加しました');
