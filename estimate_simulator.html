@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ミモザ堂｜書籍出版 お見積</title>
+<title>ミモザ堂｜書籍出版 見積シュミレーター</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fdf8ee; color: #1a1a1a; padding: 2rem 1rem; }
@@ -66,7 +66,7 @@
 <div class="container">
   <div class="header">
     <h1>ミモザ堂</h1>
-    <h1>書籍出版 お見積</h1>
+    <h1>書籍出版 見積シュミレーター</h1>
     <p class="subtitle">必要項目を入力すると、概算費用が自動で表示されます</p>
   </div>
 
@@ -79,11 +79,11 @@
       </div>
       <div class="plan-tab" id="tab-standard" onclick="selectPlan('standard')">
         <div class="plan-tab-name">スタンダードプラン</div>
-        <div class="plan-tab-desc">1,000〜3,000部（お渡し：100冊〜）<br>書店流通あり</div>
+        <div class="plan-tab-desc">1,000〜3,000部（お渡し：100冊〜）<br>書店流通・電子書籍込み</div>
       </div>
       <div class="plan-tab" id="tab-premium" onclick="selectPlan('premium')">
         <div class="plan-tab-name">プレミアムプラン</div>
-        <div class="plan-tab-desc">1,000〜3,000部（お渡し：200冊〜）<br>書店流通あり<br>イラスト４点・ライター費込</div>
+        <div class="plan-tab-desc">1,000〜3,000部（お渡し：200冊〜）<br>書店流通・電子書籍込み<br>イラスト４点・ライター費込</div>
       </div>
     </div>
   </div>
@@ -179,7 +179,7 @@
       <span>小計（税抜）</span><span id="subtotal-display">—</span>
     </div>
     <div class="estimate-total">
-      <span class="total-label">お見積合計（税込）</span>
+      <span class="total-label">見積合計（税込）</span>
       <span class="total-amount" id="total-display">—</span>
     </div>
     <div class="tax-note">消費税10%含む</div>
