@@ -55,6 +55,15 @@
   .total-label { font-size: 15px; font-weight: 500; color: #5a4400; }
   .total-amount { font-size: 30px; font-weight: 500; color: #2a1a00; }
   .tax-note { font-size: 12px; color: #999; text-align: right; margin-top: 4px; }
+
+  /* 提示額フィールド */
+  .quote-field { position: relative; }
+  .quote-field input { padding-left: 28px; }
+  .quote-field::before { content: '¥'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #888; font-size: 15px; pointer-events: none; margin-top: 12px; }
+  .quote-diff { font-size: 12px; margin-top: 6px; padding: 4px 10px; border-radius: 6px; display: none; }
+  .quote-diff.positive { background: #eaf7ef; color: #2e7d52; display: block; }
+  .quote-diff.negative { background: #fdecea; color: #b71c1c; display: block; }
+
   .submit-btn{width:auto;min-width:240px;padding:14px 48px;background:#c8a000;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.15s;}
   .submit-btn:hover { background: #a07800; }
   .submit-btn:disabled { opacity: 0.7; cursor: default; }
@@ -148,6 +157,7 @@
         <span class="genre-tag" onclick="selectGenre(this)">技術・専門書</span>
         <span class="genre-tag" onclick="selectGenre(this)">絵本・児童書</span>
         <span class="genre-tag" onclick="selectGenre(this)">写真集・画集</span>
+        <span class="genre-tag" onclick="selectGenre(this)">スピリチュアル</span>
         <span class="genre-tag" onclick="selectGenre(this)">その他</span>
       </div>
     </div>
@@ -155,7 +165,6 @@
 
   <div class="section" id="option-section" style="display:none;">
     <p class="section-title">オプション</p>
-    <!-- ↓ チェックボックスはスプシのオプション行から自動生成されます -->
     <div class="option-grid" id="option-grid"></div>
   </div>
 
@@ -185,73 +194,56 @@
     <div class="tax-note">消費税10%含む</div>
   </div>
 
+  <!-- 商談メモセクション -->
   <div class="section">
+    <p class="section-title">商談メモ</p>
     <div class="field">
-      <label>メモ</label>
-      <textarea id="customer-message" rows="4" placeholder="" style="resize:vertical;width:100%;"></textarea>
+      <label>クライアント名</label>
+      <input type="text" id="client-name" placeholder="例：山田 花子">
     </div>
-  </div>
-
-  <div class="section">
-    <p class="section-title">お客様情報</p>
     <div class="row">
-      <div class="field">
-        <label>お名前 <span style="color:#c8a000;">*</span></label>
-        <input type="text" id="customer-name" placeholder="山田 太郎">
+      <div class="field quote-field">
+        <label>提示額（税抜）</label>
+        <input type="number" id="quote-price" placeholder="0" step="10000" oninput="calcDiff()">
+        <div class="quote-diff" id="quote-diff"></div>
       </div>
-      <div class="field">
-        <label>お電話番号</label>
-        <input type="tel" id="customer-tel" placeholder="09000000000（ハイフン不要）">
+      <div class="field" style="display:flex;align-items:flex-end;">
+        <div style="width:100%;padding:9px 12px;background:#f5f0e8;border:0.5px solid #d8cfa8;border-radius:8px;font-size:13px;color:#888;line-height:1.5;">
+          原価（税抜）<br>
+          <span id="cost-ref" style="font-size:15px;color:#5a4400;font-weight:500;">—</span>
+        </div>
       </div>
     </div>
     <div class="field">
-      <label>メールアドレス <span style="color:#c8a000;">*</span></label>
-      <input type="email" id="customer-email" placeholder="example@mail.com">
+      <label>備考</label>
+      <textarea id="client-memo" rows="3" placeholder="商談メモ・特記事項など" style="resize:vertical;"></textarea>
     </div>
   </div>
 
   <div style="text-align:center;padding:1.5rem 0 0;">
-    <button class="submit-btn" onclick="submitForm()">送信</button>
+    <button class="submit-btn" onclick="submitForm()">記録する</button>
   </div>
 </div>
 
 <script>
-// ============================================================
-// 価格・オプションはスプレッドシートで一元管理。
-// 起動時に GAS(doGet) から読み込み、オプションも動的生成。
-// 変えたいときは HTML ではなくスプシの「価格設定」シートを編集。
-// ============================================================
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx4HnF4BnBotXTHQaM8M0dZj8-5c3JhF0bCxriWsH6y-XPGJBrViqAbNHd7kJPKAKw8Sw/exec';
 
 const ROUND_UNIT = 1000;
 
-let PRICE = null;          // スプシから取得した価格データ
-let currentPlan = 'start'; // 起動時はスタート
-let S = {};                // 直近計算結果
+let PRICE = null;
+let currentPlan = 'start';
+let S = {};
 
-// 価格ヘルパー
-function pRate(key, def)     { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
-function pPrint(key, copies) { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
+function pRate(key, def)      { return (PRICE && PRICE.rate && PRICE.rate[key] != null) ? Number(PRICE.rate[key]) : def; }
+function pPrint(key, copies)  { return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].prices[copies]) ? PRICE.print[key].prices[copies] : 0; }
 function pPrintSell(key, copies){ return (PRICE && PRICE.print && PRICE.print[key] && PRICE.print[key].sells && PRICE.print[key].sells[copies]) ? PRICE.print[key].sells[copies] : 0; }
-function pPrintLabel(key)    { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
-function pFixedSell(key)     { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
-function pFixedLabel(key)    { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? (PRICE.fixed[key].label||key) : key; }
-
-// プランごとに含める制作費の項目キー
-// ST/SD: 編集・校正・デザイン・DTP・文字起こし / PM: それ + ライター・イラスト
-function prodKeysForPlan(plan) {
-  const base = ['editor','proofreader','designer','dtp','moji'];
-  return (plan === 'premium') ? base.concat(['writer','illustroter']) : base;
-}
-function pShip(key)          { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
-
-function nishidaCost(copies) {
-  return Math.round(pRate('nishidaFixed', 32679) + pRate('nishidaVar', 110140/300) * copies);
-}
-
-function fmt(n)     { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
-function ceilU(n,u) { return Math.ceil(n/u)*u; }
-function selectGenre(el) { document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('selected')); el.classList.add('selected'); }
+function pPrintLabel(key)     { return (PRICE && PRICE.print && PRICE.print[key]) ? PRICE.print[key].label : key; }
+function pFixedSell(key)      { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? Number(PRICE.fixed[key].sell) : 0; }
+function pFixedLabel(key)     { return (PRICE && PRICE.fixed && PRICE.fixed[key]) ? (PRICE.fixed[key].label||key) : key; }
+function prodKeysForPlan(plan){ const base=['editor','proofreader','designer','dtp','moji']; return plan==='premium' ? base.concat(['writer','illustroter']) : base; }
+function pShip(key)           { return (PRICE && PRICE.ship && PRICE.ship[key] != null) ? Number(PRICE.ship[key]) : 0; }
+function fmt(n)               { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+function selectGenre(el)      { document.querySelectorAll('.genre-tag').forEach(t=>t.classList.remove('selected')); el.classList.add('selected'); }
 
 function updateCopiesForSize() {
   const sizeKey = document.getElementById('sinano-size').value;
@@ -265,23 +257,20 @@ function updateCopiesForSize() {
   }
 }
 
-// 起動時に価格・オプションを取得
 function loadPrices() {
-  const btn = document.querySelector('.submit-btn');
   fetch(GAS_URL, { method:'GET' })
     .then(res => res.json())
     .then(res => {
       if (res.status === 'ok' && res.prices) {
         PRICE = res.prices;
         syncSinanoLabels();
-        selectPlan(currentPlan);   // オプション生成＋計算は価格取得後に行う
-      } else {
-        throw new Error(res.message || '価格データの形式が不正です');
-      }
+        selectPlan(currentPlan);
+      } else { throw new Error(res.message || '価格データの形式が不正です'); }
     })
     .catch(err => {
+      const btn = document.querySelector('.submit-btn');
       if (btn) { btn.disabled = true; btn.textContent = '価格読込エラー'; }
-      alert('価格データの読み込みに失敗しました。\nGAS_URL の設定とデプロイ状態を確認してください。\n' + err.message);
+      alert('価格データの読み込みに失敗しました。\n' + err.message);
     });
 }
 
@@ -289,37 +278,24 @@ function syncSinanoLabels() {
   if (!PRICE || !PRICE.print) return;
   const sel = document.getElementById('sinano-size');
   if (!sel) return;
-  Array.from(sel.options).forEach(opt => {
-    if (PRICE.print[opt.value]) opt.text = PRICE.print[opt.value].label;
-  });
+  Array.from(sel.options).forEach(opt => { if (PRICE.print[opt.value]) opt.text = PRICE.print[opt.value].label; });
 }
 
-// スプシのオプションを、現プランに合わせてチェックボックス生成
 function renderOptions() {
   const grid = document.getElementById('option-grid');
   grid.innerHTML = '';
   if (!PRICE || !PRICE.option) return;
-
   PRICE.option.forEach((opt, i) => {
-    // ラベルが空の行（スプシのゴミ行）は表示しない
     if (!opt.label || String(opt.label).trim() === '') return;
-    // 売価が数値でないもの（変動型）は表示しない（GAS側でも除外済みだが念のため）
     if (typeof opt.sell !== 'number' || isNaN(opt.sell)) return;
-    // 対象プランに現プランが含まれるものだけ表示
     if (opt.plans && opt.plans.indexOf(currentPlan) === -1) return;
-
     const label = document.createElement('label');
     label.className = 'option-item';
-    label.innerHTML =
-      '<input type="checkbox" data-idx="' + i + '">' +
-      '<span class="option-label">' + opt.label + '</span>' +
-      '<span class="option-price">+' + Number(opt.sell).toLocaleString('ja-JP') + '円</span>';
+    label.innerHTML = '<input type="checkbox" data-idx="' + i + '"><span class="option-label">' + opt.label + '</span><span class="option-price">+' + Number(opt.sell).toLocaleString('ja-JP') + '円</span>';
     const cb = label.querySelector('input');
     cb.addEventListener('change', () => { label.classList.toggle('checked', cb.checked); calc(); });
     grid.appendChild(label);
   });
-
-  // オプションが1つも無いプランならセクションごと隠す
   document.getElementById('option-section').style.display = grid.children.length ? 'block' : 'none';
 }
 
@@ -331,48 +307,38 @@ function selectPlan(plan) {
   });
   document.getElementById('start-fields').style.display  = plan==='start' ? 'block' : 'none';
   document.getElementById('sinano-fields').style.display = (plan==='standard'||plan==='premium') ? 'block' : 'none';
-
-  renderOptions();   // プランに応じてオプション再生成
+  renderOptions();
   calc();
 }
 
 function calc() {
-  if (!PRICE) { return; }
-
-  // ---- 印刷（サイズキー・部数を決定）----
+  if (!PRICE) return;
   let sizeKey, copies, printLabel;
   if (currentPlan === 'start') {
-    copies  = parseInt(document.getElementById('start-copies').value);
-    sizeKey = document.getElementById('start-size').value;   // 例 shiro_mono_St
+    copies    = parseInt(document.getElementById('start-copies').value);
+    sizeKey   = document.getElementById('start-size').value;
     printLabel = pPrintLabel(sizeKey) + ' / ' + copies.toLocaleString() + '部';
   } else {
-    sizeKey = document.getElementById('sinano-size').value;  // SD/PM共用キー
-    copies  = parseInt(document.getElementById('sinano-copies').value);
+    sizeKey   = document.getElementById('sinano-size').value;
+    copies    = parseInt(document.getElementById('sinano-copies').value);
     printLabel = pPrintLabel(sizeKey) + ' / ' + copies.toLocaleString() + '部';
   }
 
-  // 印刷売価はスプシのE列固定値をそのまま使う（掛け率計算なし）
   const printSell = pPrintSell(sizeKey, copies);
   if (!printSell) {
-    // 売価が未設定の組み合わせ
     document.getElementById('print-label').textContent   = printLabel + '（売価未設定）';
     document.getElementById('print-display').textContent = '—';
     document.getElementById('subtotal-display').textContent = '—';
     document.getElementById('total-display').textContent = '—';
+    document.getElementById('cost-ref').textContent = '—';
     S = {};
     return;
   }
 
-  // ---- 制作費（項目別の固定売価。プランで含める項目を切替）----
   const prodKeys = prodKeysForPlan(currentPlan);
   let prodSubtotal = 0;
-  const prodParts = [];
-  prodKeys.forEach(k => {
-    const sell = pFixedSell(k);
-    if (sell > 0) { prodSubtotal += sell; prodParts.push(pFixedLabel(k)); }
-  });
+  prodKeys.forEach(k => { const sell = pFixedSell(k); if (sell > 0) prodSubtotal += sell; });
 
-  // ---- オプション（チェック中を集計）----
   let optTotal = 0;
   const checkedIdx = [];
   document.querySelectorAll('#option-grid input[type=checkbox]:checked').forEach(cb => {
@@ -380,7 +346,6 @@ function calc() {
     if (PRICE.option[i]) { optTotal += Number(PRICE.option[i].sell); checkedIdx.push(i); }
   });
 
-  // ---- 送料 ----
   let shipping = 0, shippingLabel = '配送料';
   if (currentPlan === 'start') {
     shipping = Math.ceil(copies * 17 / 100) * 100;
@@ -394,76 +359,69 @@ function calc() {
 
   S = { sizeKey, copies, printSell, prodSubtotal, optTotal, shipping, totalExTax, totalIncTax, checkedIdx };
 
-  // ---- 表示 ----
-  document.getElementById('opt-est-section').style.display = optTotal > 0 ? 'block' : 'none';
-  document.getElementById('shipping-label').textContent   = shippingLabel;
-  document.getElementById('shipping-display').textContent = fmt(shipping);
-  document.getElementById('print-label').textContent      = printLabel;
-  document.getElementById('print-display').textContent    = fmt(printSell);
-
-  // 制作費は項目名を出さず「一式」表示（内訳はスプシ記録には残る）
+  document.getElementById('opt-est-section').style.display   = optTotal > 0 ? 'block' : 'none';
+  document.getElementById('shipping-label').textContent      = shippingLabel;
+  document.getElementById('shipping-display').textContent    = fmt(shipping);
+  document.getElementById('print-label').textContent         = printLabel;
+  document.getElementById('print-display').textContent       = fmt(printSell);
   document.getElementById('production-subtotal').textContent = fmt(prodSubtotal);
   document.getElementById('opt-display').textContent         = fmt(optTotal);
   document.getElementById('subtotal-display').textContent    = fmt(totalExTax);
   document.getElementById('total-display').textContent       = fmt(totalIncTax);
+  document.getElementById('cost-ref').textContent            = fmt(totalExTax);
+
+  calcDiff();
 }
 
-// 起動
+// 提示額と原価の差分表示
+function calcDiff() {
+  const quoteRaw = document.getElementById('quote-price').value;
+  const diffEl   = document.getElementById('quote-diff');
+  if (!quoteRaw || !S.totalExTax) { diffEl.className = 'quote-diff'; return; }
+  const quote = parseInt(quoteRaw, 10);
+  const diff  = quote - S.totalExTax;
+  const sign  = diff >= 0 ? '+' : '';
+  const pct   = S.totalExTax > 0 ? ((diff / S.totalExTax) * 100).toFixed(1) : 0;
+  diffEl.className = 'quote-diff ' + (diff >= 0 ? 'positive' : 'negative');
+  diffEl.textContent = `原価との差：${sign}¥${Math.abs(diff).toLocaleString()} （${sign}${pct}%）`;
+}
+
 loadPrices();
 
 // ===================================
-// フォーム送信
+// 記録送信
 // ===================================
 function submitForm() {
-  const name  = document.getElementById('customer-name').value.trim();
-  const email = document.getElementById('customer-email').value.trim();
-  if (!name)  { alert('お名前を入力してください'); return; }
-  if (!email) { alert('メールアドレスを入力してください'); return; }
-  // メール形式の簡易チェック
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    alert('メールアドレスの形式が正しくないようです。ご確認ください。');
-    return;
-  }
-
-  // 電話番号：全角→半角に変換し、数字以外を除去して桁数チェック（入力時のみ）
-  let tel = document.getElementById('customer-tel').value.trim();
-  if (tel) {
-    // 全角数字を半角に
-    tel = tel.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-    // 数字以外（ハイフン・スペース・括弧など）を除去
-    const digits = tel.replace(/[^0-9]/g, '');
-    if (digits.length < 10 || digits.length > 11) {
-      alert('電話番号は10〜11桁の数字でご入力ください（ハイフンは不要です）。');
-      return;
-    }
-    tel = digits;   // 数字のみで送る（頭の0も保持される）
-  }
+  const clientName = document.getElementById('client-name').value.trim();
+  if (!clientName) { alert('クライアント名を入力してください'); return; }
 
   const genreEl = document.querySelector('.genre-tag.selected');
   const genre   = genreEl ? genreEl.textContent : '';
-
-  // 選択中オプション（スプシのラベルとindexをそのまま使う）
-  const checkedIdx = S.checkedIdx || [];
-  const checkedLabels = checkedIdx.map(i => (PRICE.option[i] ? PRICE.option[i].label : '')).filter(Boolean).join('、');
 
   let spec='', copies='', sizeKey='';
   if (currentPlan === 'start') {
     const sizeEl = document.getElementById('start-size');
     spec    = sizeEl.options[sizeEl.selectedIndex].text;
     copies  = document.getElementById('start-copies').value;
-    sizeKey = sizeEl.value;   // 例 shiro_mono_St
+    sizeKey = sizeEl.value;
   } else {
     const sizeEl = document.getElementById('sinano-size');
     spec    = sizeEl.options[sizeEl.selectedIndex].text;
     copies  = document.getElementById('sinano-copies').value;
     sizeKey = sizeEl.value;
   }
-  const planNames = { start:'スタートプラン', standard:'スタンダードプラン', premium:'プレミアムプラン' };
+
+  const checkedIdx    = S.checkedIdx || [];
+  const checkedLabels = checkedIdx.map(i => (PRICE.option[i] ? PRICE.option[i].label : '')).filter(Boolean).join('、');
+  const planNames     = { start:'スタートプラン', standard:'スタンダードプラン', premium:'プレミアムプラン' };
+  const quotePrice    = parseInt(document.getElementById('quote-price').value || '0', 10);
 
   const payload = {
-    name,
-    email,
-    tel:           tel,
+    // クライアント情報
+    name:          clientName,
+    quotePrice:    quotePrice || 0,
+    memo:          document.getElementById('client-memo').value.trim(),
+    // 見積情報
     plan:          currentPlan,
     planName:      planNames[currentPlan],
     spec,
@@ -480,26 +438,23 @@ function submitForm() {
     totalExTax:    S.totalExTax   || 0,
     totalIncTax:   S.totalIncTax  || 0,
     totalDisplay:  document.getElementById('total-display').textContent,
-    message:       document.getElementById('customer-message').value.trim()
   };
 
   const btn = document.querySelector('.submit-btn');
-  btn.textContent = '送信中...';
+  btn.textContent = '記録中...';
   btn.disabled = true;
 
   fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
     .then(res => res.json())
     .then(res => {
       if (res.status === 'ok') {
-        btn.textContent = '送信完了しました';
+        btn.textContent = '記録しました';
         btn.style.background = '#4caf8a';
-        alert('送信しました。');
-      } else {
-        throw new Error(res.message || '不明なエラー');
-      }
+        alert('スプシに記録しました。');
+      } else { throw new Error(res.message || '不明なエラー'); }
     })
     .catch(err => {
-      btn.textContent = '送信';
+      btn.textContent = '記録する';
       btn.disabled = false;
       alert('送信に失敗しました。\n' + err.message);
     });
