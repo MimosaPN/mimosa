@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お申し込みありがとうございます | 本、文通</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --yellow:     #E8C84A;
+      --yellow-lt:  #F5E08A;
+      --yellow-dk:  #C9A832;
+      --green:      #4A6741;
+      --green-lt:   #6A8B65;
+      --cream:      #FDFAF3;
+      --cream-dk:   #F4EDD8;
+      --ink:        #1C1C1C;
+      --ink-mid:    #3D3730;
+      --ink-lt:     #7A7268;
+      --white:      #FFFFFF;
+
+      --f-display: 'Shippori Mincho', 'Yu Mincho', serif;
+      --f-body:    'Noto Serif JP', 'Yu Mincho', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--f-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.9;
+      font-size: 15px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(253,250,243,0.92);
+      border-bottom: 1px solid rgba(232,200,74,0.25);
+    }
+    .nav-logo img { height: 36px; width: auto; vertical-align: middle; }
+
+    /* ─── MAIN ─── */
+    main {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .thanks-mark {
+      font-size: 30px;
+      color: var(--yellow-dk);
+      margin-bottom: 28px;
+      letter-spacing: 0.3em;
+    }
+
+    .thanks-label {
+      font-family: var(--f-display);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--yellow-dk);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .thanks-title {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .thanks-copy {
+      max-width: 460px;
+      font-size: 14.5px;
+      line-height: 2.1;
+      color: var(--ink-mid);
+      margin-bottom: 48px;
+    }
+
+    .thanks-detail {
+      max-width: 460px;
+      width: 100%;
+      background: var(--cream-dk);
+      border-top: 3px solid var(--yellow);
+      padding: 32px 36px;
+      text-align: left;
+      margin-bottom: 48px;
+    }
+    .thanks-detail p {
+      font-size: 13.5px;
+      line-height: 2.0;
+      color: var(--ink-mid);
+    }
+    .thanks-detail p + p { margin-top: 12px; }
+    .thanks-detail strong { color: var(--ink); }
+
+    .btn-primary {
+      font-family: var(--f-display);
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      padding: 16px 44px;
+      background: var(--green);
+      color: var(--white);
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--green-lt); transform: translateY(-1px); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.5);
+      padding: 40px;
+      text-align: center;
+      font-family: var(--f-display);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      line-height: 2.2;
+    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: var(--yellow); }
+    .footer-logo {
+      font-size: 15px;
+      color: var(--yellow);
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 14px 20px; }
+      main { padding: 64px 24px; }
+      .thanks-detail { padding: 26px 24px; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="https://mimosa.mimosa-partners.com/buntsu">
+    <img src="/buntsu_logo.png" alt="本、文通">
+  </a>
+</nav>
+
+<main>
+  <p class="thanks-mark">✦</p>
+  <p class="thanks-label">Thank You</p>
+  <h1 class="thanks-title">お申し込み、<br>ありがとうございます。</h1>
+  <p class="thanks-copy">
+    お支払い登録が完了しました。<br>
+    あなたのことを想いながら、最初の１冊を選びます。<br>
+    本と手紙が届くまで、少しお待ちください。
+  </p>
+
+  <div class="thanks-detail">
+    <p><strong>次回以降のお支払い</strong>：毎月10日に自動引き落とし</p>
+    <p><strong>お届け</strong>：月末〜翌月初旬を目安に発送</p>
+    <p><strong>ご連絡先</strong>：<a href="mailto:info@mimosa-partners.com" style="color:var(--green)">info@mimosa-partners.com</a></p>
+  </div>
+
+  <a class="btn-primary" href="https://mimosa.mimosa-partners.com/buntsu">「本、文通」のページに戻る</a>
+</main>
+
+<footer>
+  <div class="footer-logo">出版社 ミモザ</div>
+  <p><a href="https://mimosa.mimosa-partners.com">mimosa.mimosa-partners.com</a></p>
+  <p style="margin-top:8px"><a href="mailto:info@mimosa-partners.com">info@mimosa-partners.com</a></p>
+  <p style="margin-top:20px; font-size:11px">© 2026 ミモザパートナーズ合同会社</p>
+</footer>
+
+</body>
+</html>
