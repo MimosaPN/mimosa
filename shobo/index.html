@@ -185,9 +185,17 @@ const BOOKS_LABEL   = 'ミモザ書房';
 
 // ステータスに応じたクラスとラベル
 const STATUS_MAP = {
-  '刊行予定': { cls: 'status-soon', label: (date) => date ? date + ' 刊行予定' : '刊行予定' },
+  '刊行予定': { cls: 'status-soon', label: (date) => date ? formatDate_(date) + ' 刊行予定' : '刊行予定' },
   '準備中':   { cls: 'status-wip',  label: () => '準備中' },
   '刊行済':   { cls: 'status-done', label: () => '好評発売中' },
+};
+
+function formatDate_(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr; // パース失敗時はそのまま返す
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
 };
 
 // 表紙がない場合の色（順番に使い回す）
