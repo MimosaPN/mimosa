@@ -201,8 +201,8 @@ async function loadBooks() {
     if (!data.ok || !Array.isArray(data.books)) throw new Error();
 
     if (data.books.length === 0) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>';
-      return;
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>';
+       return;
     }
 
     grid.innerHTML = data.books.map((b, i) => {
