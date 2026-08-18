@@ -399,43 +399,59 @@ async function loadProducts() {
   const cachedSb = loadCache(CACHE_KEY_SB);
   const cachedMd = loadCache(CACHE_KEY_MD);
 
+  // ① 埋め込みデータがあればそれを使う（一番速い）
+  if (EMBEDDED_PRODUCTS && Array.isArray(EMBEDDED_PRODUCTS.sb) && EMBEDDED_PRODUCTS.sb.length > 0) {
+    PRODUCTS_SHOBO    = EMBEDDED_PRODUCTS.sb;
+    PRODUCTS_MIMOSADO = EMBEDDED_PRODUCTS.md || [];
+    hideLoading();
+    buildFilter();
+    renderGrid();
+    updateCartBadge();
+    // バックグラウンドで在庫だけ更新
+    fetchFromGas().then(({ sb, md }) => {
+      if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
+      if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
+      renderGrid();
+    }).catch(() => {});
+    return;
+  }
+
+  // ② キャッシュがあれば使う
   if (cachedSb && cachedMd) {
-    // キャッシュあり → 即表示
     PRODUCTS_SHOBO    = cachedSb;
     PRODUCTS_MIMOSADO = cachedMd;
     hideLoading();
     buildFilter();
     renderGrid();
     updateCartBadge();
-
     // バックグラウンドで静かに更新
     fetchFromGas().then(({ sb, md }) => {
       if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
       if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
       renderGrid();
     }).catch(() => {});
-
-  } else {
-    // キャッシュなし → ローディング表示してから描画
-    showLoading();
-    try {
-      const { sb, md } = await fetchFromGas();
-      PRODUCTS_SHOBO    = sb || DEMO.shobo;
-      PRODUCTS_MIMOSADO = md || DEMO.mimosado;
-      if (sb) saveCache(CACHE_KEY_SB, sb);
-      if (md) saveCache(CACHE_KEY_MD, md);
-    } catch {
-      PRODUCTS_SHOBO    = DEMO.shobo;
-      PRODUCTS_MIMOSADO = DEMO.mimosado;
-    }
-    hideLoading();
-    setTimeout(() => {
-      buildFilter();
-      document.getElementById('grid').classList.add('fade-in');
-      renderGrid();
-      updateCartBadge();
-    }, 280);
+    return;
   }
+
+  // ③ GASからfetch
+  showLoading();
+  try {
+    const { sb, md } = await fetchFromGas();
+    PRODUCTS_SHOBO    = sb || DEMO.shobo;
+    PRODUCTS_MIMOSADO = md || DEMO.mimosado;
+    if (sb) saveCache(CACHE_KEY_SB, sb);
+    if (md) saveCache(CACHE_KEY_MD, md);
+  } catch {
+    PRODUCTS_SHOBO    = DEMO.shobo;
+    PRODUCTS_MIMOSADO = DEMO.mimosado;
+  }
+  hideLoading();
+  setTimeout(() => {
+    buildFilter();
+    document.getElementById('grid').classList.add('fade-in');
+    renderGrid();
+    updateCartBadge();
+  }, 280);
 }
 
 // ── タブ切り替え ──
