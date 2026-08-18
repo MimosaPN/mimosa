@@ -205,7 +205,6 @@ async function loadBooks() {
   try {
     const res  = await fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`);
     const data = await res.json();
-    console.log('GASレスポンス:', data); // ← 追加
     if (!data.ok || !Array.isArray(data.books)) throw new Error();
 
     if (data.books.length === 0) {
