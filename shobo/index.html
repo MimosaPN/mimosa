@@ -3,55 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ミモザ書房 | 出版社 ミモザ</title>
+<title>ミモザ書房 | 出版社ミモザ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
 
-.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; position: sticky; top: 0; z-index: 40; }
+.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; }
 .nav-logo { text-decoration: none; color: inherit; }
 .nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; font-family: 'Noto Sans JP', sans-serif; }
 .nav-logo .name { font-size: 22px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; }
-.nav-links { display: flex; gap: 2rem; list-style: none; font-size: 12px; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; }
-.nav-links a { color: #666; text-decoration: none; transition: color .2s; }
-.nav-links a:hover { color: #8a6f4e; }
-
-/* ── ハンバーガーボタン ── */
-.nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 50; }
-.nav-hamburger span { display: block; width: 22px; height: 1.5px; background: #2c2a24; transition: transform .25s, opacity .25s; }
-.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.nav-hamburger.open span:nth-child(2) { opacity: 0; }
-.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-/* ── モバイルメニュー（nav外に配置） ── */
-.mobile-menu {
-  display: none;
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  flex-direction: column; justify-content: center; align-items: center;
-  gap: 2.25rem;
-  background: rgba(250,248,244,0.93);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  z-index: 100;
-  list-style: none;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-size: 17px; letter-spacing: .1em;
-}
-.mobile-menu.open { display: flex; }
-.mobile-menu a { color: #6b6454; text-decoration: none; }
-.mobile-menu a:hover { color: #8a6f4e; }
-.mobile-menu-close {
-  position: absolute; top: 1.25rem; right: 1.5rem;
-  background: none; border: none; font-size: 26px;
-  cursor: pointer; color: #2c2a24; line-height: 1;
-}
-
-@media(max-width:640px){
-  .nav-hamburger { display: flex; }
-  .nav-links { display: none; }
-}
+.nav-links { display: flex; gap: 2rem; list-style: none; font-size: 12px; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; color: #666; }
+.nav-links li { cursor: pointer; }
 
 .hero { position: relative; padding: 7rem 3rem 5rem; text-align: center; overflow: hidden; }
 .hero-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #f5f0e8 0%, #faf8f4 100%); z-index: 0; }
@@ -65,42 +29,13 @@ body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24;
 .section { padding: 5rem 3rem; max-width: 900px; margin: 0 auto; }
 .section-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; text-align: center; }
 
-/* ── ローディング ── */
-.books-loading {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 0;
-  gap: 1.25rem;
-}
-.books-loading-dots {
-  display: flex; gap: 8px;
-}
-.books-loading-dots span {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #c8b89a;
-  animation: dotPulse 1.2s ease-in-out infinite;
-}
-.books-loading-dots span:nth-child(2) { animation-delay: .2s; }
-.books-loading-dots span:nth-child(3) { animation-delay: .4s; }
-@keyframes dotPulse {
-  0%,80%,100% { opacity: .25; transform: scale(.8); }
-  40%          { opacity: 1;   transform: scale(1); }
-}
-.books-loading-text {
-  font-size: 12px; color: #a09880;
-  font-family: 'Noto Sans JP', sans-serif;
-  letter-spacing: 0.1em;
-}
-
 .books-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.books-grid.fade-in { animation: fadeIn .4s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
 .book-card { background: #fff; border: 0.5px solid #d8d4c8; cursor: pointer; transition: border-color 0.2s; }
 .book-card:hover { border-color: #a09880; }
 .book-cover { width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; }
+.book-cover-1 { background: #e8e0d4; }
+.book-cover-2 { background: #dce8e0; }
+.book-cover-3 { background: #e4dcea; }
 .cover-title { font-size: 16px; letter-spacing: 0.12em; color: #fff; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; padding: 1rem; }
 .book-info { padding: 1.25rem 1rem 1.5rem; }
 .book-genre { font-size: 10px; letter-spacing: 0.2em; color: #b8a888; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 0.4rem; }
@@ -109,8 +44,7 @@ body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24;
 .book-desc { font-size: 12px; color: #6b6454; line-height: 1.8; font-family: 'Noto Sans JP', sans-serif; }
 .book-status { display: inline-block; margin-top: 1rem; font-size: 10px; letter-spacing: 0.15em; padding: 0.3rem 0.75rem; font-family: 'Noto Sans JP', sans-serif; }
 .status-soon { background: #f5f0e8; color: #8a6f4e; border: 0.5px solid #c8b89a; }
-.status-wip  { background: #f0f0f0; color: #888;    border: 0.5px solid #ddd; }
-.status-done { background: #e8f0e4; color: #4a6741; border: 0.5px solid #a0c090; }
+.status-wip { background: #f0f0f0; color: #888; border: 0.5px solid #ddd; }
 
 .recruit { background: #f0ece3; padding: 5rem 3rem; }
 .recruit-inner { max-width: 700px; margin: 0 auto; text-align: center; }
@@ -119,20 +53,17 @@ body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24;
 .recruit-body { font-size: 13px; color: #6b6454; line-height: 2.1; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; }
 .recruit-genres { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
 .genre-tag { font-size: 11px; letter-spacing: 0.1em; padding: 0.4rem 1rem; border: 0.5px solid #c8b89a; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; background: #fff; }
-.btn { display: inline-block; padding: 0.9rem 3rem; background: #2c2a24; color: #faf8f4; font-size: 13px; letter-spacing: 0.2em; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; border: none; text-decoration: none; transition: background .2s; }
+.btn { display: inline-block; padding: 0.9rem 3rem; background: #2c2a24; color: #faf8f4; font-size: 13px; letter-spacing: 0.2em; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; border: none; text-decoration: none; }
 .btn:hover { background: #1e1c18; }
 
-.contact { padding: 5rem 3rem; max-width: 800px; margin: 0 auto; scroll-margin-top: 80px; }
-.contact-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; text-align: center; }
-.contact-title { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 0.75rem; text-align: center; }
-.contact-lead { font-size: 13px; color: #6b6454; line-height: 2; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 3rem; text-align: center; }
-.contact-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-.contact-card { background: #fff; border: 0.5px solid #d8d4c8; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
-.contact-card-tag { font-size: 10px; letter-spacing: 0.25em; color: #b8a888; font-family: 'Noto Sans JP', sans-serif; text-transform: uppercase; }
-.contact-card-title { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: #1e1c18; line-height: 1.5; }
-.contact-card-body { font-size: 12px; color: #6b6454; line-height: 1.9; font-family: 'Noto Sans JP', sans-serif; flex: 1; }
-.contact-card-link { display: inline-block; margin-top: 0.5rem; font-size: 12px; letter-spacing: 0.1em; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; text-decoration: none; border-bottom: 0.5px solid #c8b89a; padding-bottom: 1px; transition: color .2s; }
-.contact-card-link:hover { color: #5a4f3e; }
+.contact { padding: 5rem 3rem; max-width: 700px; margin: 0 auto; text-align: center; }
+.contact-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
+.contact-title { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 1.5rem; }
+.contact-body { font-size: 13px; color: #6b6454; line-height: 2; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: left; margin-bottom: 2.5rem; }
+.contact-item { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.5rem; }
+.contact-item-label { font-size: 10px; letter-spacing: 0.2em; color: #b8a888; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 0.5rem; }
+.contact-item-text { font-size: 13px; color: #4a4438; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; }
 
 .about { border-top: 0.5px solid #d8d4c8; padding: 5rem 3rem; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
 .about-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
@@ -142,53 +73,23 @@ body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24;
 
 footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #aaa; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.05em; }
 .footer-back { color: #c8b89a; text-decoration: none; }
-
-/* ── 準備中 ── */
-.books-coming-soon{
-  grid-column:1/-1;text-align:center;padding:4rem 0;
-}
-.books-coming-soon-dots{ display:flex;gap:6px;justify-content:center;margin-bottom:1.5rem; }
-.books-coming-soon-dots span{ width:7px;height:7px;border-radius:50%;background:#E8B84B; }
-.books-coming-soon-text{ font-family:'Noto Sans JP',sans-serif;font-size:14px;color:#a09880;line-height:2; }
-
-@media(max-width:640px){
-  nav { padding: 1rem 1.5rem; }
-  .hero-title { font-size: 34px; }
-  .books-grid { grid-template-columns: 1fr; }
-  .contact-cards { grid-template-columns: 1fr; }
-  .about { grid-template-columns: 1fr; gap: 2rem; }
-  .section, .contact, .recruit { padding: 3rem 1.5rem; }
-}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <a class="nav-logo" href="/">
-    <div class="parent">出版社 ミモザ ／ Mimosa Shobo</div>
+    <div class="parent">出版社ミモザ ／ Mimosa Shobo</div>
     <div class="name">ミモザ書房</div>
   </a>
   <ul class="nav-links">
-    <li><a href="#books">書籍</a></li>
-    <li><a href="#recruit">著者募集</a></li>
-    <li><a href="/trade.html">書店員の方へ</a></li>
-    <li><a href="#contact">お問い合わせ</a></li>
-    <li><a href="/mimosado/">ミモザ堂</a></li>
+    <li><a href="#books" style="color:inherit;text-decoration:none;">書籍</a></li>
+    <li><a href="#recruit" style="color:inherit;text-decoration:none;">著者募集</a></li>
+    <li><a href="/trade.html" style="color:inherit;text-decoration:none;">書店員の方へ</a></li>
+    <li><a href="#contact" style="color:inherit;text-decoration:none;">お問い合わせ</a></li>
+    <li><a href="/mimosado/" style="color:inherit;text-decoration:none;">ミモザ堂</a></li>
   </ul>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
-
-<!-- モバイルメニュー（nav外に配置してstacking context問題を回避） -->
-<ul class="mobile-menu" id="mobile-menu">
-  <button class="mobile-menu-close" onclick="closeMenu()" aria-label="閉じる">&times;</button>
-  <li><a href="#books"      onclick="closeMenu()">書籍</a></li>
-  <li><a href="#recruit"    onclick="closeMenu()">著者募集</a></li>
-  <li><a href="/trade.html" onclick="closeMenu()">書店員の方へ</a></li>
-  <li><a href="#contact"    onclick="closeMenu()">お問い合わせ</a></li>
-  <li><a href="/mimosado/"  onclick="closeMenu()">ミモザ堂</a></li>
-</ul>
 
 <section class="hero">
   <div class="hero-bg"></div>
@@ -197,7 +98,7 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
     <h1 class="hero-title">物語を、<em>ひらく</em>。</h1>
     <p class="hero-copy">
       ミモザ書房は、文芸・小説・エッセイの商業出版レーベルです。<br>
-      書き手の声と物語を、１冊の本として世界に届けます。
+      書き手の声と物語を、一冊の本として世界に届けます。
     </p>
     <span class="hero-badge">2025年秋　第1作　刊行予定</span>
   </div>
@@ -205,16 +106,11 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
 
 <section class="section" id="books">
   <p class="section-label">Books</p>
-
-  <!-- ローディング表示 -->
-  <div class="books-loading" id="books-loading">
-    <div class="books-loading-dots">
-      <span></span><span></span><span></span>
+  <div class="books-grid" id="books-grid">
+    <div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">
+      書籍を読み込んでいます…
     </div>
-    <p class="books-loading-text">書籍を読み込んでいます</p>
   </div>
-
-  <div class="books-grid" id="books-grid"></div>
 </section>
 
 <section class="recruit" id="recruit">
@@ -224,6 +120,7 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
     <p class="recruit-body">
       ミモザ書房では、商業出版をともに作り上げる書き手を募集しています。<br>
       小説・エッセイ・ライフスタイルなど、あなたの原稿をお持ちください。<br>
+      完成稿でなくても構いません。まずはお気軽にご相談ください。
     </p>
     <div class="recruit-genres">
       <span class="genre-tag">小説</span>
@@ -232,34 +129,27 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
       <span class="genre-tag">ノンフィクション</span>
       <span class="genre-tag">その他ご相談</span>
     </div>
-    <a class="btn" href="/shobo/recruit.html">原稿を送る・応募する</a>
+    <a class="btn" href="mailto:info@mimosa-partners.com?subject=原稿応募について">原稿を送る・応募する</a>
   </div>
 </section>
 
 <section class="contact" id="contact">
   <p class="contact-label">Contact</p>
   <h2 class="contact-title">お問い合わせ</h2>
-  <p class="contact-lead">目的に合わせた窓口をご利用ください。</p>
-  <div class="contact-cards">
-    <div class="contact-card">
-      <p class="contact-card-tag">For Bookstores</p>
-      <p class="contact-card-title">取次・書店の方</p>
-      <p class="contact-card-body">会社概要・書誌情報・ISBN一覧・注文書など、各種資料のご請求はこちらから。</p>
-      <a class="contact-card-link" href="/trade.html">書店員の方へ →</a>
+  <p class="contact-body">
+    書籍のご注文・取次・メディア掲載・著者応募など、<br>お気軽にご連絡ください。
+  </p>
+  <div class="contact-grid">
+    <div class="contact-item">
+      <p class="contact-item-label">Email</p>
+      <p class="contact-item-text">info@mimosa-partners.com<br><span style="font-size:11px;color:#aaa;">※返信まで2〜3営業日</span></p>
     </div>
-    <div class="contact-card">
-      <p class="contact-card-tag">For Media</p>
-      <p class="contact-card-title">取材・メディアの方</p>
-      <p class="contact-card-body">著者・出版社への取材・掲載のご依頼は、出版社 ミモザのお問い合わせフォームよりお送りください。</p>
-      <a class="contact-card-link" href="/index.html#contact">お問い合わせフォームへ →</a>
-    </div>
-    <div class="contact-card">
-      <p class="contact-card-tag">For Writers</p>
-      <p class="contact-card-title">著者応募・原稿相談</p>
-      <p class="contact-card-body">出版をご検討中の書き手の方は、応募フォームよりご連絡ください。原稿データの添付も可能です。</p>
-      <a class="contact-card-link" href="/shobo/recruit.html">応募フォームへ →</a>
+    <div class="contact-item">
+      <p class="contact-item-label">取次・書店の方</p>
+      <p class="contact-item-text">会社概要・ISBN情報は<br><a href="/trade.html" style="color:#8a6f4e;">書店員の方へ</a>よりご請求ください</p>
     </div>
   </div>
+  <a class="btn" href="/">お問い合わせはこちら →</a>
 </section>
 
 <section class="about">
@@ -274,7 +164,8 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
       出版社名「ミモザ」のもと、文芸・エッセイを中心に刊行します。<br><br>
       ISBN登録出版社名：ミモザ<br>
       運営会社：ミモザパートナーズ合同会社<br>
-      設立：2026年1月13日
+      設立：2026年1月13日<br>
+      メール：info@mimosa-partners.com
     </p>
   </div>
 </section>
@@ -285,198 +176,105 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
 </footer>
 
 <script>
-// ── プレビュー制御 ──
-const PREVIEW_KEY    = 'mimosa_shobo_preview';
-const PREVIEW_SECRET = 'mimosa2026';
-
-(function checkPreview() {
-  const params = new URLSearchParams(location.search);
-  if (params.get('preview') === PREVIEW_SECRET) {
-    localStorage.setItem(PREVIEW_KEY, '1');
-    history.replaceState(null, '', location.pathname);
-  }
-})();
-
-function isPreview() {
-  return !!localStorage.getItem(PREVIEW_KEY);
-}
-
-// ── ハンバーガーメニュー ──
-function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn  = document.getElementById('nav-hamburger');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
-  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-}
-function closeMenu() {
-  document.getElementById('mobile-menu').classList.remove('open');
-  document.getElementById('nav-hamburger').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-const BOOKS_GAS_URL = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
+// ============================================================
+// 書籍マスタ取得（GASウェブアプリURL）
+// ショップのGAS_URLと同じURLを使用
+// ============================================================
+const BOOKS_GAS_URL = '【GASのウェブアプリURLをここに貼る】';
 const BOOKS_LABEL   = 'ミモザ書房';
-const CACHE_KEY     = 'mimosa_books_shobo';
-const CACHE_TTL     = 60 * 60 * 1000; // 1時間
 
+// ステータスに応じたクラスとラベル
 const STATUS_MAP = {
   '刊行予定': { cls: 'status-soon', label: (date) => date ? date + ' 刊行予定' : '刊行予定' },
   '準備中':   { cls: 'status-wip',  label: () => '準備中' },
   '刊行済':   { cls: 'status-done', label: () => '好評発売中' },
 };
+
+// 表紙がない場合の色（順番に使い回す）
 const COVER_COLORS = ['#e8e0d4', '#dce8e0', '#e4dcea', '#e0e4e8', '#e8e4d4'];
 
-// ── キャッシュ読み書き ──
-function loadCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const { data, timestamp } = JSON.parse(raw);
-    if (Date.now() - timestamp > CACHE_TTL) return null; // 期限切れ
-    return data;
-  } catch { return null; }
-}
-
-function saveCache(data) {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
-  } catch {}
-}
-
-// ── ローディング表示制御 ──
-function showLoading() {
-  document.getElementById('books-loading').style.display = 'flex';
-}
-
-function hideLoading() {
-  const el = document.getElementById('books-loading');
-  el.style.transition = 'opacity .3s';
-  el.style.opacity = '0';
-  setTimeout(() => { el.style.display = 'none'; el.style.opacity = ''; }, 300);
-}
-
-// ── GASからデータ取得 ──
-async function fetchBooks() {
-  const res  = await fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`);
-  const data = await res.json();
-  if (!data.ok || !Array.isArray(data.books)) throw new Error('データ取得失敗');
-  return data.books;
-}
-
-// ── グリッド描画 ──
-function renderBooks(books, animate) {
-  const grid = document.getElementById('books-grid');
-
-  if (!books || books.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:\'Noto Sans JP\',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>';
-    return;
-  }
-
-  grid.innerHTML = books.map((b, i) => {
-    const coverColor = COVER_COLORS[i % COVER_COLORS.length];
-    const thumbHtml  = b.image
-      ? `<img src="${b.image}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;">`
-      : `<div class="cover-title">${b.title}</div>`;
-    const st = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
-    return `
-      <div class="book-card">
-        <div class="book-cover" style="background:${coverColor};">${thumbHtml}</div>
-        <div class="book-info">
-          <p class="book-genre">${b.genre || ''}</p>
-          <p class="book-title">${b.title}</p>
-          <p class="book-author">著：${b.author}</p>
-          <p class="book-desc">${b.desc || ''}</p>
-          <span class="book-status ${st.cls}">${st.label(b.pubDate)}</span>
-        </div>
-      </div>`;
-  }).join('');
-
-  if (animate) grid.classList.add('fade-in');
-}
-
-// ── メイン処理 ──
 async function loadBooks() {
   const grid = document.getElementById('books-grid');
+  try {
+    const res  = await fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`);
+    const data = await res.json();
+    if (!data.ok || !Array.isArray(data.books)) throw new Error();
 
-  // プレビューモードでなければ準備中を表示
-  if (!isPreview()) {
-    document.getElementById('books-loading').style.display = 'none';
-    grid.innerHTML = `
-      <div class="books-coming-soon">
-        <div class="books-coming-soon-dots">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <p class="books-coming-soon-text">
-          近日公開予定です。<br>もうしばらくお待ちください。
-        </p>
-      </div>`;
-    return;
-  }
-
-  const cached = loadCache();
-
-  if (cached) {
-    // ── キャッシュあり：即表示 ──
-    renderBooks(cached, false);
-
-    // バックグラウンドで静かに更新
-    fetchBooks().then(books => {
-      saveCache(books);
-      renderBooks(books, false); // 表示中に静かに差し替え
-    }).catch(() => {});
-
-  } else {
-    // ── キャッシュなし：ローディング → フェードイン ──
-    showLoading();
-    try {
-      const books = await fetchBooks();
-      saveCache(books);
-      hideLoading();
-      setTimeout(() => renderBooks(books, true), 320); // hideLoadingのfade後に描画
-    } catch {
-      hideLoading();
-      setTimeout(() => renderDemoBooks(), 320);
+    if (data.books.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>';
+      return;
     }
+
+    grid.innerHTML = data.books.map((b, i) => {
+      const coverColor = COVER_COLORS[i % COVER_COLORS.length];
+      const thumbHtml  = b.image
+        ? `<img src="${b.image}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<div class="cover-title">${b.title.replace(/、/g, '、<br>')}</div>`;
+      const st     = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
+      const stCls  = st.cls;
+      const stText = st.label(b.pubDate);
+
+      return `
+        <div class="book-card">
+          <div class="book-cover" style="background:${coverColor};">
+            ${thumbHtml}
+          </div>
+          <div class="book-info">
+            <p class="book-genre">${b.genre}</p>
+            <p class="book-title">${b.title}</p>
+            <p class="book-author">著：${b.author}</p>
+            <p class="book-desc">${b.desc}</p>
+            <span class="book-status ${stCls}">${stText}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch(err) {
+    // GAS未設定時はダミーデータで表示
+    grid.innerHTML = `
+      <div class="book-card">
+        <div class="book-cover" style="background:#e8e0d4;">
+          <div class="cover-title">夜の縁側で<br>あなたに会う</div>
+        </div>
+        <div class="book-info">
+          <p class="book-genre">小説</p>
+          <p class="book-title">夜の縁側で、あなたに会う</p>
+          <p class="book-author">著：山田 花子（仮）</p>
+          <p class="book-desc">祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。</p>
+          <span class="book-status status-soon">2025年秋 刊行予定</span>
+        </div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:#dce8e0;">
+          <div class="cover-title">喫茶店で<br>生きている</div>
+        </div>
+        <div class="book-info">
+          <p class="book-genre">エッセイ</p>
+          <p class="book-title">喫茶店で生きている</p>
+          <p class="book-author">著：佐藤 一郎（仮）</p>
+          <p class="book-desc">全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。</p>
+          <span class="book-status status-wip">準備中</span>
+        </div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:#e4dcea;">
+          <div class="cover-title">あの日の<br>つづき</div>
+        </div>
+        <div class="book-info">
+          <p class="book-genre">小説</p>
+          <p class="book-title">あの日のつづき</p>
+          <p class="book-author">著：田中 美咲（仮）</p>
+          <p class="book-desc">10年後に再会した幼馴染が語り始める、誰にも話せなかった秘密の記憶。</p>
+          <span class="book-status status-wip">準備中</span>
+        </div>
+      </div>`;
   }
 }
 
-// ── デモデータ（GAS未設定・エラー時のフォールバック） ──
-function renderDemoBooks() {
-  const grid = document.getElementById('books-grid');
-  grid.classList.add('fade-in');
-  grid.innerHTML = `
-    <div class="book-card">
-      <div class="book-cover" style="background:#e8e0d4;"><div class="cover-title">夜の縁側で<br>あなたに会う</div></div>
-      <div class="book-info">
-        <p class="book-genre">小説</p>
-        <p class="book-title">夜の縁側で、あなたに会う</p>
-        <p class="book-author">著：山田 花子（仮）</p>
-        <p class="book-desc">祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。</p>
-        <span class="book-status status-soon">2025年秋 刊行予定</span>
-      </div>
-    </div>
-    <div class="book-card">
-      <div class="book-cover" style="background:#dce8e0;"><div class="cover-title">喫茶店で<br>生きている</div></div>
-      <div class="book-info">
-        <p class="book-genre">エッセイ</p>
-        <p class="book-title">喫茶店で生きている</p>
-        <p class="book-author">著：佐藤 一郎（仮）</p>
-        <p class="book-desc">全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。</p>
-        <span class="book-status status-wip">準備中</span>
-      </div>
-    </div>
-    <div class="book-card">
-      <div class="book-cover" style="background:#e4dcea;"><div class="cover-title">あの日の<br>つづき</div></div>
-      <div class="book-info">
-        <p class="book-genre">小説</p>
-        <p class="book-title">あの日のつづき</p>
-        <p class="book-author">著：田中 美咲（仮）</p>
-        <p class="book-desc">10年後に再会した幼馴染が語り始める、誰にも話せなかった秘密の記憶。</p>
-        <span class="book-status status-wip">準備中</span>
-      </div>
-    </div>`;
-}
+// status-done用のCSSを動的に追加
+const style = document.createElement('style');
+style.textContent = '.status-done{background:#e8f0e4;color:#4a6741;border:0.5px solid #a0c090;}';
+document.head.appendChild(style);
 
 loadBooks();
 </script>
