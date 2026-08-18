@@ -196,7 +196,6 @@ function formatDate_(dateStr) {
   if (isNaN(d.getTime())) return dateStr; // パース失敗時はそのまま返す
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
-};
 
 // 表紙がない場合の色（順番に使い回す）
 const COVER_COLORS = ['#e8e0d4', '#dce8e0', '#e4dcea', '#e0e4e8', '#e8e4d4'];
