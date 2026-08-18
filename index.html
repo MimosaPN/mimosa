@@ -32,41 +32,6 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .nav-links a{color:var(--ink-light);text-decoration:none;transition:color .2s;}
 .nav-links a:hover{color:var(--mimosa-gold);}
 
-/* ── ハンバーガーボタン ── */
-.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;z-index:50;}
-.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:transform .25s, opacity .25s;}
-.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-.nav-hamburger.open span:nth-child(2){opacity:0;}
-.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-/* ── モバイルメニュー（navの外に出してstacking context問題を回避） ── */
-.mobile-menu{
-  display:none;
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  flex-direction:column;justify-content:center;align-items:center;
-  gap:2.25rem;
-  background:rgba(250,248,244,0.93);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  z-index:100;
-  list-style:none;
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:17px;letter-spacing:.1em;
-}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{color:var(--ink-light);text-decoration:none;}
-.mobile-menu a:hover{color:var(--mimosa-gold);}
-.mobile-menu-close{
-  position:absolute;top:1.25rem;right:1.5rem;
-  background:none;border:none;font-size:26px;
-  cursor:pointer;color:var(--ink);line-height:1;
-}
-
-@media(max-width:640px){
-  .nav-hamburger{display:flex;}
-  .nav-links{display:none;}
-}
-
 .hero{padding:5rem 3rem 3rem;max-width:900px;margin:0 auto;text-align:center;}
 .hero-accent{display:inline-flex;align-items:center;gap:.5rem;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:1.5rem;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--mimosa-yellow);}
@@ -82,15 +47,12 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .labels-section{padding:2rem 3rem 5rem;max-width:880px;margin:0 auto;}
 .labels-heading{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
 .labels-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
-.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);color:inherit;display:block;transition:border-color .2s,transform .2s;}
+.label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s;}
 .label-card:hover{border-color:var(--mimosa-gold);transform:translateY(-2px);}
 .label-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
 .label-name{font-size:26px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:1rem;}
 .label-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:1.9;}
-.label-links{display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;flex-wrap:wrap;}
-.label-arrow{font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);text-decoration:none;}
-.label-arrow:hover{color:var(--mimosa-deep);}
-.label-shop{padding:0.35rem 1rem;border:0.5px solid var(--mimosa-gold);border-radius:2px;font-size:11px;}
+.label-arrow{display:inline-block;margin-top:1.5rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);}
 
 .isbn-section{background:var(--mimosa-soft);border-top:0.5px solid #E8D8A8;border-bottom:0.5px solid #E8D8A8;padding:4rem 3rem;scroll-margin-top:80px;}
 .isbn-inner{max-width:760px;margin:0 auto;}
@@ -101,22 +63,18 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .isbn-card-val{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.05em;}
 .isbn-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
 
-/* ── お問い合わせフォーム ── */
 .contact-section{padding:4rem 3rem;max-width:760px;margin:0 auto;scroll-margin-top:80px;}
 .contact-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
 .contact-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:2rem;text-align:center;}
+
 .form-box{background:var(--white);border:0.5px solid var(--border);padding:2.5rem;}
 .form-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-bottom:2rem;}
 .form-row{margin-bottom:1.25rem;}
 .form-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;display:block;}
 .form-label .req{color:#c87060;margin-left:.25rem;}
-.contact-section input[type=text],
-.contact-section input[type=email],
-.contact-section textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
-.contact-section input[type=text]:focus,
-.contact-section input[type=email]:focus,
-.contact-section textarea:focus{border-color:var(--mimosa-gold);}
-.contact-section textarea{resize:vertical;min-height:90px;}
+input[type=text],input[type=email],textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
+input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:var(--mimosa-gold);}
+textarea{resize:vertical;min-height:90px;}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .form-check{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
 .form-check label{display:flex;align-items:center;gap:.4rem;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
@@ -128,26 +86,12 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
 .footer-flower{display:flex;gap:3px;align-items:center;}
 .footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
-.footer-center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.25rem;}
-.footer-logo{height:56px;width:auto;object-fit:contain;}
-.footer-company{font-size:11px;color:var(--ink-light);letter-spacing:0.05em;}
-.footer-copy{font-size:10px;color:var(--muted);}
-
-/* ── ヒーローロゴ ── */
-.hero-logo{
-  display:block;
-  width:min(320px, 70vw);
-  height:auto;
-  margin:0 auto 1.5rem;
-  object-fit:contain;
-}
 
 @media(max-width:640px){
   .labels-grid,.isbn-grid,.form-row-2{grid-template-columns:1fr;}
   .hero h1{font-size:34px;}
-  .hero h1 em{white-space:nowrap;}
   nav{padding:1rem 1.5rem;}
-  .labels-section,.contact-section,.isbn-section,.feeling-section{padding:2rem 1.5rem;}
+  .labels-section,.contact-section,.isbn-section{padding:2rem 1.5rem;}
   .form-box{padding:1.5rem;}
 }
 </style>
@@ -156,40 +100,24 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 
 <nav>
   <a class="nav-logo" href="#">
-    <span class="en">Mimosa Publishing</span>
+    <span class="en">Publisher Mimosa</span>
     <span class="ja">出版社 ミモザ</span>
   </a>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#labels"    onclick="closeMenu()">レーベル</a></li>
-    <li><a href="#isbn"      onclick="closeMenu()">ISBNについて</a></li>
-    <li><a href="/trade.html"onclick="closeMenu()">書店員の方へ</a></li>
-    <li><a href="/shop/"     onclick="closeMenu()">ショップ</a></li>
-    <li><a href="#contact"   onclick="closeMenu()">お問い合わせ</a></li>
-    <li><a href="/feeling.html"onclick="closeMenu()">ご感想</a></li>
+  <ul class="nav-links">
+    <li><a href="#labels">レーベル</a></li>
+    <li><a href="#isbn">ISBNについて</a></li>
+    <li><a href="/trade.html">書店員の方へ</a></li>
+    <li><a href="#contact">お問い合わせ</a></li>
   </ul>
-  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMenu()" aria-label="メニュー">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
-<!-- モバイルメニュー（nav外に配置してstacking context問題を回避） -->
-<ul class="mobile-menu" id="mobile-menu">
-  <button class="mobile-menu-close" onclick="closeMenu()" aria-label="閉じる">&times;</button>
-  <li><a href="#labels"      onclick="closeMenu()">レーベル</a></li>
-  <li><a href="#isbn"        onclick="closeMenu()">ISBNについて</a></li>
-  <li><a href="/trade.html"  onclick="closeMenu()">書店員の方へ</a></li>
-  <li><a href="/shop/"       onclick="closeMenu()">ショップ</a></li>
-  <li><a href="#contact"     onclick="closeMenu()">お問い合わせ</a></li>
-  <li><a href="/feeling.html"onclick="closeMenu()">ご感想</a></li>
-</ul>
-
 <section class="hero">
-  <img src="/logo.png" alt="出版社 ミモザ" class="hero-logo">
-   <h1>ことばを、<em>残す</em>。</h1>
+  <div class="hero-accent"><div class="dot"></div>Publisher Mimosa<div class="dot"></div></div>
+  <h1>ことばを、<em>残す</em>。</h1>
   <p class="hero-sub">
-    出版社 ミモザは、文学・エッセイから<br class="hero-br">書籍出版サポートまで、<br>
-    書き手の声をかたちにする<br class="hero-br">出版レーベルです。<br>
-    ミモザ書房とミモザ堂<br class="hero-br">2つのレーベルで刊行しています。
+    出版社 ミモザは、文学・エッセイから自費出版まで、<br>
+    書き手の声をかたちにする出版レーベルです。<br>
+    ミモザ書房・ミモザ堂、2つのレーベルで刊行しています。
   </p>
 </section>
 
@@ -202,7 +130,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 <section class="labels-section" id="labels">
   <p class="labels-heading">Our Labels</p>
   <div class="labels-grid">
-    <div class="label-card">
+    <a class="label-card" href="/shobo/">
       <p class="label-en">Mimosa Shobo</p>
       <h2 class="label-name">ミモザ書房</h2>
       <p class="label-desc">
@@ -210,24 +138,18 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
         書き手の個性と物語を丁寧に世に届けます。<br>
         2025年秋、第1作刊行予定。
       </p>
-      <div class="label-links">
-        <a class="label-arrow" href="/shobo/">ミモザ書房へ →</a>
-        <a class="label-arrow label-shop" href="/shop/#shobo">本を買う →</a>
-      </div>
-    </div>
-    <div class="label-card">
+      <span class="label-arrow">ミモザ書房へ →</span>
+    </a>
+    <a class="label-card" href="/mimosado/">
       <p class="label-en">Mimosado</p>
       <h2 class="label-name">ミモザ堂</h2>
       <p class="label-desc">
-        書籍出版サポートのレーベル。<br>
+        自費出版サポートのレーベル。<br>
         あなたの原稿を、本というかたちに。<br>
         個人の出版を丁寧にサポートします。
       </p>
-      <div class="label-links">
-        <a class="label-arrow" href="/mimosado/">ミモザ堂へ →</a>
-        <a class="label-arrow label-shop" href="/shop/#mimosado">本を買う →</a>
-      </div>
-    </div>
+      <span class="label-arrow">ミモザ堂へ →</span>
+    </a>
   </div>
 </section>
 
@@ -253,7 +175,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       </div>
     </div>
     <p class="isbn-note">
-      書籍のISBNはすべて<br>「出版社：ミモザ」名義で登録されています。<br>
+      書籍のISBNはすべて「出版社：ミモザ」名義で登録されています。<br>
       取次・書店の方は<a href="/trade.html" style="color:var(--mimosa-gold);text-decoration:none;">書店員の方へ</a>よりご連絡ください。
     </p>
   </div>
@@ -264,39 +186,39 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <h2 class="contact-title">お問い合わせ</h2>
   <div class="form-box">
     <p class="form-note">
-      出版・取材・取次・著者応募など、<br class="hero-br">お気軽にご連絡ください。<br>
+      出版・取材・取次・著者応募など、お気軽にご連絡ください。<br>
       2〜3営業日以内にご返信いたします。
     </p>
     <div class="form-row-2">
       <div class="form-row">
         <label class="form-label">会社・書店・取次名</label>
-        <input type="text" id="c-shopname" placeholder="株式会社〇〇">
+        <input type="text" id="f-shopname" placeholder="株式会社〇〇">
       </div>
       <div class="form-row">
         <label class="form-label">お名前<span class="req">*</span></label>
-        <input type="text" id="c-name" placeholder="山田 花子">
+        <input type="text" id="f-name" placeholder="山田 花子">
       </div>
     </div>
     <div class="form-row">
       <label class="form-label">メールアドレス<span class="req">*</span></label>
-      <input type="email" id="c-email" placeholder="info@example.com">
+      <input type="email" id="f-email" placeholder="info@example.com">
     </div>
     <div class="form-row">
       <label class="form-label">お問い合わせの種類（複数選択可）</label>
       <div class="form-check">
-        <label><input type="checkbox" class="c-material" value="出版について"> 出版について</label>
-        <label><input type="checkbox" class="c-material" value="取材について"> 取材について</label>
-        <label><input type="checkbox" class="c-material" value="取次について"> 取次について</label>
-        <label><input type="checkbox" class="c-material" value="著者募集について"> 著者募集について</label>
-        <label><input type="checkbox" class="c-material" value="その他"> その他</label>
+        <label><input type="checkbox" class="f-material" value="出版について"> 出版について</label>
+        <label><input type="checkbox" class="f-material" value="取材について"> 取材について</label>
+        <label><input type="checkbox" class="f-material" value="取次について"> 取次について</label>
+        <label><input type="checkbox" class="f-material" value="著者募集について"> 著者募集について</label>
+        <label><input type="checkbox" class="f-material" value="その他"> その他</label>
       </div>
     </div>
     <div class="form-row">
       <label class="form-label">メッセージ<span class="req">*</span></label>
-      <textarea id="c-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
+      <textarea id="f-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
     </div>
-    <button class="btn" id="c-submit" onclick="submitContact()">送信する</button>
-    <p class="form-result" id="c-result"></p>
+    <button class="btn" id="f-submit" onclick="submitForm()">送信する</button>
+    <p class="form-result" id="f-result"></p>
   </div>
 </section>
 
@@ -304,42 +226,25 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
   <div class="footer-flower">
     <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
   </div>
-  <div class="footer-center">
-    <img src="/logo.png" alt="出版社 ミモザ" class="footer-logo">
-    <p class="footer-company">ミモザパートナーズ合同会社</p>
-    <p class="footer-copy">© 2026 ミモザパートナーズ合同会社　<br>　mimosa.mimosa-partners.com</p>
-  </div>
+  <span>© 2026 ミモザパートナーズ合同会社　|　mimosa.mimosa-partners.com</span>
   <div class="footer-flower">
     <div class="footer-petal"></div><div class="footer-petal"></div><div class="footer-petal"></div>
   </div>
 </footer>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGUE42-775KiBImwlbZeVU6xU0YgxWpT7vcA9I1fL1mtLlmFJ15wlWztNFCfBrr0ejMA/exec';
+const GAS_URL = '【GASのウェブアプリURLをここに貼る】';
 
-// ── ハンバーガーメニュー ──
-function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn  = document.getElementById('nav-hamburger');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
-  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-}
-function closeMenu() {
-  document.getElementById('mobile-menu').classList.remove('open');
-  document.getElementById('nav-hamburger').classList.remove('open');
-  document.body.style.overflow = '';
-}
+async function submitForm() {
+  const shopName  = document.getElementById('f-shopname').value.trim();
+  const name      = document.getElementById('f-name').value.trim();
+  const email     = document.getElementById('f-email').value.trim();
+  const message   = document.getElementById('f-message').value.trim();
+  const materials = Array.from(document.querySelectorAll('.f-material:checked')).map(c => c.value);
+  const result    = document.getElementById('f-result');
+  const btn       = document.getElementById('f-submit');
 
-async function submitContact() {
-  const shopName  = document.getElementById('c-shopname').value.trim();
-  const name      = document.getElementById('c-name').value.trim();
-  const email     = document.getElementById('c-email').value.trim();
-  const message   = document.getElementById('c-message').value.trim();
-  const materials = Array.from(document.querySelectorAll('.c-material:checked')).map(c => c.value);
-  const result    = document.getElementById('c-result');
-  const btn       = document.getElementById('c-submit');
-
+  // バリデーション
   if (!name || !email || !message) {
     result.style.display = 'block';
     result.style.color = '#c87060';
@@ -358,7 +263,7 @@ async function submitContact() {
   result.style.display = 'none';
 
   try {
-    const res  = await fetch(GAS_URL, {
+    const res = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
@@ -369,11 +274,11 @@ async function submitContact() {
       result.style.color = '#4A6741';
       result.textContent = 'ありがとうございます。2〜3営業日以内にご連絡いたします。';
       btn.textContent = '送信しました';
-      document.getElementById('c-shopname').value = '';
-      document.getElementById('c-name').value = '';
-      document.getElementById('c-email').value = '';
-      document.getElementById('c-message').value = '';
-      document.querySelectorAll('.c-material').forEach(c => c.checked = false);
+      document.getElementById('f-shopname').value = '';
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-email').value = '';
+      document.getElementById('f-message').value = '';
+      document.querySelectorAll('.f-material').forEach(c => c.checked = false);
     } else {
       throw new Error(data.message || 'エラーが発生しました');
     }
