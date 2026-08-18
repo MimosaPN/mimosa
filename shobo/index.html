@@ -180,101 +180,76 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
 // 書籍マスタ取得（GASウェブアプリURL）
 // ショップのGAS_URLと同じURLを使用
 // ============================================================
-const BOOKS_GAS_URL = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';  
+const BOOKS_GAS_URL = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
 const BOOKS_LABEL   = 'ミモザ書房';
+
+// ============================================================
+// 「LPに反映」で埋め込まれる書籍データ（GASが自動更新）
+// ============================================================
+const BOOKS_EMBEDDED = /*__BOOKS_JSON_START__*/null/*__BOOKS_JSON_END__*/;
 
 // ステータスに応じたクラスとラベル
 const STATUS_MAP = {
-  '刊行予定': { cls: 'status-soon', label: (date) => date ? formatDate_(date) + ' 刊行予定' : '刊行予定' },
+  '刊行予定': { cls: 'status-soon', label: (date) => date ? date + ' 刊行予定' : '刊行予定' },
   '準備中':   { cls: 'status-wip',  label: () => '準備中' },
   '刊行済':   { cls: 'status-done', label: () => '好評発売中' },
 };
 
-function formatDate_(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr; // パース失敗時はそのまま返す
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-}
-
 // 表紙がない場合の色（順番に使い回す）
 const COVER_COLORS = ['#e8e0d4', '#dce8e0', '#e4dcea', '#e0e4e8', '#e8e4d4'];
 
+function renderBooks_(grid, books) {
+  if (books.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>`;
+    return;
+  }
+  grid.innerHTML = books.map((b, i) => {
+    const coverColor = COVER_COLORS[i % COVER_COLORS.length];
+    const thumbHtml  = b.image
+      ? `<img src="${b.image}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;">`
+      : `<div class="cover-title">${b.title.replace(/、/g, '、<br>')}</div>`;
+    const st     = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
+    const stCls  = st.cls;
+    const stText = st.label(b.pubDate);
+    return `
+      <div class="book-card">
+        <div class="book-cover" style="background:${coverColor};">
+          ${thumbHtml}
+        </div>
+        <div class="book-info">
+          <p class="book-genre">${b.genre}</p>
+          <p class="book-title">${b.title}</p>
+          <p class="book-author">著：${b.author}</p>
+          <p class="book-desc">${b.desc}</p>
+          <span class="book-status ${stCls}">${stText}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
 async function loadBooks() {
   const grid = document.getElementById('books-grid');
+
+  // ① 埋め込みデータがあれば即表示
+  if (Array.isArray(BOOKS_EMBEDDED) && BOOKS_EMBEDDED.length > 0) {
+    renderBooks_(grid, BOOKS_EMBEDDED);
+    // バックグラウンドで静かに更新
+    fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`)
+      .then(r => r.json())
+      .then(data => { if (data.ok && Array.isArray(data.books)) renderBooks_(grid, data.books); })
+      .catch(() => {});
+    return;
+  }
+
+  // ② なければGASからfetch
   try {
     const res  = await fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`);
     const data = await res.json();
     if (!data.ok || !Array.isArray(data.books)) throw new Error();
-
-    if (data.books.length === 0) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>`;
-       return;
-    }
-
-    grid.innerHTML = data.books.map((b, i) => {
-      const coverColor = COVER_COLORS[i % COVER_COLORS.length];
-      const thumbHtml  = b.image
-        ? `<img src="${b.image}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;">`
-        : `<div class="cover-title">${b.title.replace(/、/g, '、<br>')}</div>`;
-      const st     = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
-      const stCls  = st.cls;
-      const stText = st.label(b.pubDate);
-
-      return `
-        <div class="book-card">
-          <div class="book-cover" style="background:${coverColor};">
-            ${thumbHtml}
-          </div>
-          <div class="book-info">
-            <p class="book-genre">${b.genre}</p>
-            <p class="book-title">${b.title}</p>
-            <p class="book-author">著：${b.author}</p>
-            <p class="book-desc">${b.desc}</p>
-            <span class="book-status ${stCls}">${stText}</span>
-          </div>
-        </div>`;
-    }).join('');
-
+    renderBooks_(grid, data.books);
   } catch(err) {
-    // GAS未設定時はダミーデータで表示
-    grid.innerHTML = `
-      <div class="book-card">
-        <div class="book-cover" style="background:#e8e0d4;">
-          <div class="cover-title">夜の縁側で<br>あなたに会う</div>
-        </div>
-        <div class="book-info">
-          <p class="book-genre">小説</p>
-          <p class="book-title">夜の縁側で、あなたに会う</p>
-          <p class="book-author">著：山田 花子（仮）</p>
-          <p class="book-desc">祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。</p>
-          <span class="book-status status-soon">2025年秋 刊行予定</span>
-        </div>
-      </div>
-      <div class="book-card">
-        <div class="book-cover" style="background:#dce8e0;">
-          <div class="cover-title">喫茶店で<br>生きている</div>
-        </div>
-        <div class="book-info">
-          <p class="book-genre">エッセイ</p>
-          <p class="book-title">喫茶店で生きている</p>
-          <p class="book-author">著：佐藤 一郎（仮）</p>
-          <p class="book-desc">全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。</p>
-          <span class="book-status status-wip">準備中</span>
-        </div>
-      </div>
-      <div class="book-card">
-        <div class="book-cover" style="background:#e4dcea;">
-          <div class="cover-title">あの日の<br>つづき</div>
-        </div>
-        <div class="book-info">
-          <p class="book-genre">小説</p>
-          <p class="book-title">あの日のつづき</p>
-          <p class="book-author">著：田中 美咲（仮）</p>
-          <p class="book-desc">10年後に再会した幼馴染が語り始める、誰にも話せなかった秘密の記憶。</p>
-          <span class="book-status status-wip">準備中</span>
-        </div>
-      </div>`;
+    // フォールバック：ダミーデータ
+    renderBooks_(grid, []);
   }
 }
 
