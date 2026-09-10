@@ -21,7 +21,7 @@ function cartCheckExpire() {
 function cartUpdateTs() {
   localStorage.setItem(CART_TS_KEY, Date.now());
 }
-const GAS_URL  = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
+const GAS_URL  = window.MIMOSA.GAS_URL;
 
 // ============================================================
 // カートの読み書き（localStorage）
