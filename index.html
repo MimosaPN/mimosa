@@ -5,39 +5,299 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>出版社 ミモザ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --mimosa-yellow:#E8B84B;
-  --mimosa-gold:#C9962A;
-  --mimosa-soft:#FBF5E6;
-  --mimosa-deep:#7A5C1E;
-  --green-leaf:#4A6741;
-  --green-soft:#EBF0E4;
-  --ink:#2C2A24;
-  --ink-light:#6B6454;
-  --border:#DDD8C8;
-  --cream:#FAFAF5;
-  --white:#FFFFFF;
-  --muted:#A09880;
-}
-body{font-family:'Noto Serif JP',serif;background:var(--cream);color:var(--ink);line-height:1.7;}
+/* ============================================================
+   tokens.css — ミモザ 全ページ共通デザイントークン
+   統一基準: トップページ系（Noto Serif JP）
+   46色 → 19トークンに集約。ここ以外で生の #hex を書かないこと。
+   ============================================================ */
 
-nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);background:rgba(250,250,245,.95);position:sticky;top:0;z-index:40;backdrop-filter:blur(6px);}
-.nav-logo{text-decoration:none;color:var(--ink);}
-.nav-logo .en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);}
-.nav-logo .ja{font-size:20px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:block;}
-.nav-links{display:flex;gap:2rem;list-style:none;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.05em;}
-.nav-links a{color:var(--ink-light);text-decoration:none;transition:color .2s;}
-.nav-links a:hover{color:var(--mimosa-gold);}
+:root {
+  /* --- ブランド（ミモザ黄） --- */
+  --mimosa-yellow: #E8B84B;   /* 主アクセント */
+  --mimosa-gold:   #C9962A;   /* リンクhover・フォーカス罫 */
+  --mimosa-deep:   #7A5C1E;   /* ボタンhover */
+  --mimosa-soft:   #FBF5E6;   /* 淡い面 */
+  --mimosa-line:   #E8D89A;   /* 黄の罫線（注記ボックス等） */
+
+  /* --- 緑（葉） --- */
+  --green-leaf:    #4A6741;   /* 成功表示・書房タグ */
+  --green-soft:    #EBF0E4;   /* 淡い緑の面 */
+
+  /* --- 茶（書房・取次のアクセント） --- */
+  --tan:           #8A6F4E;   /* バッジ・タグ・強調文字 */
+  --tan-line:      #C8B89A;   /* 茶の罫線・ドット・フッタリンク */
+  --tan-muted:     #B8A888;   /* ラベル・パンくず・キャプション */
+
+  /* --- 文字 --- */
+  --ink-strong:    #1E1C18;   /* 見出し */
+  --ink:           #2C2A24;   /* 本文 */
+  --ink-light:     #6B6454;   /* 補助テキスト */
+  --muted:         #A09880;   /* ラベル・フッタ */
+
+  /* --- 面・罫 --- */
+  --cream:         #FAFAF5;   /* ページ背景 */
+  --white:         #FFFFFF;   /* カード背景 */
+  --border:        #DDD8C8;   /* 標準の罫線 */
+  --border-soft:   #E8E0D4;   /* 薄い区切り */
+
+  /* --- 状態 --- */
+  --required:      #C87060;   /* 必須マーク・エラー */
+
+  /* --- 書体 --- */
+  --font-serif: 'Noto Serif JP', serif;
+  --font-sans:  'Noto Sans JP', sans-serif;
+
+  /* --- 余白（ページ左右） --- */
+  --gutter:    3rem;
+  --gutter-sm: 1.5rem;
+}
+
+/* ============================================================
+   base.css — 全ページ共通の土台
+   前提: tokens.css を先に読み込むこと。
+   ここに置くのは「2ページ以上に出る部品」だけ。
+   ページ固有の見た目は各HTMLの <style> に残す。
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-serif);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--mimosa-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- ナビゲーション ----------
+   <nav> と <nav class="nav"> の両方に効かせる。 */
+nav, .nav {
+  padding: 1.25rem var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.5px solid var(--border);
+  background: rgba(250, 250, 245, .95);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(6px);
+}
+
+.nav-logo { text-decoration: none; color: inherit; }
+
+/* .en / .parent = 上段の小さい親ブランド名 */
+.nav-logo .en,
+.nav-logo .parent {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: var(--muted);
+}
+
+/* .ja / .name = 下段のブランド名 */
+.nav-logo .ja,
+.nav-logo .name {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--ink-strong);
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: .05em;
+}
+
+.nav-links a {
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.nav-links a:hover { color: var(--mimosa-gold); }
+
+.nav-links .active {
+  color: var(--mimosa-gold);
+  font-weight: 500;
+}
+
+/* ---------- パンくず ---------- */
+.breadcrumb {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--tan-muted);
+  letter-spacing: .1em;
+  margin-bottom: 1.5rem;
+}
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb span { margin: 0 .5rem; }
+
+/* ---------- ボタン ---------- */
+.btn {
+  display: inline-block;
+  padding: .85rem 3rem;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: .2em;
+  border: none;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  text-decoration: none;
+  transition: background .2s;
+}
+.btn:hover { background: var(--ink-strong); }
+.btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+/* ---------- フォーム ---------- */
+.form-box {
+  background: var(--white);
+  border: 0.5px solid var(--border);
+  padding: 2.5rem;
+}
+
+.form-note {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.9;
+  margin-bottom: 2rem;
+}
+
+.form-row { margin-bottom: 1.25rem; }
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: .4rem;
+  display: block;
+}
+.form-label .req { color: var(--required); margin-left: .25rem; }
+
+input[type=text],
+input[type=email],
+textarea {
+  width: 100%;
+  padding: .65rem .85rem;
+  border: 0.5px solid var(--border);
+  background: var(--cream);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  outline: none;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+textarea:focus { border-color: var(--mimosa-gold); }
+
+textarea { resize: vertical; min-height: 90px; }
+
+.form-check {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: .5rem;
+}
+.form-check label {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-light);
+  cursor: pointer;
+}
+
+.form-result {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  margin-top: 1rem;
+  display: none;
+}
+.form-result.is-ok    { color: var(--green-leaf); display: block; }
+.form-result.is-error { color: var(--required);   display: block; }
+
+/* ---------- フッタ ----------
+   既定は左右振り分け（トップ・書房・取次）。
+   中央寄せブロックにしたいページは <footer class="center">。 */
+footer {
+  border-top: 0.5px solid var(--border);
+  padding: 2rem var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .05em;
+  color: var(--muted);
+}
+footer a { color: var(--tan-line); text-decoration: none; }
+
+footer.center {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 2;
+}
+footer.center a { color: var(--muted); margin: 0 8px; }
+footer.center a:hover { color: var(--ink); }
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 720px) {
+  :root { --gutter: var(--gutter-sm); }
+  .form-box   { padding: 1.5rem; }
+  .form-row-2 { grid-template-columns: 1fr; }
+  .nav-links  { gap: 1.25rem; }
+  footer:not(.center) {
+    flex-direction: column;
+    gap: .75rem;
+    text-align: center;
+  }
+}
+
+</style>
+<style>
 
 .hero{padding:5rem 3rem 3rem;max-width:900px;margin:0 auto;text-align:center;}
-.hero-accent{display:inline-flex;align-items:center;gap:.5rem;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-accent{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-sans);font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:1.5rem;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--mimosa-yellow);}
 .hero h1{font-size:48px;font-weight:600;letter-spacing:.12em;line-height:1.3;color:var(--ink);margin-bottom:1.5rem;}
 .hero h1 em{font-style:normal;color:var(--mimosa-gold);}
-.hero-sub{font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--ink-light);line-height:2;max-width:560px;margin:0 auto 2.5rem;}
+.hero-sub{font-family:var(--font-sans);font-size:15px;color:var(--ink-light);line-height:2;max-width:560px;margin:0 auto 2.5rem;}
 
 .mimosa-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:2rem auto;max-width:300px;}
 .divider-line{flex:1;height:0.5px;background:var(--border);}
@@ -45,54 +305,34 @@ nav{padding:1.25rem 3rem;display:flex;justify-content:space-between;align-items:
 .petal{width:7px;height:7px;border-radius:50%;background:var(--mimosa-yellow);}
 
 .labels-section{padding:2rem 3rem 5rem;max-width:880px;margin:0 auto;}
-.labels-heading{text-align:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
+.labels-heading{text-align:center;font-family:var(--font-sans);font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem;}
 .labels-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
 .label-card{border:0.5px solid var(--border);padding:2.5rem;background:var(--white);text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s;}
 .label-card:hover{border-color:var(--mimosa-gold);transform:translateY(-2px);}
-.label-en{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
+.label-en{font-family:var(--font-sans);font-size:10px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:.75rem;}
 .label-name{font-size:26px;font-weight:600;letter-spacing:.1em;color:var(--ink);margin-bottom:1rem;}
-.label-desc{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);line-height:1.9;}
-.label-arrow{display:inline-block;margin-top:1.5rem;font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);}
+.label-desc{font-family:var(--font-sans);font-size:13px;color:var(--ink-light);line-height:1.9;}
+.label-arrow{display:inline-block;margin-top:1.5rem;font-family:var(--font-sans);font-size:12px;letter-spacing:.15em;color:var(--mimosa-gold);}
 
-.isbn-section{background:var(--mimosa-soft);border-top:0.5px solid #E8D8A8;border-bottom:0.5px solid #E8D8A8;padding:4rem 3rem;scroll-margin-top:80px;}
+.isbn-section{background:var(--mimosa-soft);border-top:0.5px solid var(--mimosa-line);border-bottom:0.5px solid var(--mimosa-line);padding:4rem 3rem;scroll-margin-top:80px;}
 .isbn-inner{max-width:760px;margin:0 auto;}
-.isbn-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:2rem;text-align:center;}
+.isbn-heading{font-family:var(--font-sans);font-size:11px;letter-spacing:.3em;color:var(--mimosa-gold);text-transform:uppercase;margin-bottom:2rem;text-align:center;}
 .isbn-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-.isbn-card{background:var(--white);border:0.5px solid #E8D8A8;padding:1.5rem 1.75rem;}
-.isbn-card-label{font-family:'Noto Sans JP',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--muted);margin-bottom:.5rem;}
+.isbn-card{background:var(--white);border:0.5px solid var(--mimosa-line);padding:1.5rem 1.75rem;}
+.isbn-card-label{font-family:var(--font-sans);font-size:10px;letter-spacing:.2em;color:var(--muted);margin-bottom:.5rem;}
 .isbn-card-val{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.05em;}
-.isbn-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
+.isbn-note{font-family:var(--font-sans);font-size:12px;color:var(--ink-light);line-height:1.9;margin-top:1.5rem;text-align:center;}
 
 .contact-section{padding:4rem 3rem;max-width:760px;margin:0 auto;scroll-margin-top:80px;}
-.contact-heading{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
-.contact-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:2rem;text-align:center;}
-
-.form-box{background:var(--white);border:0.5px solid var(--border);padding:2.5rem;}
-.form-note{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--ink-light);line-height:1.9;margin-bottom:2rem;}
-.form-row{margin-bottom:1.25rem;}
-.form-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;display:block;}
-.form-label .req{color:#c87060;margin-left:.25rem;}
-input[type=text],input[type=email],textarea{width:100%;padding:.65rem .85rem;border:0.5px solid var(--border);background:var(--cream);font-size:13px;font-family:'Noto Sans JP',sans-serif;color:var(--ink);outline:none;}
-input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:var(--mimosa-gold);}
-textarea{resize:vertical;min-height:90px;}
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.form-check{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
-.form-check label{display:flex;align-items:center;gap:.4rem;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--ink-light);cursor:pointer;}
-.btn{display:inline-block;padding:.85rem 3rem;background:var(--ink);color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13px;letter-spacing:.2em;border:none;cursor:pointer;margin-top:1.5rem;transition:background .2s;}
-.btn:hover{background:var(--mimosa-deep);}
-.btn:disabled{background:var(--muted);cursor:not-allowed;}
-.form-result{font-family:'Noto Sans JP',sans-serif;font-size:13px;margin-top:1rem;display:none;}
-
-footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--muted);}
+.contact-heading{font-family:var(--font-sans);font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:1.5rem;text-align:center;}
+.contact-title{font-family:var(--font-serif);font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--ink);margin-bottom:2rem;text-align:center;}
 .footer-flower{display:flex;gap:3px;align-items:center;}
 .footer-petal{width:5px;height:5px;border-radius:50%;background:var(--mimosa-yellow);}
 
 @media(max-width:640px){
   .labels-grid,.isbn-grid,.form-row-2{grid-template-columns:1fr;}
   .hero h1{font-size:34px;}
-  nav{padding:1rem 1.5rem;}
   .labels-section,.contact-section,.isbn-section{padding:2rem 1.5rem;}
-  .form-box{padding:1.5rem;}
 }
 </style>
 </head>
@@ -184,7 +424,9 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 <section class="contact-section" id="contact">
   <p class="contact-heading">Contact</p>
   <h2 class="contact-title">お問い合わせ</h2>
-  <div class="form-box">
+  <div class="form-box" id="contact-form"
+       data-type="contact"
+       data-required="f-name,f-email,f-message">
     <p class="form-note">
       出版・取材・取次・著者応募など、お気軽にご連絡ください。<br>
       2〜3営業日以内にご返信いたします。
@@ -217,7 +459,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
       <label class="form-label">メッセージ<span class="req">*</span></label>
       <textarea id="f-message" placeholder="ご質問など、お気軽にどうぞ。"></textarea>
     </div>
-    <button class="btn" id="f-submit" onclick="submitForm()">送信する</button>
+    <button class="btn" id="f-submit">送信する</button>
     <p class="form-result" id="f-result"></p>
   </div>
 </section>
@@ -233,64 +475,142 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 </footer>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
+/* ============================================================
+   config.js — サイト共通の設定
+   GASを再デプロイしてURLが変わったら、直すのはこの1行だけ。
+   （現在は index.html / shobo/index.html / trade.html の3箇所に
+     同じURLがベタ書きされている。それを全部これに置き換える）
+   ============================================================ */
 
-async function submitForm() {
-  const shopName  = document.getElementById('f-shopname').value.trim();
-  const name      = document.getElementById('f-name').value.trim();
-  const email     = document.getElementById('f-email').value.trim();
-  const message   = document.getElementById('f-message').value.trim();
-  const materials = Array.from(document.querySelectorAll('.f-material:checked')).map(c => c.value);
-  const result    = document.getElementById('f-result');
-  const btn       = document.getElementById('f-submit');
+window.MIMOSA = {
+  // Apps Script ウェブアプリのエンドポイント
+  GAS_URL: 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec',
 
-  // バリデーション
-  if (!name || !email || !message) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'お名前・メールアドレス・メッセージは必須です。';
-    return;
-  }
-  if (email.indexOf('@') === -1) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = 'メールアドレスの形式が正しくありません。';
-    return;
-  }
+  // 書籍データの取得先（Phase 2で /data/books.json に一本化する）
+  BOOKS_URL: '/data/books.json',
 
-  btn.disabled = true;
-  btn.textContent = '送信中…';
-  result.style.display = 'none';
+  // 問い合わせの返信目安。文言を1箇所で管理する
+  REPLY_LEAD: '2〜3営業日以内'
+};
 
-  try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
-    });
-    const data = await res.json();
-    if (data.status === 'ok') {
-      result.style.display = 'block';
-      result.style.color = '#4A6741';
-      result.textContent = 'ありがとうございます。2〜3営業日以内にご連絡いたします。';
-      btn.textContent = '送信しました';
-      document.getElementById('f-shopname').value = '';
-      document.getElementById('f-name').value = '';
-      document.getElementById('f-email').value = '';
-      document.getElementById('f-message').value = '';
-      document.querySelectorAll('.f-material').forEach(c => c.checked = false);
-    } else {
-      throw new Error(data.message || 'エラーが発生しました');
-    }
-  } catch(err) {
-    result.style.display = 'block';
-    result.style.color = '#c87060';
-    result.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。';
-    btn.disabled = false;
-    btn.textContent = '送信する';
-  }
-}
 </script>
+<script>
+/* ============================================================
+   form.js — 問い合わせフォーム共通処理
+   index.html の submitForm() と trade.html の submitTradeForm() を
+   1つに統合したもの。違いは HTML 側の data 属性で指定する。
+
+   使い方（HTML側）:
+     <div class="form-box" id="contact-form"
+          data-type="contact"
+          data-required="f-name,f-email,f-message">
+       ...
+       <button class="btn" id="f-submit">送信する</button>
+       <p class="form-result" id="f-result"></p>
+     </div>
+     <script>MimosaForm.init('#contact-form');</script>
+
+   trade.html なら data-type="trade"
+   data-required="f-shopname,f-name,f-email" にするだけ。
+   ============================================================ */
+
+const MimosaForm = (() => {
+
+  // id → 送信するキー名。存在するものだけ拾う
+  const FIELDS = {
+    'f-shopname': 'shopName',
+    'f-name':     'name',
+    'f-email':    'email',
+    'f-message':  'message'
+  };
+
+  // 必須項目が空だったときの表示名
+  const LABELS = {
+    'f-shopname': '書店・取次名',
+    'f-name':     'お名前',
+    'f-email':    'メールアドレス',
+    'f-message':  'お問い合わせ内容'
+  };
+
+  function show(result, kind, text) {
+    result.className = 'form-result ' + (kind === 'ok' ? 'is-ok' : 'is-error');
+    result.textContent = text;
+  }
+
+  function init(selector) {
+    const box = document.querySelector(selector);
+    if (!box) return;
+
+    const type     = box.dataset.type || 'contact';
+    const required = (box.dataset.required || 'f-name,f-email')
+                       .split(',').map(s => s.trim()).filter(Boolean);
+    const btn      = box.querySelector('#f-submit');
+    const result   = box.querySelector('#f-result');
+    if (!btn || !result) return;
+
+    const label = btn.textContent;
+
+    btn.addEventListener('click', async () => {
+      const payload = { type };
+      for (const [id, key] of Object.entries(FIELDS)) {
+        const el = document.getElementById(id);
+        if (el) payload[key] = el.value.trim();
+      }
+      payload.materials = Array.from(
+        document.querySelectorAll('.f-material:checked')
+      ).map(c => c.value);
+
+      // 必須チェック
+      const missing = required.filter(id => {
+        const el = document.getElementById(id);
+        return !el || !el.value.trim();
+      });
+      if (missing.length) {
+        show(result, 'error',
+          missing.map(id => LABELS[id] || id).join('・') + 'を入力してください。');
+        return;
+      }
+      if (payload.email && !payload.email.includes('@')) {
+        show(result, 'error', 'メールアドレスの形式が正しくありません。');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '送信中…';
+      result.className = 'form-result';
+
+      try {
+        const res = await fetch(window.MIMOSA.GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status !== 'ok') throw new Error(data.message || '送信に失敗しました');
+
+        show(result, 'ok',
+          `ありがとうございます。${window.MIMOSA.REPLY_LEAD}にご連絡いたします。`);
+        btn.textContent = '送信しました';
+        Object.keys(FIELDS).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        document.querySelectorAll('.f-material').forEach(c => (c.checked = false));
+
+      } catch (err) {
+        show(result, 'error',
+          '送信できませんでした。時間をおいて試すか、メールでご連絡ください。');
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    });
+  }
+
+  return { init };
+})();
+
+</script>
+<script>MimosaForm.init('#contact-form');</script>
 
 </body>
 </html>
