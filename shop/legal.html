@@ -4,45 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>特定商取引法に基づく表記 | ミモザショップ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
 <style>
-  :root{
-    --ink:#3A4031; --green:#5A6B3B; --mimosa:#E8B84B; --mimosa-soft:#FBF1D6;
-    --cream:#FFFDF7; --paper:#FFFFFF; --muted:#8A8A7A; --line:#E7E3D6;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);line-height:1.8;-webkit-font-smoothing:antialiased;}
+  body{line-height:1.8;}
 
-  header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  header{position:sticky;top:0;z-index:40;background:rgba(255,253,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-soft);}
   .bar{max-width:860px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
   .brand{text-decoration:none;color:var(--ink);}
-  .brand-parent{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:10px;color:var(--muted);letter-spacing:.15em;}
-  .brand b{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:20px;letter-spacing:.06em;display:block;}
-  .back-link{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
+  .brand-parent{font-family:var(--font-sans);font-size:10px;color:var(--muted);letter-spacing:.15em;}
+  .brand b{font-family:var(--font-sans);font-size:20px;letter-spacing:.06em;display:block;}
+  .back-link{font-family:var(--font-sans);font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.05em;}
   .back-link:hover{color:var(--ink);}
 
   .hero{max-width:860px;margin:0 auto;padding:48px 22px 32px;}
-  .eyebrow{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:11px;letter-spacing:.28em;color:var(--mimosa);font-weight:700;margin-bottom:12px;}
+  .eyebrow{font-family:var(--font-sans);font-size:11px;letter-spacing:.28em;color:var(--mimosa-yellow);font-weight:700;margin-bottom:12px;}
   .hero h1{font-size:28px;font-weight:700;letter-spacing:.04em;line-height:1.4;}
 
   .content{max-width:860px;margin:0 auto;padding:8px 22px 80px;}
 
-  .table-wrap{background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:48px;}
+  .table-wrap{background:var(--white);border:1px solid var(--border-soft);border-radius:8px;overflow:hidden;margin-bottom:48px;}
   table{width:100%;border-collapse:collapse;}
-  th,td{padding:16px 20px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px;line-height:1.8;}
+  th,td{padding:16px 20px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-soft);font-size:14px;line-height:1.8;}
   tr:last-child th,tr:last-child td{border-bottom:none;}
-  th{width:200px;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.05em;background:#fdfbf7;white-space:nowrap;}
-  td{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink);}
-  td a{color:var(--green);text-decoration:none;}
+  th{width:200px;font-family:var(--font-sans);font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.05em;background:var(--cream);white-space:nowrap;}
+  td{font-family:var(--font-sans);color:var(--ink);}
+  td a{color:var(--green-leaf);text-decoration:none;}
   td a:hover{text-decoration:underline;}
 
-  .section-title{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--muted);margin-bottom:16px;}
+  .section-title{font-family:var(--font-sans);font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--muted);margin-bottom:16px;}
 
-  .note-box{background:var(--mimosa-soft);border:1px solid #e8d89a;border-radius:8px;padding:20px 24px;margin-bottom:48px;}
-  .note-box p{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:13px;color:#6b5a20;line-height:2;}
-
-  footer{border-top:1px solid var(--line);padding:30px 22px;text-align:center;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:12px;color:var(--muted);}
-  footer a{color:var(--muted);text-decoration:none;margin:0 10px;}
-  footer a:hover{color:var(--ink);}
+  .note-box{background:var(--mimosa-soft);border:1px solid var(--mimosa-line);border-radius:8px;padding:20px 24px;margin-bottom:48px;}
+  .note-box p{font-family:var(--font-sans);font-size:13px;color:var(--mimosa-deep);line-height:2;}
 
   @media(max-width:640px){
     .hero{padding:32px 16px 24px;}
@@ -159,12 +155,18 @@
 
 </div>
 
-<footer>
-  <a href="/shop/">ショップトップ</a>
-  <a href="/shobo/">ミモザ書房</a>
-  <a href="/mimosado/">ミモザ堂</a>
-  <a href="/">出版社 ミモザ</a><br><br>
-  © 2026 ミモザパートナーズ合同会社
+<footer class="center">
+  <p class="footer-org">
+    ミモザパートナーズ合同会社<br>
+    古物商許可番号 431340070485 埼玉県公安委員会許可
+  </p>
+  <div class="footer-links">
+    <a href="/shop/">ショップトップ</a>
+    <a href="/shobo/">ミモザ書房</a>
+    <a href="/mimosado/">ミモザ堂</a>
+    <a href="/">出版社 ミモザ</a>
+  </div>
+  <p class="footer-copy">© 2026 ミモザパートナーズ合同会社</p>
 </footer>
 
 </body>
