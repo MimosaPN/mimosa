@@ -11,7 +11,7 @@
        <button class="btn" id="f-submit">送信する</button>
        <p class="form-result" id="f-result"></p>
      </div>
-     <script>MimosaForm.init('#contact-form');</script>
+     <script>MimosaForm.init('#contact-form');<\/script>
 
    trade.html なら data-type="trade"
    data-required="f-shopname,f-name,f-email" にするだけ。
@@ -109,5 +109,15 @@ const MimosaForm = (() => {
     });
   }
 
-  return { init };
+  // URLの ?topic= に一致するチェックボックスを最初から入れておく。
+  // 例: /?topic=著者募集について#contact
+  function applyTopic() {
+    const topic = new URLSearchParams(location.search).get('topic');
+    if (!topic) return;
+    document.querySelectorAll('.f-material').forEach(c => {
+      if (c.value === topic) c.checked = true;
+    });
+  }
+
+  return { init, applyTopic };
 })();
