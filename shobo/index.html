@@ -5,74 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ミモザ書房 | 出版社ミモザ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Noto Serif JP', serif; background: #faf8f4; color: #2c2a24; min-height: 100vh; }
-
-.nav { padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid #d8d4c8; background: #faf8f4; }
-.nav-logo { text-decoration: none; color: inherit; }
-.nav-logo .parent { font-size: 10px; letter-spacing: 0.2em; color: #a09880; font-family: 'Noto Sans JP', sans-serif; }
-.nav-logo .name { font-size: 22px; letter-spacing: 0.1em; color: #1e1c18; font-weight: 600; }
-.nav-links { display: flex; gap: 2rem; list-style: none; font-size: 12px; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; color: #666; }
 .nav-links li { cursor: pointer; }
 
 .hero { position: relative; padding: 7rem 3rem 5rem; text-align: center; overflow: hidden; }
-.hero-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #f5f0e8 0%, #faf8f4 100%); z-index: 0; }
+.hero-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, var(--mimosa-soft) 0%, var(--cream) 100%); z-index: 0; }
 .hero-inner { position: relative; z-index: 1; }
-.hero-label { font-size: 10px; letter-spacing: 0.35em; color: #b8a888; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
-.hero-title { font-size: 52px; font-weight: 600; letter-spacing: 0.12em; color: #1e1c18; line-height: 1.25; margin-bottom: 2rem; }
-.hero-title em { font-style: normal; color: #8a6f4e; }
-.hero-copy { font-size: 14px; line-height: 2.2; color: #6b6454; letter-spacing: 0.06em; font-family: 'Noto Sans JP', sans-serif; max-width: 520px; margin: 0 auto 2.5rem; }
-.hero-badge { display: inline-block; font-size: 11px; letter-spacing: 0.15em; padding: 0.5rem 1.5rem; border: 0.5px solid #c8b89a; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; }
+.hero-label { font-size: 10px; letter-spacing: 0.35em; color: var(--tan-muted); text-transform: uppercase; font-family: var(--font-sans); margin-bottom: 1.5rem; }
+.hero-title { font-size: 52px; font-weight: 600; letter-spacing: 0.12em; color: var(--ink-strong); line-height: 1.25; margin-bottom: 2rem; }
+.hero-title em { font-style: normal; color: var(--tan); }
+.hero-copy { font-size: 14px; line-height: 2.2; color: var(--ink-light); letter-spacing: 0.06em; font-family: var(--font-sans); max-width: 520px; margin: 0 auto 2.5rem; }
+.hero-badge { display: inline-block; font-size: 11px; letter-spacing: 0.15em; padding: 0.5rem 1.5rem; border: 0.5px solid var(--tan-line); color: var(--tan); font-family: var(--font-sans); }
 
 .section { padding: 5rem 3rem; max-width: 900px; margin: 0 auto; }
-.section-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; text-align: center; }
+.section-label { font-size: 10px; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; font-family: var(--font-sans); margin-bottom: 2.5rem; text-align: center; }
 
 .books-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.book-card { background: #fff; border: 0.5px solid #d8d4c8; cursor: pointer; transition: border-color 0.2s; }
-.book-card:hover { border-color: #a09880; }
+.book-card { background: var(--white); border: 0.5px solid var(--border); cursor: pointer; transition: border-color 0.2s; }
+.book-card:hover { border-color: var(--muted); }
 .book-cover { width: 100%; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; }
-.book-cover-1 { background: #e8e0d4; }
+.book-cover-1 { background: var(--border-soft); }
 .book-cover-2 { background: #dce8e0; }
 .book-cover-3 { background: #e4dcea; }
-.cover-title { font-size: 16px; letter-spacing: 0.12em; color: #fff; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; padding: 1rem; }
+.cover-title { font-size: 16px; letter-spacing: 0.12em; color: var(--white); font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.2); text-align: center; padding: 1rem; }
 .book-info { padding: 1.25rem 1rem 1.5rem; }
-.book-genre { font-size: 10px; letter-spacing: 0.2em; color: #b8a888; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 0.4rem; }
-.book-title { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: #1e1c18; margin-bottom: 0.5rem; line-height: 1.4; }
-.book-author { font-size: 12px; color: #888; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
-.book-desc { font-size: 12px; color: #6b6454; line-height: 1.8; font-family: 'Noto Sans JP', sans-serif; }
-.book-status { display: inline-block; margin-top: 1rem; font-size: 10px; letter-spacing: 0.15em; padding: 0.3rem 0.75rem; font-family: 'Noto Sans JP', sans-serif; }
-.status-soon { background: #f5f0e8; color: #8a6f4e; border: 0.5px solid #c8b89a; }
-.status-wip { background: #f0f0f0; color: #888; border: 0.5px solid #ddd; }
+.book-genre { font-size: 10px; letter-spacing: 0.2em; color: var(--tan-muted); font-family: var(--font-sans); margin-bottom: 0.4rem; }
+.book-title { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-strong); margin-bottom: 0.5rem; line-height: 1.4; }
+.book-author { font-size: 12px; color: var(--muted); font-family: var(--font-sans); letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+.book-desc { font-size: 12px; color: var(--ink-light); line-height: 1.8; font-family: var(--font-sans); }
+.book-status { display: inline-block; margin-top: 1rem; font-size: 10px; letter-spacing: 0.15em; padding: 0.3rem 0.75rem; font-family: var(--font-sans); }
+.status-soon { background: var(--mimosa-soft); color: var(--tan); border: 0.5px solid var(--tan-line); }
+.status-wip { background: var(--border-soft); color: var(--muted); border: 0.5px solid var(--border); }
 
-.recruit { background: #f0ece3; padding: 5rem 3rem; }
+.recruit { background: var(--mimosa-soft); padding: 5rem 3rem; }
 .recruit-inner { max-width: 700px; margin: 0 auto; text-align: center; }
-.recruit-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
-.recruit-title { font-size: 28px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 1.5rem; line-height: 1.5; }
-.recruit-body { font-size: 13px; color: #6b6454; line-height: 2.1; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; }
+.recruit-label { font-size: 10px; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; font-family: var(--font-sans); margin-bottom: 1.5rem; }
+.recruit-title { font-size: 28px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-strong); margin-bottom: 1.5rem; line-height: 1.5; }
+.recruit-body { font-size: 13px; color: var(--ink-light); line-height: 2.1; letter-spacing: 0.05em; font-family: var(--font-sans); margin-bottom: 2.5rem; }
 .recruit-genres { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
-.genre-tag { font-size: 11px; letter-spacing: 0.1em; padding: 0.4rem 1rem; border: 0.5px solid #c8b89a; color: #8a6f4e; font-family: 'Noto Sans JP', sans-serif; background: #fff; }
-.btn { display: inline-block; padding: 0.9rem 3rem; background: #2c2a24; color: #faf8f4; font-size: 13px; letter-spacing: 0.2em; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; border: none; text-decoration: none; }
-.btn:hover { background: #1e1c18; }
+.genre-tag { font-size: 11px; letter-spacing: 0.1em; padding: 0.4rem 1rem; border: 0.5px solid var(--tan-line); color: var(--tan); font-family: var(--font-sans); background: var(--white); }
 
 .contact { padding: 5rem 3rem; max-width: 700px; margin: 0 auto; text-align: center; }
-.contact-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
-.contact-title { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 1.5rem; }
-.contact-body { font-size: 13px; color: #6b6454; line-height: 2; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 2.5rem; }
+.contact-label { font-size: 10px; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; font-family: var(--font-sans); margin-bottom: 1.5rem; }
+.contact-title { font-size: 24px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-strong); margin-bottom: 1.5rem; }
+.contact-body { font-size: 13px; color: var(--ink-light); line-height: 2; letter-spacing: 0.05em; font-family: var(--font-sans); margin-bottom: 2.5rem; }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: left; margin-bottom: 2.5rem; }
-.contact-item { background: #fff; border: 0.5px solid #d8d4c8; padding: 1.5rem; }
-.contact-item-label { font-size: 10px; letter-spacing: 0.2em; color: #b8a888; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 0.5rem; }
-.contact-item-text { font-size: 13px; color: #4a4438; font-family: 'Noto Sans JP', sans-serif; line-height: 1.8; }
+.contact-item { background: var(--white); border: 0.5px solid var(--border); padding: 1.5rem; }
+.contact-item-label { font-size: 10px; letter-spacing: 0.2em; color: var(--tan-muted); font-family: var(--font-sans); margin-bottom: 0.5rem; }
+.contact-item-text { font-size: 13px; color: var(--ink-light); font-family: var(--font-sans); line-height: 1.8; }
 
-.about { border-top: 0.5px solid #d8d4c8; padding: 5rem 3rem; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
-.about-label { font-size: 10px; letter-spacing: 0.35em; color: #a09880; text-transform: uppercase; font-family: 'Noto Sans JP', sans-serif; margin-bottom: 1.5rem; }
-.about-name { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; color: #1e1c18; margin-bottom: 0.5rem; }
-.about-name-sub { font-size: 11px; color: #a09880; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.1em; }
-.about-body { font-size: 13px; color: #6b6454; line-height: 2.2; letter-spacing: 0.05em; font-family: 'Noto Sans JP', sans-serif; }
-
-footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #aaa; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.05em; }
-.footer-back { color: #c8b89a; text-decoration: none; }
+.about { border-top: 0.5px solid var(--border); padding: 5rem 3rem; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
+.about-label { font-size: 10px; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; font-family: var(--font-sans); margin-bottom: 1.5rem; }
+.about-name { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-strong); margin-bottom: 0.5rem; }
+.about-name-sub { font-size: 11px; color: var(--muted); font-family: var(--font-sans); letter-spacing: 0.1em; }
+.about-body { font-size: 13px; color: var(--ink-light); line-height: 2.2; letter-spacing: 0.05em; font-family: var(--font-sans); }
+.footer-back { color: var(--tan-line); text-decoration: none; }
 </style>
 </head>
 <body>
@@ -175,18 +166,19 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
   <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
 </footer>
 
+<script src="/assets/config.js"></script>
 <script>
 // ============================================================
 // 書籍マスタ取得（GASウェブアプリURL）
 // ショップのGAS_URLと同じURLを使用
 // ============================================================
-const BOOKS_GAS_URL = 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
+const BOOKS_GAS_URL = window.MIMOSA.GAS_URL;
 const BOOKS_LABEL   = 'ミモザ書房';
 
 // ============================================================
 // 「LPに反映」で埋め込まれる書籍データ（GASが自動更新）
 // ============================================================
-const BOOKS_EMBEDDED = /*__BOOKS_JSON_START__*/[{"id":"bk-002","label":"ミモザ書房","genre":"エッセイ","abbr":"シリーズ01 秋","title":"秋　月と夜長の文学","author":"ミモザ書房編集部","desc":"四季の移ろいとともに、文学に浸る<br>\n<br>\n「ア、秋」太宰治<br>\n「木犀の香」薄田泣菫<br>\n「秋霧」宮本百合子<br>\n「曇った秋」中原中也<br>\n「ごん狐」新美南吉<br>\n「喫茶店にて」萩原朔太郎<br>\n「鹿踊りのはじまり」宮沢賢治　など<br>\n<br>\n春・夏・秋・冬――<br>\n季節とともに楽しむ文学選集<br>","image":"https://lh3.googleusercontent.com/d/18cE3fE_Q5vHoiSbRFLuqu64etAlMX-gg","status":"刊行予定","pubDate":"2026年10月23日"}]/*__BOOKS_JSON_END__*/;
+const BOOKS_EMBEDDED = /*__BOOKS_JSON_START__*/[{"id":"bk-002","label":"ミモザ書房","genre":"","abbr":"シリーズ01 秋","title":"","author":"ミモザ書房編集部","desc":"","image":"https://lh3.googleusercontent.com/d/1E2GGUW4M9vfrpZNV7flYKKKSCwdnFqXX","status":"刊行予定","pubDate":"2026年10月23日"}]/*__BOOKS_JSON_END__*/;
 
 // ステータスに応じたクラスとラベル
 const STATUS_MAP = {
