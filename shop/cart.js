@@ -2,8 +2,8 @@
 // cart.js — ミモザショップ 共通カートロジック
 //
 // 使い方:
-//   <script src="../cart.js"></script>  ← shobo/mimosadoから
-//   <script src="cart.js"></script>     ← shop/index.htmlから
+//   <script src="../cart.js"><\/script>  ← shobo/mimosadoから
+//   <script src="cart.js"><\/script>     ← shop/index.htmlから
 // ============================================================
 
 const CART_KEY = 'mimosa_cart'; // localStorage のキー
