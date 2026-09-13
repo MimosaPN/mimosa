@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ミモザ 古本買取 — その本を、次の読者へ</title>
+<meta name="description" content="文芸・エッセイの古本買取。出版社ミモザが、一冊ずつ見て値をつけます。買い取った本は、アンソロジーの底本や選書便を通じて次の読者へ届きます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#2D4A2D;
+  --green-deep:#1E331E;
+  --cream:#FFFDF4;
+  --cream-2:#FDFAF3;
+  --mimosa:#F5C842;
+  --terra:#C1683C;
+  --ink:#23291F;
+  --muted:#6E7468;
+  --line:#DFD9C9;
+
+  --mincho:"Zen Old Mincho",serif;
+  --gothic:"Zen Kaku Gothic New",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--cream);color:var(--ink);
+  font-family:var(--gothic);font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+img{max-width:100%}
+
+.wrap{width:min(980px,92vw);margin-inline:auto}
+section{padding:76px 0}
+
+/* ---------- hero ---------- */
+.hero{
+  background:var(--green-deep);color:var(--cream);
+  padding:0;position:relative;overflow:hidden;
+}
+.hero-in{
+  width:min(980px,92vw);margin-inline:auto;
+  min-height:min(78vh,660px);
+  display:flex;align-items:center;gap:48px;
+  padding:64px 0;
+}
+.hero h1{
+  font-family:var(--mincho);font-weight:900;
+  margin:0;letter-spacing:.14em;
+}
+.hero .sub{max-width:30em}
+.hero .sub p{margin:0 0 20px;font-size:15px;line-height:2.2;color:#D9DDCF}
+.hero .lede{
+  font-family:var(--mincho);font-size:19px;line-height:2.1;
+  color:var(--cream);margin-bottom:26px;letter-spacing:.04em;
+}
+.rule{width:52px;height:3px;background:var(--mimosa);margin:0 0 26px}
+
+/* 縦書きの見出し。文芸の本らしさが出る。狭い画面では横書きに戻す */
+@media (min-width:820px){
+  .hero h1{
+    writing-mode:vertical-rl;text-orientation:upright;
+    font-size:46px;line-height:1.5;
+    max-height:420px;flex:0 0 auto;
+  }
+  .hero-in{flex-direction:row-reverse;justify-content:space-between}
+}
+@media (max-width:819px){
+  .hero-in{flex-direction:column;align-items:flex-start;min-height:0;padding:56px 0 52px}
+  .hero h1{font-size:31px;line-height:1.85;letter-spacing:.1em}
+}
+
+.btn{
+  display:inline-block;background:var(--mimosa);color:var(--green-deep);
+  font-weight:700;text-decoration:none;padding:16px 34px;border-radius:2px;
+  letter-spacing:.06em;transition:background .18s ease;
+}
+.btn:hover{background:#FFD75E}
+.btn:focus-visible{outline:3px solid var(--cream);outline-offset:3px}
+.btn-note{display:block;font-size:13px;color:#B9BFAD;margin-top:12px}
+
+/* ---------- 共通見出し ---------- */
+h2{
+  font-family:var(--mincho);font-size:27px;font-weight:700;
+  letter-spacing:.08em;margin:0 0 10px;color:var(--green);
+}
+.h2note{color:var(--muted);font-size:14px;margin:0 0 38px}
+
+/* ---------- 扱う本 ---------- */
+.scope{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:start}
+@media (max-width:760px){.scope{grid-template-columns:1fr;gap:32px}}
+.genre{font-family:var(--mincho);font-size:21px;line-height:2.1;letter-spacing:.06em;margin:0 0 18px}
+.genre span{border-bottom:2px solid var(--mimosa);padding-bottom:2px}
+.scope p{margin:0 0 14px}
+.no{background:var(--cream-2);border:1px solid var(--line);padding:24px 26px}
+.no h3{font-family:var(--gothic);font-size:14px;margin:0 0 14px;color:var(--terra);letter-spacing:.04em}
+.no ul{margin:0;padding-left:1.1em;font-size:14px;line-height:2;color:var(--muted)}
+
+/* ---------- 強化中 ---------- */
+.feat{background:var(--green);color:var(--cream)}
+.feat h2{color:var(--cream)}
+.feat .h2note{color:#B9BFAD}
+.flist{border-top:1px solid rgba(255,253,244,.22)}
+.frow{
+  display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+  padding:20px 2px;border-bottom:1px solid rgba(255,253,244,.22);
+}
+.frow .ttl{font-family:var(--mincho);font-size:18px;letter-spacing:.04em}
+.frow .au{font-size:13px;color:#B9BFAD;margin-top:4px}
+.frow .amt{font-family:var(--mincho);font-size:25px;color:var(--mimosa);white-space:nowrap}
+.frow .amt small{font-size:14px;margin-left:2px}
+.fempty{color:#B9BFAD;font-size:14px;padding:20px 0}
+
+/* ---------- 流れ ---------- */
+.flow{counter-reset:step}
+.step{display:flex;gap:22px;padding:22px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:0}
+.step .n{
+  counter-increment:step;flex:0 0 34px;height:34px;
+  border:1.5px solid var(--green);border-radius:50%;
+  display:grid;place-items:center;font-size:14px;color:var(--green);
+}
+.step .n::before{content:counter(step)}
+.step h3{font-size:16px;margin:4px 0 6px;font-weight:700}
+.step p{margin:0;font-size:14.5px;color:var(--muted)}
+
+/* ---------- 送料 ---------- */
+.ship{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){.ship{grid-template-columns:1fr}}
+.card{background:var(--cream-2);border:1px solid var(--line);padding:28px}
+.card.mark{border-color:var(--mimosa);border-width:2px}
+.card h3{font-family:var(--mincho);font-size:18px;margin:0 0 6px;letter-spacing:.05em}
+.card .who{font-size:13px;color:var(--terra);margin:0 0 16px}
+.card ul{margin:0;padding-left:1.1em;font-size:14.5px;line-height:2}
+.fine{font-size:13px;color:var(--muted);margin-top:22px;line-height:2}
+
+/* ---------- 出張 ---------- */
+.visit{background:var(--green);color:var(--cream)}
+.visit h2{color:var(--cream)}
+.visit-in{display:grid;grid-template-columns:1.6fr auto;gap:40px;align-items:center}
+@media (max-width:760px){.visit-in{grid-template-columns:1fr;gap:26px}}
+.visit p{font-size:14.5px;color:#D9DDCF;margin:0 0 16px}
+.visit ul{margin:0 0 16px;padding-left:1.1em;font-size:14.5px;line-height:2;color:var(--cream)}
+.visit .vnote{font-size:13px;color:#B9BFAD;margin:0}
+
+/* ---------- FAQ ---------- */
+details{border-bottom:1px solid var(--line);padding:2px 0}
+summary{
+  cursor:pointer;padding:18px 30px 18px 2px;font-weight:500;position:relative;
+  list-style:none;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";position:absolute;right:6px;top:50%;width:9px;height:9px;
+  border-right:1.5px solid var(--green);border-bottom:1.5px solid var(--green);
+  transform:translateY(-70%) rotate(45deg);transition:transform .2s ease;
+}
+details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+details p{margin:0 0 20px;font-size:14.5px;color:var(--muted);padding-right:30px}
+
+/* ---------- CTA ---------- */
+.cta{background:var(--mimosa);text-align:center}
+.cta h2{color:var(--green-deep);margin-bottom:8px}
+.cta p{color:#5C5327;font-size:14.5px;margin:0 0 30px}
+.cta .btn{background:var(--green-deep);color:var(--mimosa)}
+.cta .btn:hover{background:#142414}
+
+/* ---------- footer ---------- */
+footer{background:var(--green-deep);color:#B9BFAD;font-size:13px;line-height:2.1;padding:46px 0}
+footer .name{color:var(--cream);font-family:var(--mincho);font-size:17px;letter-spacing:.08em;margin-bottom:12px}
+footer a{color:#B9BFAD}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <h1>その本を、次の読者へ。</h1>
+    <div class="sub">
+      <div class="rule"></div>
+      <p class="lede">文芸とエッセイの買取を、出版社がやっています。</p>
+      <p>手放した本がどこへ行くのか、ふつうは分かりません。ミモザでは、買い取った本をオンラインショップで売り、選書便でお届けし、ときにはアンソロジーの底本にします。</p>
+      <p>一冊ずつ、編集者が見て値をつけます。</p>
+      <a class="btn" href="apply.html">買取を申し込む</a>
+      <span class="btn-note">はじめての方は20冊から。二回目以降は冊数の下限なし。送料はいただきません。</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>お預かりする本</h2>
+    <p class="h2note">得意な分野に絞っています。そのぶん、ていねいに見ます。</p>
+    <div class="scope">
+      <div>
+        <p class="genre"><span>小説</span>　<span>エッセイ</span>　<span>詩歌</span>　<span>評論</span>　<span>文学全集</span></p>
+        <p>文庫・単行本どちらでも。絶版の文庫や、評価の定まっていない作家の本も歓迎します。大手の買取では一律の値がついてしまう本こそ、見せてください。</p>
+        <p>少部数の本や自費出版の本も、内容を見たうえで判断します。ミモザは自費出版のお手伝いもしているので、そうした本の価値が分かります。</p>
+      </div>
+      <div class="no">
+        <h3>お預かりできないもの</h3>
+        <ul>
+          <li>雑誌・ムック</li>
+          <li>コミック誌</li>
+          <li>同人誌・非売品</li>
+          <li>洋書</li>
+          <li>図書館や漫画喫茶の印があるもの</li>
+          <li>レンタル落ち</li>
+          <li>水濡れ・カビのあるもの</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--cream-2)">
+  <div class="wrap">
+    <h2>買い取った本の行き先</h2>
+    <p class="h2note">値段のつけ方が変わるのは、売り先を自分たちで持っているからです。</p>
+    <div class="scope">
+      <div>
+        <p>多くはオンラインショップに並べます。カバーを拭き、読める状態に整えてから、一冊ずつ紹介文を添えて。</p>
+        <p>月々の選書便「であう、1冊。」でお届けすることもあります。読み手を思い浮かべて選ぶので、ここに回る本は買取のときから目が変わります。</p>
+        <p>ごくまれに、アンソロジーの底本になります。絶版の文庫や古い全集を探しているのは、そのためです。</p>
+      </div>
+      <div class="no" style="border-color:var(--mimosa)">
+        <h3 style="color:var(--green)">だから、こう値をつけます</h3>
+        <ul style="color:var(--ink)">
+          <li>売り先が見えている本には、高く</li>
+          <li>大手が一律にしてしまう本も、中身を見て</li>
+          <li>少部数・自費出版の本も、判断します</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feat">
+  <div class="wrap">
+    <h2>いま、探している本</h2>
+    <p class="h2note">下記の金額で確実にお引き取りします。状態が良ければこれ以上になることもあります。</p>
+    <div class="flist" id="featured">
+      <p class="fempty">読み込んでいます。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>買取までの流れ</h2>
+    <p class="h2note">はじめての方は、確認のため受付票を郵送します。</p>
+    <div class="flow">
+      <div class="step">
+        <div class="n"></div>
+        <div>
+          <h3>申し込む</h3>
+          <p>お名前・ご住所と、身分証の写真をお送りください。古物営業法により、確認が必要です。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n"></div>
+        <div>
+          <h3>受付票が届く</h3>
+          <p>はじめての方には、受付票をご住所あてに郵送します。着払い伝票も一緒にお送りします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n"></div>
+        <div>
+          <h3>本を送る</h3>
+          <p>受付票を本と一緒に同封して、着払いでお送りください。梱包は手元の段ボールで大丈夫です。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n"></div>
+        <div>
+          <h3>査定結果を見る</h3>
+          <p>一冊ずつの金額を、明細つきでメールでお知らせします。ご納得いただけない場合は、着払いでお返しします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n"></div>
+        <div>
+          <h3>振り込む</h3>
+          <p>ご承諾いただいたあと、ご本人名義の口座にお振込みします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--cream-2)">
+  <div class="wrap">
+    <h2>送料について</h2>
+    <p class="h2note">ご負担いただくことはありません。ただし冊数の条件があります。</p>
+    <div class="ship">
+      <div class="card">
+        <h3>着払いで送る</h3>
+        <p class="who">はじめての方はこちら</p>
+        <ul>
+          <li>20冊以上で送料無料</li>
+          <li>着払い伝票をお送りします</li>
+          <li>20冊未満の場合、送料1,000円を買取額から差し引きます</li>
+          <li>お届け先は受付票に記載します</li>
+        </ul>
+      </div>
+      <div class="card mark">
+        <h3>レターパックで送る</h3>
+        <p class="who">2回目以降の方はこちら</p>
+        <ul>
+          <li>冊数の下限なし</li>
+          <li>レターパックプラス代600円を買取額に上乗せ</li>
+          <li>受付票の郵送は不要です</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine">
+      一度お取引いただいた方は本人確認が済んでいるため、二回目からは手続きが軽くなります。数冊でもお送りいただけます。
+    </p>
+  </div>
+</section>
+
+<section class="visit">
+  <div class="wrap">
+    <div class="visit-in">
+      <div>
+        <h2>数が多いときは、伺います</h2>
+        <p>蔵書の整理や引っ越しで大量にある場合は、こちらからお伺いします。その場で査定して、現金でお支払いします。梱包も発送も必要ありません。</p>
+        <ul>
+          <li>目安は50冊以上から</li>
+          <li>東京・埼玉の一部の地域まで</li>
+          <li>日時は個別にご相談のうえ決めます</li>
+        </ul>
+        <p class="vnote">対応できる地域かどうかは、お申し込みのときにご住所を見て判断し、折り返しご連絡します。</p>
+      </div>
+      <div>
+        <a class="btn" href="apply.html">出張買取を相談する</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>よくあるご質問</h2>
+    <p class="h2note"></p>
+
+    <details>
+      <summary>値段がつかない本はどうなりますか</summary>
+      <p>お申し込みのときに、引き取って処分するか、お返しするかを選んでいただきます。お返しの場合は着払いになります。</p>
+    </details>
+    <details>
+      <summary>買取できない本が混ざっていたら</summary>
+      <p>雑誌や洋書など、お預かりできない本が混ざっていた場合は、査定結果のご連絡のときに一覧でお知らせします。扱いは、お申し込みのときに選んでいただいた「引き取り」か「返送」のとおりに進めます。返送をお選びの場合は着払いになりますので、冊数が少ないときは引き取りをお選びいただくほうが手元に残るお金は多くなります。</p>
+    </details>
+    <details>
+      <summary>図書館の本やレンタル落ちが混ざっていたら</summary>
+      <p>法律上お取り扱いできないため、買取も返送もできません。ご連絡のうえ、こちらで適切に処分します。ご自身の蔵書かどうか、発送前にご確認ください。</p>
+    </details>
+    <details>
+      <summary>査定額に納得できなかったら</summary>
+      <p>お断りいただけます。その場合は、まとめて着払いでご返送します。一部だけをお返しする形は、送料の都合でお受けしていません。</p>
+    </details>
+    <details>
+      <summary>返事をしないとどうなりますか</summary>
+      <p>査定結果のご連絡から7日を過ぎると、ご承諾いただいたものとしてお振込みに進みます。3日目にリマインドのメールをお送りしますので、お返事はそれまでにいただければ確実です。</p>
+    </details>
+    <details>
+      <summary>本はどこに送ればいいですか</summary>
+      <p>お申し込みのあと、受付票と一緒にお送り先をご案内します。着払い伝票にはあらかじめ宛先を記入してありますので、そのままお使いいただけます。</p>
+    </details>
+    <details>
+      <summary>なぜ身分証が必要なのですか</summary>
+      <p>古物営業法で、書籍の買取は金額にかかわらず本人確認が義務づけられているためです。1冊でも、10円でも必要になります。いただいた情報は買取台帳として3年間保管し、それ以外には使いません。</p>
+    </details>
+    <details>
+      <summary>受付票が届く前に送ってしまいました</summary>
+      <p>受付票が同封されていないと確認が取れず、査定を始められません。お手数ですが、受付票が届きましたら郵送で追送いただくか、ご連絡ください。</p>
+    </details>
+    <details>
+      <summary>本の数が多いのですが</summary>
+      <p>冊数に上限はありません。段ボール何箱でもお送りいただけます。一度に入りきらない場合は、複数口に分けてお送りいただいても大丈夫です。</p>
+    </details>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>本棚を、整理しませんか</h2>
+    <p>入力は5分ほどで終わります。</p>
+    <a class="btn" href="apply.html">買取を申し込む</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="name">ミモザ 古本買取</div>
+    ミモザパートナーズ合同会社<br>
+    埼玉県公安委員会 許可 第431340070485号<br>
+    <a href="mailto:info@mimosa-partners.com">info@mimosa-partners.com</a><br>
+    <span style="font-size:12px">お問い合わせはメールで承ります。お送り先は、お申し込み後にご案内します。</span>
+  </div>
+</footer>
+
+<script>
+/* ← GASのデプロイURLに差し替えてください */
+var API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
+
+/* 買取強化中の本を読み込む。個別指定シートの「固定額」から自動で出る */
+fetch(API_URL, {
+  method: 'POST',
+  body: JSON.stringify({ action: 'featured', limit: 8 })
+})
+  .then(function (r) { return r.json(); })
+  .then(function (d) {
+    var el = document.getElementById('featured');
+    if (!d.ok || !d.items.length) {
+      el.innerHTML = '<p class="fempty">いまは強化中の本がありません。通常の買取は受け付けています。</p>';
+      return;
+    }
+    el.innerHTML = d.items.map(function (b) {
+      return '<div class="frow">' +
+        '<div><div class="ttl">' + esc(b.title) + '</div>' +
+        (b.author ? '<div class="au">' + esc(b.author) + '</div>' : '') + '</div>' +
+        '<div class="amt">' + Number(b.amount).toLocaleString() + '<small>円</small></div>' +
+      '</div>';
+    }).join('');
+  })
+  .catch(function () {
+    document.getElementById('featured').innerHTML =
+      '<p class="fempty">読み込めませんでした。通常の買取は受け付けています。</p>';
+  });
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[<>&]/g, function (m) {
+    return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[m];
+  });
+}
+</script>
+</body>
+</html>
