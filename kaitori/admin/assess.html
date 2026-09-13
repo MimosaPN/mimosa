@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>査定 — ミモザ 古本買取</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+:root{--cream:#FFFDF4;--green:#2D4A2D;--mimosa:#F5C842;--line:#E0DCCF;--terra:#C1683C;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);font-family:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans",sans-serif;color:#2b2b2b}
+.wrap{max-width:640px;margin:0 auto;padding:12px 12px 140px}
+select,input{width:100%;padding:10px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row>*{flex:1}
+.btn{padding:12px;font-size:15px;font-weight:700;border:0;border-radius:8px;background:var(--green);color:var(--cream)}
+.btn.sub{background:#fff;color:var(--green);border:1px solid var(--green)}
+#reader{border-radius:10px;overflow:hidden;margin:10px 0}
+.cond{display:flex;gap:6px;margin:8px 0}
+.cond button{flex:1;padding:12px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:15px}
+.cond button.on{background:var(--mimosa);border-color:var(--mimosa);font-weight:700}
+.item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
+.item.q{opacity:.55}
+.t{font-size:14px;font-weight:600;line-height:1.4}
+.m{font-size:11px;color:#777;margin-top:3px}
+.p{font-size:18px;font-weight:800;color:var(--green);text-align:right}
+.p.ng{color:var(--terra);font-size:13px}
+.item.need{border-color:var(--terra);background:#fff8f4}
+.fix{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);display:none}
+.fix .fr{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.fix label{flex:0 0 62px;font-size:12px;color:#666}
+.fix input{flex:1;padding:8px;font-size:15px}
+.fix button{padding:10px;font-size:14px;font-weight:700;border:0;border-radius:8px;
+  background:var(--terra);color:#fff;width:100%}
+.fixbtn{background:none;border:1px solid var(--terra);color:var(--terra);
+  border-radius:6px;font-size:12px;padding:6px 10px;margin-top:8px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--green);color:var(--cream);
+  padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.bar b{font-size:24px}
+.bar .acts{display:flex;gap:8px}
+.bar button{padding:10px 12px;font-size:13px;border:0;border-radius:8px;background:var(--mimosa);color:var(--green);font-weight:700}
+.pending{background:#fff5d6;border:1px solid var(--mimosa);padding:8px;border-radius:8px;font-size:12px;margin-bottom:8px}
+.x{flex:0 0 auto;background:none;border:0;color:#aaa;font-size:20px;padding:0 6px}
+h2{font-size:13px;color:var(--green);margin:16px 0 6px}
+</style>
+</head>
+<body>
+<div id="gate" style="display:none;position:fixed;inset:0;background:var(--cream);
+  align-items:center;justify-content:center;padding:24px;z-index:50">
+  <div style="width:min(360px,100%);text-align:center">
+    <div style="font-family:'Zen Old Mincho',serif;font-size:20px;color:var(--green);
+      letter-spacing:.08em;margin-bottom:8px">査定画面</div>
+    <p id="gateMsg" style="font-size:13px;color:#777;margin:0 0 18px"></p>
+    <input id="gateInput" type="password" placeholder="合言葉"
+      style="width:100%;padding:12px;font-size:16px;border:1px solid var(--line);border-radius:8px">
+    <button onclick="unlock()" class="btn" style="width:100%;margin-top:12px">開く</button>
+  </div>
+</div>
+<div id="app" style="display:none">
+<div class="wrap">
+
+<h2>宅配の到着確認</h2>
+<div class="row">
+  <input id="arr" inputmode="numeric" placeholder="同封の受付番号（4桁）">
+  <button class="btn sub" id="arrBtn" style="flex:0 0 110px">到着確認</button>
+</div>
+<div id="arrMsg" class="m" style="margin-bottom:10px"></div>
+
+<h2>案件を選ぶ</h2>
+<select id="cases"><option value="">受付番号で選択</option></select>
+
+<h2>状態ランク</h2>
+<div class="cond">
+  <button data-c="A">A 美品</button>
+  <button data-c="B" class="on">B 通常</button>
+  <button data-c="C">C 難あり</button>
+</div>
+
+<h2>スキャン</h2>
+<div class="row">
+  <button class="btn" id="scan">カメラを起動</button>
+  <button class="btn sub" id="stop">停止</button>
+</div>
+<div id="reader"></div>
+<div class="row">
+  <input id="manual" inputmode="numeric" autocomplete="off"
+         placeholder="バーコードリーダー / 手入力">
+  <button class="btn sub" id="add" style="flex:0 0 80px">追加</button>
+</div>
+<div class="m" id="scanMode" style="margin-bottom:8px">
+  この欄にカーソルを置いたままリーダーで読み取ると、次々に追加されます。
+</div>
+
+<div id="pending"></div>
+<h2>明細</h2>
+<div id="list"></div>
+</div>
+
+<div class="bar">
+  <div><span id="cnt">0</span>点<br><b id="sum">0</b>円</div>
+  <div class="acts">
+    <button id="commit">確定保存</button>
+    <button id="show">提示画面</button>
+    <button id="offer">結果を送信</button>
+    <button id="recv">受付票</button>
+  </div>
+</div>
+
+</div>
+<script>
+/* ← GASのデプロイURLに差し替えてください */
+var API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
+
+/* 合言葉は端末に保存する。ページは公開でも、これを知らなければAPIは叩けない */
+var KEYNAME = 'kaitori_admin_key';
+function adminKey(){ return localStorage.getItem(KEYNAME) || ''; }
+
+function api(action, payload){
+  var body = Object.assign({ action: action, key: adminKey() }, payload || {});
+  return fetch(API_URL, { method:'POST', body: JSON.stringify(body) })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d && d.message === '合言葉が違います') {
+        localStorage.removeItem(KEYNAME);
+        askKey('合言葉が違います。もう一度入力してください。');
+        throw new Error('unauthorized');
+      }
+      return d;
+    });
+}
+
+function askKey(msg){
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gateMsg').textContent = msg || '';
+  document.getElementById('app').style.display = 'none';
+}
+
+function unlock(){
+  var v = document.getElementById('gateInput').value.trim();
+  if (!v) return;
+  localStorage.setItem(KEYNAME, v);
+  location.reload();
+}
+
+/* --- 設定 --- */
+var BATCH_SIZE = 5;      // これだけ溜まったら送る
+var BATCH_WAIT = 1200;   // 最後のスキャンからこのms数で送る
+
+
+var COND = 'B', items = [], scanner = null, caseId = '';
+var queue = [], timer = null, inflight = false;
+var KEY = 'kaitori_buffer';
+
+if (!adminKey()) {
+  askKey('この画面は担当者専用です。');
+} else {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  boot();
+}
+
+function boot(){
+api('listCases').then(function(d){
+  var list = (d && d.cases) || [];
+  var s = document.getElementById('cases');
+  list.forEach(function(c){
+    var o = document.createElement('option');
+    o.value = c.caseId;
+    o.textContent = c.receipt + '  ' + (c.name||'') + '  [' + c.kubun + '/' + c.status + ']';
+    s.appendChild(o);
+  });
+  if (caseId) s.value = caseId;
+});
+}
+
+try {
+  var buf = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (buf) { items = buf.items || []; queue = buf.queue || []; caseId = buf.caseId || ''; render();
+             if (queue.length) schedule(0); }
+} catch(e){}
+
+document.getElementById('cases').addEventListener('change', function(){ caseId = this.value; save(); });
+
+document.querySelectorAll('.cond button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.cond button').forEach(function(x){ x.classList.remove('on'); });
+    b.classList.add('on'); COND = b.dataset.c;
+  });
+});
+
+/* --- スキャン --- */
+document.getElementById('scan').addEventListener('click', function(){
+  if (scanner) return;
+  scanner = new Html5Qrcode('reader');
+  scanner.start({ facingMode:'environment' },
+    { fps:10, qrbox:{width:260,height:140},
+      formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13] },
+    function(text){ handle(text); }, function(){}
+  ).catch(function(){
+    alert('カメラを起動できませんでした。\n\n' +
+          'この画面はGoogleのiframe内で動いているため、カメラを使えないことがあります。\n' +
+          'バーコードリーダーをお使いの場合は、下の入力欄にカーソルを置いてそのまま読み取ってください。');
+    scanner = null;
+  });
+});
+document.getElementById('stop').addEventListener('click', function(){
+  if (scanner) scanner.stop().then(function(){ scanner.clear(); scanner=null; });
+});
+var manualEl = document.getElementById('manual');
+
+function submitManual(){
+  var v = manualEl.value.trim();
+  if (v) { handle(v); }
+  manualEl.value = '';
+  manualEl.focus();
+}
+document.getElementById('add').addEventListener('click', submitManual);
+
+/* バーコードリーダーはキーボードとして動く。読み取り末尾のEnterで確定する */
+manualEl.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' || e.keyCode === 13) { e.preventDefault(); submitManual(); }
+});
+
+/* 読み取り後にフォーカスが外れると次が入らないので、常に戻す */
+manualEl.addEventListener('blur', function(){
+  setTimeout(function(){
+    var a = document.activeElement;
+    if (!a || a.tagName === 'BODY') manualEl.focus();
+  }, 80);
+});
+manualEl.focus();
+
+var lastCode = '', lastAt = 0;
+function handle(code){
+  var c = String(code).replace(/[^0-9X]/gi,'');
+  if (!/^97[89]/.test(c)) return;              // 下段(192〜)は無視
+  var now = Date.now();
+  if (c === lastCode && now - lastAt < 2500) return;
+  lastCode = c; lastAt = now;
+  if (navigator.vibrate) navigator.vibrate(40);
+
+  // すでに確定済みの同一ISBN・同一状態なら数量を足すだけ（通信不要）
+  var idx = items.findIndex(function(i){ return i.isbn===c && i.condition===COND && !i.queued; });
+  if (idx >= 0) {
+    items[idx].qty++;
+    items[idx].total = items[idx].unitPrice * items[idx].qty;
+    render(); save(); return;
+  }
+
+  queue.push({ isbn:c, condition:COND, qty:1 });
+  render(); save();
+  schedule(queue.length >= BATCH_SIZE ? 0 : BATCH_WAIT);
+}
+
+function schedule(delay){
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(flush, delay);
+}
+
+function flush(){
+  if (inflight || !queue.length) return;
+  var batch = queue.splice(0, 50);
+  inflight = true; render(); save();
+
+  api('assessBatch', { scans: batch })
+    .then(function(r){
+      inflight = false;
+      (r.results || []).forEach(function(x, i){
+        if (x.ok) { items.unshift(x.result); }
+        else {
+          items.unshift({ isbn:x.isbn, title:'【要手入力】' + (x.message||'取得失敗'),
+                          qty:batch[i].qty, condition:batch[i].condition,
+                          unitPrice:0, total:0, ng:'NG', noPriceReason:'書誌なし' });
+        }
+      });
+      render(); save();
+      if (queue.length) schedule(0);
+    })
+    .catch(function(){
+      inflight = false;
+      queue = batch.concat(queue);   // 失敗したぶんはキューに戻す
+      render(); save();
+    });
+}
+
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify({ caseId:caseId, items:items, queue:queue })); } catch(e){}
+}
+
+function render(){
+  var el = document.getElementById('list');
+  el.innerHTML = '';
+  var cnt = 0, sum = 0;
+
+  queue.forEach(function(q){
+    var d = document.createElement('div'); d.className='item q';
+    d.innerHTML = '<div class="t">待機中…</div><div class="m">' + esc(q.isbn) + ' / ' + esc(q.condition) + '</div>';
+    el.appendChild(d);
+  });
+
+  items.forEach(function(it, idx){
+    cnt += Number(it.qty)||0; sum += Number(it.total)||0;
+    var need = (it.ng === '要確認');
+    var ng = need || it.ng === 'NG' || !it.unitPrice;
+
+    var d = document.createElement('div');
+    d.className = 'item' + (need ? ' need' : '');
+    d.innerHTML =
+      '<div class="row" style="margin:0">' +
+        '<div style="flex:1">' +
+          '<div class="t">' + esc(it.title) + '</div>' +
+          '<div class="m">' + esc(it.isbn) + ' / 定価' + (it.listPrice||0) + '円 / ' +
+            esc(it.condition) + ' / ' + esc(it.ageBucket||'') + ' ' + esc(it.turnover||'') +
+            ' / ×' + it.qty + '</div>' +
+          (need ? '<button class="fixbtn" data-fix="' + idx + '">書誌を手入力して再計算</button>' : '') +
+        '</div>' +
+        '<div style="flex:0 0 96px" class="p' + (ng?' ng':'') + '">' +
+          (ng ? esc(it.noPriceReason||'0円') : (it.total||0) + '円') + '</div>' +
+        '<button class="x" data-i="' + idx + '">×</button>' +
+      '</div>' +
+      (need
+        ? '<div class="fix" id="fix' + idx + '">' +
+            '<div class="fr"><label>定価</label>' +
+              '<input type="number" inputmode="numeric" id="fp' + idx + '" value="' + (it.listPrice||'') + '" placeholder="760"></div>' +
+            '<div class="fr"><label>発売日</label>' +
+              '<input type="date" id="fd' + idx + '" value="' + esc(it.pubDate||'') + '"></div>' +
+            '<div class="fr"><label>Cコード</label>' +
+              '<input id="fc' + idx + '" value="' + esc(it.ccode||'') + '" placeholder="0076"></div>' +
+            '<button data-go="' + idx + '">再計算する</button>' +
+          '</div>'
+        : '');
+    el.appendChild(d);
+  });
+
+  el.querySelectorAll('.x').forEach(function(b){
+    b.addEventListener('click', function(){ items.splice(Number(b.dataset.i),1); render(); save(); });
+  });
+
+  el.querySelectorAll('[data-fix]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var box = document.getElementById('fix' + b.dataset.fix);
+      box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    });
+  });
+
+  el.querySelectorAll('[data-go]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var i = Number(b.dataset.go);
+      var it = items[i];
+      if (!it) return;
+      b.disabled = true; b.textContent = '計算中...';
+      api('fixAndAssess', {
+        isbn: it.isbn,
+        patch: {
+          listPrice: document.getElementById('fp' + i).value,
+          pubDate: document.getElementById('fd' + i).value,
+          ccode: document.getElementById('fc' + i).value
+        },
+        condition: it.condition, qty: it.qty
+      }).then(function(r){
+        if (r && r.ok) { items[i] = r.result; render(); save(); }
+        else { b.disabled = false; b.textContent = '再計算する'; alert((r && r.message) || '失敗しました'); }
+      }).catch(function(){
+        b.disabled = false; b.textContent = '再計算する'; alert('通信に失敗しました');
+      });
+    });
+  });
+
+  document.getElementById('cnt').textContent = cnt;
+  document.getElementById('sum').textContent = sum.toLocaleString();
+  document.getElementById('pending').innerHTML = queue.length
+    ? '<div class="pending">未送信が' + queue.length + '件あります。' +
+      '<button class="btn sub" style="padding:6px 10px;font-size:12px;margin-left:8px" onclick="flush()">いま送る</button></div>'
+    : '';
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[<>&]/g,function(m){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[m];}); }
+
+/* --- 確定保存 --- */
+document.getElementById('commit').addEventListener('click', function(){
+  if (!caseId) { alert('案件を選んでください'); return; }
+  if (queue.length) { alert('未送信が' + queue.length + '件あります。先に送信してください。'); return; }
+  if (!items.length) { alert('明細がありません'); return; }
+  var need = items.filter(function(i){ return i.ng === '要確認'; }).length;
+  if (need) { alert('書誌が不足している明細が' + need + '件あります。\n手入力で補ってから保存してください。'); return; }
+  var self = this; self.disabled = true; self.textContent = '保存中';
+  api('commitDetails', { caseId: caseId, items: items })
+    .then(function(r){
+      self.disabled=false; self.textContent='確定保存';
+      if (r.ok) { items=[]; localStorage.removeItem(KEY); render();
+                  alert('今回 ' + r.added + '点を保存しました。\nこの案件の合計 ' +
+                        r.count + '点 / ' + Number(r.total).toLocaleString() + '円'); }
+      else alert(r.message || '保存できませんでした');
+    })
+    .catch(function(){
+      self.disabled=false; self.textContent='確定保存';
+      alert('保存に失敗しました。明細は端末に残っています。電波の良い場所で再度お試しください。');
+    });
+});
+
+document.getElementById('show').addEventListener('click', function(){
+  if (!caseId) { alert('案件を選んでください'); return; }
+  window.open(API_URL + '?p=show&id=' + encodeURIComponent(caseId), '_blank');
+});
+
+/* --- 宅配：受付票を開く（合言葉を引き継ぐ） --- */
+document.getElementById('recv').addEventListener('click', function(){
+  if (!caseId) { alert('案件を選んでください'); return; }
+  window.open(API_URL + '?p=receipt&key=' + encodeURIComponent(adminKey()) +
+              '&id=' + encodeURIComponent(caseId), '_blank');
+});
+
+/* --- 宅配：到着確認 --- */
+document.getElementById('arrBtn').addEventListener('click', function(){
+  var no = document.getElementById('arr').value.trim();
+  if (!no) return;
+  var msg = document.getElementById('arrMsg');
+  msg.textContent = '確認中...';
+  api('confirmArrival', { receiptNo: no }).then(function(r){
+    if (!r.ok) { msg.textContent = r.message; return; }
+    msg.textContent = r.name + ' さまの荷物を確認しました。査定できます。';
+    document.getElementById('arr').value = '';
+    reloadCases(r.caseId);
+  });
+});
+
+function reloadCases(selectId){
+  api('listCases').then(function(d){
+    var list = (d && d.cases) || [];
+    var s = document.getElementById('cases');
+    s.innerHTML = '<option value="">受付番号で選択</option>';
+    list.forEach(function(c){
+      var o = document.createElement('option');
+      o.value = c.caseId;
+      o.textContent = c.receipt + '  ' + (c.name||'') + '  [' + c.kubun + '/' + c.status + ']';
+      s.appendChild(o);
+    });
+    if (selectId) { s.value = selectId; caseId = selectId; save(); }
+    else if (caseId) s.value = caseId;
+  });
+}
+
+/* --- 宅配：査定結果をメールで送る --- */
+document.getElementById('offer').addEventListener('click', function(){
+  if (!caseId) { alert('案件を選んでください'); return; }
+  if (!confirm('査定結果をメールで送信します。よろしいですか。')) return;
+  var self = this; self.disabled = true;
+  api('sendOffer', { caseId: caseId })
+    .then(function(r){
+      self.disabled = false;
+      if (!r.ok) { alert(r.message); return; }
+      alert('送信しました\n買取 ' + r.total + '円' +
+            (r.refund ? ' + 送料補填 ' + r.refund + '円' : '') +
+            '\n承諾期限 ' + r.deadline);
+      reloadCases();
+    })
+    .catch(function(){ self.disabled = false; alert('送信に失敗しました'); });
+});
+
+document.getElementById('gateInput').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') unlock();
+});
+</script>
+</body>
+</html>
