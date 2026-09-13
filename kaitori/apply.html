@@ -151,18 +151,50 @@ var API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
 
 var imgs = { front: null, back: null };
 
+/* スマホ写真はそのままだと数MBあり、送信に失敗する。
+   長辺1600pxのJPEGに縮めてから送る。文字は十分読める */
+function shrinkImage(file, maxEdge, quality){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onerror = function(){ reject(new Error('読み込めませんでした')); };
+    reader.onload = function(){
+      var img = new Image();
+      img.onerror = function(){ reject(new Error('画像として開けませんでした')); };
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        var scale = Math.min(1, maxEdge / Math.max(w, h));
+        var cw = Math.round(w * scale), ch = Math.round(h * scale);
+
+        var cv = document.createElement('canvas');
+        cv.width = cw; cv.height = ch;
+        cv.getContext('2d').drawImage(img, 0, 0, cw, ch);
+
+        var url = cv.toDataURL('image/jpeg', quality);
+        resolve({ data: url.split(',')[1], mimeType: 'image/jpeg', dataUrl: url,
+                  bytes: Math.round(url.length * 0.75) });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function bindFile(inputId, previewId, key){
   document.getElementById(inputId).addEventListener('change', function(e){
     var f = e.target.files[0];
-    if(!f){ imgs[key] = null; document.getElementById(previewId).style.display='none'; return; }
-    var r = new FileReader();
-    r.onload = function(){
-      imgs[key] = { data: r.result.split(',')[1], mimeType: f.type,
+    var p = document.getElementById(previewId);
+    if(!f){ imgs[key] = null; p.style.display='none'; return; }
+
+    imgs[key] = null;
+    document.getElementById('err').textContent = '';
+    shrinkImage(f, 1600, 0.82).then(function(out){
+      imgs[key] = { data: out.data, mimeType: out.mimeType,
                     side: (key === 'front' ? '表' : '裏') };
-      var p = document.getElementById(previewId);
-      p.src = r.result; p.style.display = 'block';
-    };
-    r.readAsDataURL(f);
+      p.src = out.dataUrl; p.style.display = 'block';
+    }).catch(function(){
+      document.getElementById('err').textContent =
+        '画像を読み込めませんでした。別の写真でお試しください。';
+    });
   });
 }
 bindFile('idFront','prevFront','front');
@@ -188,7 +220,7 @@ function idImageList(){
 }
 function idMissing(){
   var t = document.getElementById('idType').value;
-  if (!imgs.front) return '身分証の表面';
+  if (!imgs.front) return '身分証の表面（読み込み中の場合は少しお待ちください）';
   if (BACK_REQUIRED.indexOf(t) >= 0 && !imgs.back) return '身分証の裏面';
   return '';
 }
@@ -258,9 +290,12 @@ document.getElementById('go').addEventListener('click', function(){
         'お預かりのご確認ができ次第、査定を開始いたします。';
     window.scrollTo(0,0);
   })
-  .catch(function(){
+  .catch(function(e){
     self.disabled=false; self.textContent='この内容で申し込む';
-    document.getElementById('err').textContent = '送信に失敗しました。電波の良い場所で、もう一度お試しください。';
+    document.getElementById('err').textContent =
+      '送信に失敗しました（' + (e && e.message ? e.message : '通信エラー') + '）。' +
+      '電波の良い場所で、もう一度お試しください。';
+    console.error(e);
   });
 });
 </script>
