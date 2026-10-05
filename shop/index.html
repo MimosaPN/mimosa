@@ -101,7 +101,7 @@
   .modal-tag{font-family:var(--font-sans);font-size:11px;color:var(--mimosa-yellow);font-weight:700;letter-spacing:.1em;margin-bottom:6px;}
   .modal-name{font-size:22px;font-weight:700;line-height:1.4;margin-bottom:4px;}
   .modal-seller{font-family:var(--font-sans);font-size:13px;color:var(--muted);margin-bottom:16px;}
-  .modal-desc{font-family:var(--font-sans);font-size:13px;color:var(--ink);line-height:1.9;flex:1;border-top:1px solid var(--border-soft);padding-top:14px;margin-bottom:16px;}
+  .modal-desc{font-family:var(--font-sans);font-size:13px;color:var(--ink);line-height:1.9;flex:1;border-top:1px solid var(--border-soft);padding-top:14px;margin-bottom:16px;white-space:pre-line;}
   .modal-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
   .modal-price{font-family:var(--font-sans);font-weight:800;font-size:24px;}
   .modal-price small{font-size:13px;font-weight:400;color:var(--muted);}
@@ -193,7 +193,6 @@
 </style>
 </head>
 <body>
-
 
 <header>
   <div class="bar">
@@ -327,18 +326,6 @@ const PREVIEW_SECRET = 'mimosa2026';
 })();
 const GAS_URL_SHOP = GAS_URL;
 
-const DEMO = {
-  shobo: [
-    { id:'sb01', label:'ミモザ書房', name:'夜の縁側で、あなたに会う', cat:'小説', price:1600, stock:10, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'祖母の家に帰省した夏。縁側に現れる老女の幽霊と交わす、静かな夜の対話。' },
-    { id:'sb02', label:'ミモザ書房', name:'喫茶店で生きている', cat:'エッセイ', price:1500, stock:0, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'全国の喫茶店を巡った著者が綴る、珈琲と時間と人生についての断章。' },
-  ],
-  mimosado: [
-    { id:'bk01', label:'ミモザ堂', name:'朝の余白', cat:'エッセイ', price:1500, stock:8, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'日々の小さな間（ま）を見つめた、静かな随筆集。' },
-    { id:'bk02', label:'ミモザ堂', name:'港の光', cat:'写真集', price:2200, stock:3, shipFee:200, shipMethod:'クリックポスト', image:'', desc:'瀬戸内の港町を巡って撮りためた、朝夕の光の記録。' },
-    { id:'gd01', label:'ミモザ堂', name:'和綴じノート（藍）', cat:'文具', price:1800, stock:5, shipFee:700, shipMethod:'宅配便', image:'', desc:'職人が一冊ずつ手で綴じた、藍染め表紙のノート。' },
-  ]
-};
-
 let PRODUCTS_SHOBO    = [];
 let PRODUCTS_MIMOSADO = [];
 let activeTab         = 'shobo';
@@ -355,24 +342,6 @@ const bookSvgEl = bookSvg;
     document.getElementById('tab-mimosado').classList.toggle('active', hash === 'mimosado');
   }
 })();
-
-const CACHE_TTL      = 60 * 60 * 1000; // 1時間
-const CACHE_KEY_SB   = 'mimosa_products_shobo';
-const CACHE_KEY_MD   = 'mimosa_products_mimosado';
-
-// ── キャッシュ読み書き ──
-function loadCache(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    const { data, timestamp } = JSON.parse(raw);
-    if (Date.now() - timestamp > CACHE_TTL) return null;
-    return data;
-  } catch { return null; }
-}
-function saveCache(key, data) {
-  try { localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() })); } catch {}
-}
 
 // ── ローディング制御 ──
 function showLoading() {
@@ -396,64 +365,36 @@ async function fetchFromGas() {
   return { sb, md };
 }
 
-// ── 商品読み込み（キャッシュ対応） ──
+// ── 商品読み込み ──
+// GASを先に待ってから描画する。埋め込みデータを先に出すと、
+// GitHub PagesのHTMLキャッシュのせいで「反映前の内容が数秒表示される」ため。
+// 埋め込みは、GASに繋がらなかったときだけ使う。
 async function loadProducts() {
-  const cachedSb = loadCache(CACHE_KEY_SB);
-  const cachedMd = loadCache(CACHE_KEY_MD);
+  showLoading();
 
-  // ① 埋め込みデータがあればそれを使う（一番速い）
-  if (EMBEDDED_PRODUCTS && Array.isArray(EMBEDDED_PRODUCTS.sb) && EMBEDDED_PRODUCTS.sb.length > 0) {
+  let sb = null, md = null;
+  try {
+    ({ sb, md } = await fetchFromGas());
+  } catch (err) {
+    console.warn('商品データの取得に失敗しました', err);
+  }
+
+  if (sb || md) {
+    PRODUCTS_SHOBO    = sb || [];
+    PRODUCTS_MIMOSADO = md || [];
+  } else if (EMBEDDED_PRODUCTS && Array.isArray(EMBEDDED_PRODUCTS.sb)) {
     PRODUCTS_SHOBO    = EMBEDDED_PRODUCTS.sb;
     PRODUCTS_MIMOSADO = EMBEDDED_PRODUCTS.md || [];
-    hideLoading();
-    buildFilter();
-    renderGrid();
-    updateCartBadge();
-    // バックグラウンドで在庫だけ更新
-    fetchFromGas().then(({ sb, md }) => {
-      if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
-      if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
-      renderGrid();
-    }).catch(() => {});
-    return;
+  } else {
+    PRODUCTS_SHOBO    = [];
+    PRODUCTS_MIMOSADO = [];
   }
 
-  // ② キャッシュがあれば使う
-  if (cachedSb && cachedMd) {
-    PRODUCTS_SHOBO    = cachedSb;
-    PRODUCTS_MIMOSADO = cachedMd;
-    hideLoading();
-    buildFilter();
-    renderGrid();
-    updateCartBadge();
-    // バックグラウンドで静かに更新
-    fetchFromGas().then(({ sb, md }) => {
-      if (sb) { saveCache(CACHE_KEY_SB, sb); PRODUCTS_SHOBO    = sb; }
-      if (md) { saveCache(CACHE_KEY_MD, md); PRODUCTS_MIMOSADO = md; }
-      renderGrid();
-    }).catch(() => {});
-    return;
-  }
-
-  // ③ GASからfetch
-  showLoading();
-  try {
-    const { sb, md } = await fetchFromGas();
-    PRODUCTS_SHOBO    = sb || DEMO.shobo;
-    PRODUCTS_MIMOSADO = md || DEMO.mimosado;
-    if (sb) saveCache(CACHE_KEY_SB, sb);
-    if (md) saveCache(CACHE_KEY_MD, md);
-  } catch {
-    PRODUCTS_SHOBO    = DEMO.shobo;
-    PRODUCTS_MIMOSADO = DEMO.mimosado;
-  }
   hideLoading();
-  setTimeout(() => {
-    buildFilter();
-    document.getElementById('grid').classList.add('fade-in');
-    renderGrid();
-    updateCartBadge();
-  }, 280);
+  buildFilter();
+  document.getElementById('grid').classList.add('fade-in');
+  renderGrid();
+  updateCartBadge();
 }
 
 // ── タブ切り替え ──
@@ -524,7 +465,7 @@ function renderGrid() {
           </div>
           <div class="stock-info">${sold
             ? 'ただいま在庫切れです'
-            : `残り ${p.stock - inCart} 点・送料 ${yen(p.shipFee)}（${p.shipMethod}）`
+            : `残り ${p.stock - inCart} 点`
           }</div>
         </div>
       </article>`;
@@ -547,12 +488,17 @@ function openModal(productId) {
   document.getElementById('modal-tag').textContent    = p.label + '・' + p.cat;
   document.getElementById('modal-name').textContent   = p.name;
   document.getElementById('modal-seller').textContent = p.seller ? '著：' + p.seller : '';
-  document.getElementById('modal-desc').textContent   = p.desc || '';
+  // スプシの説明文には <br> が入っている。textContentだとタグが文字として出るので
+  // 改行文字に直して入れる（CSSの white-space:pre-line で改行として表示される）。
+  document.getElementById('modal-desc').textContent   =
+    String(p.desc || '').replace(/<br\s*\/?>/gi, '\n');
   document.getElementById('modal-price').innerHTML    = yen(p.price);
   document.getElementById('modal-stock').textContent  = sold
     ? 'ただいま在庫切れです'
     : `残り ${p.stock - inCart} 点`;
-  document.getElementById('modal-ship').textContent   = `送料：${yen(p.shipFee)}（${p.shipMethod}）`;
+  // 送料は商品ごとではなく、カート全体の梱包区分からお会計時に計算される。
+  document.getElementById('modal-ship').textContent   =
+    '送料：お会計時に計算されます（商品代金10,000円以上は送料無料）';
 
   const imgEl = document.getElementById('modal-img');
   imgEl.innerHTML = p.image
