@@ -48,6 +48,7 @@
   .brand-tag{position:absolute;top:12px;left:12px;font-family:var(--font-sans);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;}
   .tag-shobo{background:rgba(255,253,247,.92);color:var(--green-leaf);}
   .tag-mimosado{background:rgba(232,184,75,.18);color:var(--mimosa-deep);}
+  .tag-goods{background:rgba(138,111,78,.15);color:var(--tan);}
   .body{padding:16px 16px 18px;display:flex;flex-direction:column;flex:1;}
   .cat{font-family:var(--font-sans);font-size:11px;color:var(--muted);letter-spacing:.1em;}
   .name{font-size:17px;font-weight:700;margin:4px 0 6px;line-height:1.45;}
@@ -233,6 +234,7 @@
 <div class="tabs">
   <button class="tab active" id="tab-shobo"    onclick="switchTab('shobo')">ミモザ書房</button>
   <button class="tab"        id="tab-mimosado" onclick="switchTab('mimosado')">ミモザ堂</button>
+  <button class="tab"        id="tab-goods"    onclick="switchTab('goods')">雑貨</button>
 </div>
 
 <div class="filter" id="filter">
@@ -328,6 +330,25 @@ const GAS_URL_SHOP = GAS_URL;
 
 let PRODUCTS_SHOBO    = [];
 let PRODUCTS_MIMOSADO = [];
+let PRODUCTS_GOODS    = [];
+
+// タブへの振り分け。
+// 雑貨は「種別」で分けるので、レーベルは書房・堂のどちらでも構わない。
+function assignProducts(all) {
+  const list    = Array.isArray(all) ? all : [];
+  const isGoods = p => String(p.kind || '').trim() === '雑貨';
+  PRODUCTS_GOODS    = list.filter(isGoods);
+  const books       = list.filter(p => !isGoods(p));
+  PRODUCTS_MIMOSADO = books.filter(p => p.label === 'ミモザ堂');
+  // レーベルが空欄の書籍も消えないよう、堂以外はすべて書房に寄せる
+  PRODUCTS_SHOBO    = books.filter(p => p.label !== 'ミモザ堂');
+}
+
+function currentProducts() {
+  if (activeTab === 'goods')    return PRODUCTS_GOODS;
+  if (activeTab === 'mimosado') return PRODUCTS_MIMOSADO;
+  return PRODUCTS_SHOBO;
+}
 let activeTab         = 'shobo';
 let activeFilter      = 'all';
 
@@ -336,10 +357,9 @@ const bookSvgEl = bookSvg;
 // ── ハッシュに応じた初期タブ設定 ──────────────────
 (function initTabFromHash() {
   const hash = location.hash.slice(1); // '#shobo' → 'shobo'
-  if (hash === 'shobo' || hash === 'mimosado') {
+  if (['shobo', 'mimosado', 'goods'].includes(hash)) {
     activeTab = hash;
-    document.getElementById('tab-shobo').classList.toggle('active',    hash === 'shobo');
-    document.getElementById('tab-mimosado').classList.toggle('active', hash === 'mimosado');
+    setActiveTab(hash);
   }
 })();
 
@@ -355,14 +375,16 @@ function hideLoading() {
 }
 
 // ── GASからデータ取得 ──
+// レーベルを指定せず、公開中の商品をまとめて1回で取る。
+// 以前はレーベルごとに2回叩いていたが、レーベルが空欄の商品が
+// どちらの結果にも入らず表示されなかったため、取得側では絞らない。
 async function fetchFromGas() {
-  const [r1, r2] = await Promise.all([
-    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ書房')}`).then(r => r.json()),
-    fetch(`${GAS_URL_SHOP}?label=${encodeURIComponent('ミモザ堂')}`).then(r => r.json())
-  ]);
-  const sb = (r1.ok && r1.products) ? r1.products.map(p => ({...p, label:'ミモザ書房'})) : null;
-  const md = (r2.ok && r2.products) ? r2.products.map(p => ({...p, label:'ミモザ堂'}))   : null;
-  return { sb, md };
+  const res  = await fetch(GAS_URL_SHOP);
+  const data = await res.json();
+  if (!data.ok || !Array.isArray(data.products)) {
+    throw new Error(data.error || '商品データを取得できませんでした');
+  }
+  return data.products;
 }
 
 // ── 商品読み込み ──
@@ -372,22 +394,20 @@ async function fetchFromGas() {
 async function loadProducts() {
   showLoading();
 
-  let sb = null, md = null;
+  let products = null;
   try {
-    ({ sb, md } = await fetchFromGas());
+    products = await fetchFromGas();
   } catch (err) {
     console.warn('商品データの取得に失敗しました', err);
   }
 
-  if (sb || md) {
-    PRODUCTS_SHOBO    = sb || [];
-    PRODUCTS_MIMOSADO = md || [];
-  } else if (EMBEDDED_PRODUCTS && Array.isArray(EMBEDDED_PRODUCTS.sb)) {
-    PRODUCTS_SHOBO    = EMBEDDED_PRODUCTS.sb;
-    PRODUCTS_MIMOSADO = EMBEDDED_PRODUCTS.md || [];
+  if (products) {
+    assignProducts(products);
+  } else if (EMBEDDED_PRODUCTS) {
+    // GASに繋がらないときだけ、HTMLに埋め込まれた内容を使う
+    assignProducts([...(EMBEDDED_PRODUCTS.sb || []), ...(EMBEDDED_PRODUCTS.md || [])]);
   } else {
-    PRODUCTS_SHOBO    = [];
-    PRODUCTS_MIMOSADO = [];
+    assignProducts([]);
   }
 
   hideLoading();
@@ -398,11 +418,16 @@ async function loadProducts() {
 }
 
 // ── タブ切り替え ──
+function setActiveTab(tab) {
+  ['shobo', 'mimosado', 'goods'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+}
+
 function switchTab(tab) {
   activeTab    = tab;
   activeFilter = 'all';
-  document.getElementById('tab-shobo').classList.toggle('active',    tab === 'shobo');
-  document.getElementById('tab-mimosado').classList.toggle('active', tab === 'mimosado');
+  setActiveTab(tab);
   // URLハッシュを更新（ブラウザ履歴には残さない）
   history.replaceState(null, '', '#' + tab);
   buildFilter();
@@ -411,7 +436,7 @@ function switchTab(tab) {
 
 // ── フィルター生成 ──
 function buildFilter() {
-  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const products = currentProducts();
   const lbl      = activeTab === 'shobo' ? 'ジャンルで絞る' : 'カテゴリで絞る';
   const keys     = ['all', ...new Set(products.map(p => p.cat))];
   const f        = document.getElementById('filter');
@@ -449,7 +474,7 @@ function saleState(p) {
 
 // ── グリッド描画 ──
 function renderGrid() {
-  const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
+  const products = currentProducts();
   const cart     = cartLoad();
   const list     = products.filter(p => activeFilter === 'all' || p.cat === activeFilter);
   const grid     = document.getElementById('grid');
@@ -459,12 +484,13 @@ function renderGrid() {
     return;
   }
 
-  const tagCls  = activeTab === 'shobo' ? 'tag-shobo' : 'tag-mimosado';
-  const tagText = activeTab === 'shobo' ? 'ミモザ書房' : 'ミモザ堂';
-
   grid.innerHTML = list.map(p => {
-    const st     = saleState(p);
-    const inCart = cart[p.id] ? cart[p.id].q : 0;
+    const st      = saleState(p);
+    const inCart  = cart[p.id] ? cart[p.id].q : 0;
+    const isGoods = String(p.kind || '').trim() === '雑貨';
+    const tagCls  = isGoods ? 'tag-goods'
+                  : p.label === 'ミモザ堂' ? 'tag-mimosado' : 'tag-shobo';
+    const tagText = p.label || '';
     const thumb  = p.image
       ? `<img src="${p.image}" alt="${p.name}">`
       : bookSvgEl;
@@ -497,7 +523,7 @@ function renderGrid() {
 let _modalProductId = null;
 
 function openModal(productId) {
-  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO, ...PRODUCTS_GOODS];
   const p   = all.find(x => x.id === productId);
   if (!p) return;
   _modalProductId = productId;
@@ -549,7 +575,7 @@ function closeModal() {
 
 // ── カート追加 ──
 function onAdd(productId) {
-  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO];
+  const all = [...PRODUCTS_SHOBO, ...PRODUCTS_MIMOSADO, ...PRODUCTS_GOODS];
   const p   = all.find(x => x.id === productId);
   if (!p) return;
   const result = cartAdd(productId, p);
