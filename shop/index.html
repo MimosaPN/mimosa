@@ -95,7 +95,7 @@
   .modal.open{transform:translate(-50%,-50%);opacity:1;}
   .modal-inner{display:grid;grid-template-columns:1fr 1fr;min-height:360px;}
   .modal-img{background:var(--mimosa-soft);display:flex;align-items:center;justify-content:center;border-radius:14px 0 0 14px;min-height:320px;}
-  .modal-img img{width:100%;height:100%;object-fit:cover;border-radius:14px 0 0 14px;}
+  .modal-img img{width:100%;height:100%;object-fit:contain;border-radius:14px 0 0 14px;}
   .modal-img svg{width:72px;height:72px;opacity:.4;}
   .modal-body{padding:28px 28px 24px;display:flex;flex-direction:column;}
   .modal-tag{font-family:var(--font-sans);font-size:11px;color:var(--mimosa-yellow);font-weight:700;letter-spacing:.1em;margin-bottom:6px;}
@@ -303,7 +303,7 @@
 <script src="cart.js"></script>
 <script>
 // プレースホルダー
-const EMBEDDED_PRODUCTS = /*__PRODUCTS_JSON_START__*/{"sb":[{"id":"bk-002","label":"ミモザ書房","genre":"文芸","abbr":"シリーズ01 秋","title":"秋　月と夜長の文学","author":"ミモザ書房編集部","desc":"四季の移ろいとともに、文学に浸る\n「ア、秋」太宰治\n「木犀の香」薄田泣菫\n「秋霧」宮本百合子\n「曇つた秋」中原中也\n「ごん狐」新美南吉\n「喫茶店にて」萩原朔太郎\n「鹿踊りのはじまり」宮沢賢治　など\n\n春・夏・秋・冬――\n季節とともに楽しむ文学選集","image":"https://lh3.googleusercontent.com/d/1RGzASx4Jh62JnSPYvYhCwW4Z_yWxNg0x","status":"刊行予定","pubDate":"2026年11月7日"},{"id":"bk-040","label":"ミモザ書房","genre":"文芸","abbr":"シリーズ02 冬","title":"冬　雪と灯りの文学","author":"ミモザ書房編集部","desc":"","image":"","status":"準備中","pubDate":""}],"md":[]}/*__PRODUCTS_JSON_END__*/;
+const EMBEDDED_PRODUCTS = /*__PRODUCTS_JSON_START__*/{"sb":[{"id":"bk-002","label":"ミモザ書房","genre":"エッセイ","abbr":"シリーズ01 秋","title":"秋　月と夜長の文学","author":"ミモザ書房編集部","desc":"四季の移ろいとともに、文学に浸る<br>\n<br>\n「ア、秋」太宰治<br>\n「木犀の香」薄田泣菫<br>\n「秋霧」宮本百合子<br>\n「曇った秋」中原中也<br>\n「ごん狐」新美南吉<br>\n「喫茶店にて」萩原朔太郎<br>\n「鹿踊りのはじまり」宮沢賢治　など<br>\n<br>\n春・夏・秋・冬――<br>\n季節とともに楽しむ文学選集<br>","image":"https://lh3.googleusercontent.com/d/1RGzASx4Jh62JnSPYvYhCwW4Z_yWxNg0x","status":"刊行予定","pubDate":"2026年11月7日"},{"id":"bk-040","label":"ミモザ書房","genre":"文芸","abbr":"シリーズ02 冬","title":"冬　雪と灯りの文学","author":"ミモザ書房編集部","desc":"","image":"","status":"準備中","pubDate":""}],"md":[]}/*__PRODUCTS_JSON_END__*/;
 
 // ── 準備中画面の制御 ──
 const PREVIEW_KEY    = 'mimosa_shop_preview';
@@ -426,6 +426,27 @@ function buildFilter() {
   });
 }
 
+// ── 販売可否の判定 ──
+// ステータスが「刊行予定」「準備中」の商品はまだ売らない。
+// 空欄や「刊行済」など、それ以外は販売可とする（雑貨などステータス未入力でも売れるように）。
+const NOT_FOR_SALE = ['刊行予定', '準備中'];
+
+function saleState(p) {
+  const status = String(p.status || '').trim();
+  if (NOT_FOR_SALE.includes(status)) {
+    const d = p.pubDate ? String(p.pubDate).trim() : '';
+    return {
+      buyable: false,
+      btnText: status,
+      note:    (status === '刊行予定' && d) ? d + ' 刊行予定' : status
+    };
+  }
+  if (p.stock <= 0) {
+    return { buyable: false, btnText: '完売', note: 'ただいま在庫切れです' };
+  }
+  return { buyable: true, btnText: 'カートに入れる', note: '' };
+}
+
 // ── グリッド描画 ──
 function renderGrid() {
   const products = activeTab === 'shobo' ? PRODUCTS_SHOBO : PRODUCTS_MIMOSADO;
@@ -442,13 +463,13 @@ function renderGrid() {
   const tagText = activeTab === 'shobo' ? 'ミモザ書房' : 'ミモザ堂';
 
   grid.innerHTML = list.map(p => {
-    const sold   = p.stock <= 0;
+    const st     = saleState(p);
     const inCart = cart[p.id] ? cart[p.id].q : 0;
     const thumb  = p.image
       ? `<img src="${p.image}" alt="${p.name}">`
       : bookSvgEl;
     return `
-      <article class="card${sold ? ' soldout' : ''}" onclick="openModal('${p.id}')" style="cursor:pointer;">
+      <article class="card${st.buyable ? '' : ' soldout'}" onclick="openModal('${p.id}')" style="cursor:pointer;">
         <div class="thumb">
           <span class="brand-tag ${tagCls}">${tagText}</span>
           ${thumb}
@@ -459,13 +480,13 @@ function renderGrid() {
           <div class="desc">${p.desc || ''}</div>
           <div class="price-row">
             <div class="price">${yen(p.price)} <small>税込</small></div>
-            <button class="add" ${sold ? 'disabled' : ''} onclick="event.stopPropagation();onAdd('${p.id}')">
-              ${sold ? '完売' : 'カートに入れる'}
+            <button class="add" ${st.buyable ? '' : 'disabled'} onclick="event.stopPropagation();onAdd('${p.id}')">
+              ${st.btnText}
             </button>
           </div>
-          <div class="stock-info">${sold
-            ? 'ただいま在庫切れです'
-            : `残り ${p.stock - inCart} 点`
+          <div class="stock-info">${st.buyable
+            ? `残り ${p.stock - inCart} 点`
+            : st.note
           }</div>
         </div>
       </article>`;
@@ -483,7 +504,7 @@ function openModal(productId) {
 
   const cart   = cartLoad();
   const inCart = cart[productId] ? cart[productId].q : 0;
-  const sold   = p.stock <= 0;
+  const st     = saleState(p);
 
   document.getElementById('modal-tag').textContent    = p.label + '・' + p.cat;
   document.getElementById('modal-name').textContent   = p.name;
@@ -491,11 +512,15 @@ function openModal(productId) {
   // スプシの説明文には <br> が入っている。textContentだとタグが文字として出るので
   // 改行文字に直して入れる（CSSの white-space:pre-line で改行として表示される）。
   document.getElementById('modal-desc').textContent   =
-    String(p.desc || '').replace(/<br\s*\/?>/gi, '\n');
+    String(p.desc || '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/^[ \t]+|[ \t]+$/gm, '')  // 各行の前後に残る空白を落とす
+      .replace(/\n{3,}/g, '\n\n')    // 空行が続いても1行分にまとめる
+      .trim();
   document.getElementById('modal-price').innerHTML    = yen(p.price);
-  document.getElementById('modal-stock').textContent  = sold
-    ? 'ただいま在庫切れです'
-    : `残り ${p.stock - inCart} 点`;
+  document.getElementById('modal-stock').textContent  = st.buyable
+    ? `残り ${p.stock - inCart} 点`
+    : st.note;
   // 送料は商品ごとではなく、カート全体の梱包区分からお会計時に計算される。
   document.getElementById('modal-ship').textContent   =
     '送料：お会計時に計算されます（商品代金10,000円以上は送料無料）';
@@ -506,8 +531,8 @@ function openModal(productId) {
     : bookSvgEl;
 
   const btn = document.getElementById('modal-add-btn');
-  btn.disabled    = sold;
-  btn.textContent = sold ? '完売' : 'カートに入れる';
+  btn.disabled    = !st.buyable;
+  btn.textContent = st.btnText;
   btn.onclick     = () => { onAdd(productId); closeModal(); };
 
   document.getElementById('modal-overlay').classList.add('open');
