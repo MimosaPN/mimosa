@@ -308,6 +308,11 @@
 const EMBEDDED_PRODUCTS = /*__PRODUCTS_JSON_START__*/{"sb":[{"id":"bk-002","label":"ミモザ書房","genre":"文芸","abbr":"シリーズ01 秋","title":"秋　月と夜長の文学","author":"ミモザ書房編集部","desc":"四季の移ろいとともに、文学に浸る\n「ア、秋」太宰治\n「木犀の香」薄田泣菫\n「秋霧」宮本百合子\n「曇つた秋」中原中也\n「ごん狐」新美南吉\n「喫茶店にて」萩原朔太郎\n「鹿踊りのはじまり」宮沢賢治　など\n\n春・夏・秋・冬――\n季節とともに楽しむ文学選集","image":"https://lh3.googleusercontent.com/d/1RGzASx4Jh62JnSPYvYhCwW4Z_yWxNg0x","status":"刊行予定","pubDate":"2026年11月7日"},{"id":"bk-040","label":"ミモザ書房","genre":"文芸","abbr":"シリーズ02 冬","title":"冬　雪と灯りの文学","author":"ミモザ書房編集部","desc":"","image":"","status":"準備中","pubDate":""}],"md":[]}/*__PRODUCTS_JSON_END__*/;
 
 // ── 準備中画面の制御 ──
+// ★ショップの公開スイッチ
+//   true  … 一般公開（誰でも商品を見られる）
+//   false … 準備中画面。?preview=mimosa2026 を付けた人だけ中を見られる
+const SHOP_OPEN = true;
+
 const PREVIEW_KEY    = 'mimosa_shop_preview';
 const PREVIEW_SECRET = 'mimosa2026';
 
@@ -319,12 +324,13 @@ const PREVIEW_SECRET = 'mimosa2026';
     // パラメータを消してリダイレクト
     history.replaceState(null, '', location.pathname);
   }
-  // プレビュー時のみ商品を表示。通常は準備中＋ヘッダ／フッタのみ
-  const preview = !!localStorage.getItem(PREVIEW_KEY);
-  document.getElementById('coming-soon').classList.toggle('hidden', preview);
-  document.getElementById('shop-body').classList.toggle('hidden', !preview);
-  document.querySelector('.cart-btn').classList.toggle('hidden', !preview);
-  window.SHOP_PREVIEW = preview;
+  // 公開中、またはプレビュー権限がある場合に商品を表示する。
+  // どちらでもなければ準備中画面＋ヘッダ／フッタだけを出す。
+  const visible = SHOP_OPEN || !!localStorage.getItem(PREVIEW_KEY);
+  document.getElementById('coming-soon').classList.toggle('hidden', visible);
+  document.getElementById('shop-body').classList.toggle('hidden', !visible);
+  document.querySelector('.cart-btn').classList.toggle('hidden', !visible);
+  window.SHOP_VISIBLE = visible;
 })();
 const GAS_URL_SHOP = GAS_URL;
 
@@ -585,7 +591,7 @@ function onAdd(productId) {
   showToast('カートに追加しました');
 }
 
-if (window.SHOP_PREVIEW) loadProducts();
+if (window.SHOP_VISIBLE) loadProducts();
 </script>
 </body>
 </html>
