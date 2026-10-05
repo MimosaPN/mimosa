@@ -46,6 +46,7 @@
   .book-card { display: flex; flex-direction: column; }
   .book-info { flex: 1; display: flex; flex-direction: column; }
   .book-status { margin-top: auto; align-self: flex-start; }
+  .status-done { background: var(--green-soft); color: var(--green-leaf); border: 0.5px solid #A0C090; }
 .book-status { display: inline-block; margin-top: 1rem; font-size: 10px; letter-spacing: 0.15em; padding: 0.3rem 0.75rem; font-family: var(--font-sans); }
 .status-soon { background: var(--mimosa-soft); color: var(--tan); border: 0.5px solid var(--tan-line); }
 .status-wip { background: var(--border-soft); color: var(--muted); border: 0.5px solid var(--border); }
@@ -107,7 +108,7 @@
 <section class="section" id="books">
   <p class="section-label">Books</p>
   <div class="books-grid" id="books-grid">
-    <div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">
+    <div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:var(--muted);font-family:var(--font-sans);font-size:13px;">
       書籍を読み込んでいます…
     </div>
   </div>
@@ -142,11 +143,11 @@
   <div class="contact-grid">
     <div class="contact-item">
       <p class="contact-item-label">Email</p>
-      <p class="contact-item-text">info@mimosa-partners.com<br><span style="font-size:11px;color:#aaa;">※返信まで2〜3営業日</span></p>
+      <p class="contact-item-text">info@mimosa-partners.com<br><span style="font-size:11px;color:var(--muted);">※返信まで2〜3営業日</span></p>
     </div>
     <div class="contact-item">
       <p class="contact-item-label">取次・書店の方</p>
-      <p class="contact-item-text">会社概要・ISBN情報は<br><a href="/trade.html" style="color:#8a6f4e;">書店員の方へ</a>よりご請求ください</p>
+      <p class="contact-item-text">会社概要・ISBN情報は<br><a href="/trade.html" style="color:var(--tan);">書店員の方へ</a>よりご請求ください</p>
     </div>
   </div>
   <a class="btn" href="/#contact">お問い合わせはこちら →</a>
@@ -213,7 +214,7 @@ const COVER_COLORS = ['#e8e0d4', '#dce8e0', '#e4dcea', '#e0e4e8', '#e8e4d4'];
 
 function renderBooks_(grid, books) {
   if (books.length === 0) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:#a09880;font-family:'Noto Sans JP',sans-serif;font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:var(--muted);font-family:var(--font-sans);font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>`;
     return;
   }
   grid.innerHTML = books.map((b, i) => {
@@ -243,33 +244,20 @@ function renderBooks_(grid, books) {
 async function loadBooks() {
   const grid = document.getElementById('books-grid');
 
-  // ① 埋め込みデータがあれば即表示
-  if (Array.isArray(BOOKS_EMBEDDED) && BOOKS_EMBEDDED.length > 0) {
-    renderBooks_(grid, BOOKS_EMBEDDED);
-    // バックグラウンドで静かに更新
-    fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`)
-      .then(r => r.json())
-      .then(data => { if (data.ok && Array.isArray(data.books)) renderBooks_(grid, data.books); })
-      .catch(() => {});
-    return;
-  }
-
-  // ② なければGASからfetch
+  // GASを先に待ってから描画する。埋め込みデータを先に出すと、
+  // GitHub PagesのHTMLキャッシュのせいで「反映前の内容が数秒表示される」ため。
   try {
     const res  = await fetch(`${BOOKS_GAS_URL}?type=books&label=${encodeURIComponent(BOOKS_LABEL)}`);
     const data = await res.json();
-    if (!data.ok || !Array.isArray(data.books)) throw new Error();
-    renderBooks_(grid, data.books);
-  } catch(err) {
-    // フォールバック：ダミーデータ
-    renderBooks_(grid, []);
+    if (data.ok && Array.isArray(data.books)) { renderBooks_(grid, data.books); return; }
+    throw new Error('書籍データを取得できませんでした');
+  } catch (err) {
+    console.warn('書籍データの取得に失敗しました', err);
+    // GASに繋がらないときだけ埋め込みを使う
+    renderBooks_(grid, Array.isArray(BOOKS_EMBEDDED) ? BOOKS_EMBEDDED : []);
   }
 }
 
-// status-done用のCSSを動的に追加
-const style = document.createElement('style');
-style.textContent = '.status-done{background:#e8f0e4;color:#4a6741;border:0.5px solid #a0c090;}';
-document.head.appendChild(style);
 
 loadBooks();
 </script>
