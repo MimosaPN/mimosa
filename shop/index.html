@@ -28,7 +28,7 @@
   .hero h1{font-size:38px;font-weight:700;line-height:1.35;letter-spacing:.02em;}
   .hero p{margin-top:12px;color:var(--green-leaf);font-size:14px;max-width:580px;font-family:var(--font-sans);}
 
-  .tabs{max-width:1100px;margin:0 auto;padding:24px 22px 0;display:flex;gap:0;border-bottom:2px solid var(--border-soft);}
+  .tabs{max-width:1100px;margin:0 auto;padding:24px 22px 0;display:flex;gap:0;border-bottom:2px solid var(--border-soft);position:relative;z-index:1;}
   .tab{font-family:var(--font-sans);font-size:14px;font-weight:700;letter-spacing:.08em;padding:10px 28px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .18s,border-color .18s;}
   .tab:hover{color:var(--ink);}
   .tab.active{color:var(--ink);border-bottom-color:var(--mimosa-yellow);}
@@ -63,6 +63,7 @@
 
   .overlay{position:fixed;inset:0;background:rgba(58,64,49,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;}
   .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer:not(.open){pointer-events:none;}
   .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--cream);z-index:60;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.12);}
   .drawer.open{transform:translateX(0);}
   .drawer h2{font-family:var(--font-sans);font-size:18px;padding:22px 22px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-soft);}
@@ -92,6 +93,7 @@
   /* ── 商品詳細モーダル ── */
   .modal-overlay{position:fixed;inset:0;background:rgba(58,64,49,.5);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s;}
   .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal:not(.open){pointer-events:none;}
   .modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);width:min(680px,92vw);max-height:90vh;background:var(--cream);z-index:90;overflow-y:auto;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.2);transition:transform .25s,opacity .25s;opacity:0;}
   .modal.open{transform:translate(-50%,-50%);opacity:1;}
   .modal-inner{display:grid;grid-template-columns:1fr 1fr;min-height:360px;}
@@ -232,9 +234,9 @@
 </section>
 
 <div class="tabs">
-  <button class="tab active" id="tab-shobo"    onclick="switchTab('shobo')">ミモザ書房</button>
-  <button class="tab"        id="tab-mimosado" onclick="switchTab('mimosado')">ミモザ堂</button>
-  <button class="tab"        id="tab-goods"    onclick="switchTab('goods')">雑貨</button>
+  <button class="tab active" id="tab-shobo"    type="button" data-tab="shobo">ミモザ書房</button>
+  <button class="tab"        id="tab-mimosado" type="button" data-tab="mimosado">ミモザ堂</button>
+  <button class="tab"        id="tab-goods"    type="button" data-tab="goods">雑貨</button>
 </div>
 
 <div class="filter" id="filter">
@@ -429,6 +431,13 @@ function setActiveTab(tab) {
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
   });
 }
+
+// タブのクリックを登録する。
+// 以前は onclick 属性で呼んでいたが、属性だと読み込み順や
+// スクリプトの状態によっては効かないことがあるため、ここでまとめて登録する。
+document.querySelectorAll('.tab[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
 
 function switchTab(tab) {
   activeTab    = tab;
