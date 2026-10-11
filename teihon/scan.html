@@ -33,7 +33,7 @@ input,select{width:100%;padding:10px;font-size:16px;border:1px solid var(--line)
 .m{font-size:11px;color:#777;margin-top:3px;line-height:1.6}
 .warn{font-size:12px;color:var(--terra);font-weight:700;margin-top:6px}
 .f{display:flex;gap:6px;margin-top:8px;align-items:center}
-.f label{flex:0 0 46px;font-size:11px;color:#777}
+.f label{flex:0 0 58px;font-size:11px;color:#777}
 .f input,.f select{padding:7px;font-size:14px}
 .x{flex:0 0 auto;background:none;border:0;color:#bbb;font-size:20px;padding:0 4px}
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--green);color:var(--cream);
@@ -331,7 +331,7 @@ function render(){
           '<label>出版社</label><input data-k="publisher" data-i="' + i + '" value="' + esc(it.publisher) + '">' +
         '</div>') +
       '<div class="f">' +
-        '<label>叢書</label><input data-k="series" data-i="' + i + '" value="' + esc(it.series) + '" placeholder="岩波文庫">' +
+        '<label>文庫・叢書</label><input data-k="series" data-i="' + i + '" value="' + esc(it.series) + '" placeholder="岩波文庫">' +
         '<label>価格</label><input type="number" inputmode="numeric" data-k="price" data-i="' + i + '" value="' + esc(it.price) + '">' +
       '</div>' +
       '<div class="f">' +
