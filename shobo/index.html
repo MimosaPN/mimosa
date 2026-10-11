@@ -74,6 +74,31 @@
 .about-name-sub { font-size: 11px; color: var(--muted); font-family: var(--font-sans); letter-spacing: 0.1em; }
 .about-body { font-size: 13px; color: var(--ink-light); line-height: 2.2; letter-spacing: 0.05em; font-family: var(--font-sans); }
 .footer-back { color: var(--tan-line); text-decoration: none; }
+
+/* ===== Book Modal ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,42,36,.55);z-index:200;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--cream);max-width:680px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 8px 40px rgba(0,0,0,.18);}
+.modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1;z-index:1;}
+.modal-close:hover{color:var(--ink);}
+.modal-body{display:grid;grid-template-columns:200px 1fr;gap:2rem;padding:2.5rem;}
+.modal-cover{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.modal-cover img{width:100%;height:100%;object-fit:cover;}
+.modal-genre{font-size:10px;letter-spacing:.2em;color:var(--tan-muted);font-family:var(--font-sans);margin-bottom:.5rem;}
+.modal-title{font-size:22px;font-weight:600;letter-spacing:.08em;color:var(--ink-strong);margin-bottom:.5rem;line-height:1.4;}
+.modal-author{font-size:12px;color:var(--muted);font-family:var(--font-sans);margin-bottom:1.25rem;}
+.modal-desc{font-size:13px;color:var(--ink-light);line-height:2;font-family:var(--font-sans);margin-bottom:1.5rem;white-space:pre-line;}
+.modal-status{display:inline-block;font-size:11px;letter-spacing:.15em;padding:.35rem .85rem;font-family:var(--font-sans);}
+.modal-btn-row{margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;}
+.modal-btn{display:inline-block;padding:.7rem 2rem;font-size:12px;letter-spacing:.15em;font-family:var(--font-sans);text-decoration:none;cursor:pointer;border:none;}
+.modal-btn-primary{background:var(--ink);color:var(--cream);}
+.modal-btn-primary:hover{background:var(--ink-strong);}
+.modal-btn-secondary{background:var(--white);color:var(--ink);border:0.5px solid var(--border);}
+.modal-btn-secondary:hover{border-color:var(--muted);}
+@media(max-width:540px){
+  .modal-body{grid-template-columns:1fr;gap:1.25rem;padding:1.5rem;}
+  .modal-cover{max-width:160px;margin:0 auto;}
+}
 </style>
 <meta name="description" content="ミモザ書房は、文芸・小説・エッセイの商業出版レーベルです。第1作『ミモザ書房の小さな文学選集01 秋〜月と夜長の文学〜』を2026年11月7日刊行。小説・エッセイ・ノンフィクションの原稿も募集中です。">
 <script type="application/ld+json">
@@ -188,6 +213,24 @@
   </div>
 </section>
 
+<!-- Book Modal -->
+<div class="modal-overlay" id="book-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="閉じる">✕</button>
+    <div class="modal-body">
+      <div class="modal-cover" id="modal-cover"></div>
+      <div class="modal-info">
+        <p class="modal-genre" id="modal-genre"></p>
+        <p class="modal-title" id="modal-title-text"></p>
+        <p class="modal-author" id="modal-author"></p>
+        <p class="modal-desc" id="modal-desc"></p>
+        <span class="modal-status" id="modal-status"></span>
+        <div class="modal-btn-row" id="modal-btn-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <a class="footer-back" href="/">← 出版社ミモザ トップへ</a>
   <span>© 2026 ミモザパートナーズ合同会社　ミモザ書房</span>
@@ -229,7 +272,53 @@ const STATUS_MAP = {
 // 表紙がない場合の色（順番に使い回す）
 const COVER_COLORS = ['#e8e0d4', '#dce8e0', '#e4dcea', '#e0e4e8', '#e8e4d4'];
 
+let _booksData = [];
+
+function openModal(idx) {
+  const b = _booksData[idx];
+  if (!b) return;
+  const coverColor = COVER_COLORS[idx % COVER_COLORS.length];
+  const st = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
+
+  const cover = document.getElementById('modal-cover');
+  cover.style.background = coverColor;
+  cover.innerHTML = b.image
+    ? `<img src="${b.image}" alt="${b.title}">`
+    : `<div class="cover-title" style="font-size:14px;color:#fff;text-align:center;padding:1rem;">${b.title}</div>`;
+
+  document.getElementById('modal-genre').textContent = b.genre;
+  document.getElementById('modal-title-text').textContent = b.title;
+  document.getElementById('modal-author').textContent = '著：' + b.author;
+  document.getElementById('modal-desc').textContent = b.desc;
+
+  const statusEl = document.getElementById('modal-status');
+  statusEl.textContent = st.label(b.pubDate);
+  statusEl.className = 'modal-status ' + st.cls;
+
+  const btnRow = document.getElementById('modal-btn-row');
+  btnRow.innerHTML = b.status === '刊行済'
+    ? `<a class="modal-btn modal-btn-primary" href="/shop/?id=${b.id}">購入する</a>
+       <button class="modal-btn modal-btn-secondary" onclick="closeModal()">閉じる</button>`
+    : `<button class="modal-btn modal-btn-secondary" onclick="closeModal()">閉じる</button>`;
+
+  document.getElementById('book-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('book-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('book-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+});
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
 function renderBooks_(grid, books) {
+  _booksData = books;
   if (books.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:var(--muted);font-family:var(--font-sans);font-size:13px;">現在、準備中です。今しばらくお待ちください。</div>`;
     return;
@@ -240,10 +329,9 @@ function renderBooks_(grid, books) {
       ? `<img src="${b.image}" alt="${b.title}" style="width:100%;height:100%;object-fit:cover;">`
       : `<div class="cover-title">${b.title.replace(/、/g, '、<br>')}</div>`;
     const st     = STATUS_MAP[b.status] || STATUS_MAP['準備中'];
-    const stCls  = st.cls;
     const stText = st.label(b.pubDate);
     return `
-      <div class="book-card">
+      <div class="book-card" onclick="openModal(${i})" role="button" tabindex="0" aria-label="${b.title}の詳細を見る">
         <div class="book-cover" style="background:${coverColor};">
           ${thumbHtml}
         </div>
@@ -252,7 +340,7 @@ function renderBooks_(grid, books) {
           <p class="book-title">${b.title}</p>
           <p class="book-author">著：${b.author}</p>
           <p class="book-desc">${b.desc}</p>
-          <span class="book-status ${stCls}">${stText}</span>
+          <span class="book-status ${st.cls}">${stText}</span>
         </div>
       </div>`;
   }).join('');
