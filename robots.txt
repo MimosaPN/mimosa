@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mimosa.mimosa-partners.com/sitemap.xml
