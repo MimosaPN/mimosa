@@ -73,7 +73,12 @@ input,select{width:100%;padding:10px;font-size:16px;border:1px solid var(--line)
   </div>
   <div class="grid" style="margin-top:8px">
     <input id="shipping" type="number" inputmode="numeric" placeholder="送料（注文全体で1回）">
-    <div></div>
+    <select id="use">
+      <option value="底本">用途：底本（手元に置く）</option>
+      <option value="販売">用途：販売</option>
+      <option value="予備">用途：予備</option>
+      <option value="処分">用途：処分</option>
+    </select>
   </div>
   <p class="note">送料はこの注文に1回だけ記録されます。1冊目の行に入ります。</p>
 
@@ -153,7 +158,7 @@ function boot(){
     var b = JSON.parse(localStorage.getItem(BUF) || 'null');
     if (b) {
       items = b.items || []; queue = b.queue || [];
-      ['orderId','date','source','place','shipping'].forEach(function(k){
+      ['orderId','date','source','place','shipping','use'].forEach(function(k){
         if (b[k]) document.getElementById(k).value = b[k];
       });
       render();
@@ -167,8 +172,9 @@ function boot(){
     if (!document.getElementById('date').value) document.getElementById('date').value = d.today;
   });
 
-  ['orderId','date','source','place','shipping'].forEach(function(k){
+  ['orderId','date','source','place','shipping','use'].forEach(function(k){
     document.getElementById(k).addEventListener('input', save);
+    document.getElementById(k).addEventListener('change', save);
   });
 }
 
@@ -208,8 +214,9 @@ manualEl.addEventListener('blur', function(){
 
 document.getElementById('noisbn').addEventListener('click', function(){
   items.push({
-    isbn: '', title: '', author: '', publisher: '', pubYear: '',
-    edition: '', price: '', condition: '並', note: '',
+    isbn: '', title: '', series: '', author: '', publisher: '',
+    firstDate: '', printDate: '', edition: '', price: '',
+    use: val('use'), condition: '並', note: '',
     owned: [], found: false, manual: true
   });
   render(); save();
@@ -247,11 +254,14 @@ function flush(){
         items.push({
           isbn: x.isbn,
           title: b.title || '',
+          series: '',
           author: b.author || '',
           publisher: b.publisher || '',
-          pubYear: b.pubYear || '',
+          firstDate: b.pubDateJa || '',
+          printDate: '',
           edition: '',
           price: '',
+          use: val('use'),
           condition: '並',
           note: '',
           owned: x.owned || [],
@@ -273,7 +283,8 @@ function save(){
     localStorage.setItem(BUF, JSON.stringify({
       items: items, queue: queue,
       orderId: val('orderId'), date: val('date'),
-      source: val('source'), place: val('place'), shipping: val('shipping')
+      source: val('source'), place: val('place'),
+      shipping: val('shipping'), use: val('use')
     }));
   } catch(e){}
 }
@@ -302,8 +313,7 @@ function render(){
               (it.manual ? '【手入力】書名を入れてください' : '【書誌なし】手入力が必要です')) + '</div>' +
           '<div class="m">' + (it.isbn ? esc(it.isbn) : 'ISBNなし') +
             (it.author ? ' / ' + esc(it.author) : '') +
-            (it.publisher ? ' / ' + esc(it.publisher) : '') +
-            (it.pubYear ? ' / ' + esc(it.pubYear) + '年' : '') + '</div>' +
+            (it.publisher ? ' / ' + esc(it.publisher) : '') + '</div>' +
           (dup ? '<div class="warn">すでに所持：' +
               it.owned.map(function(o){
                 return esc(o.id) + (o.edition ? '（' + esc(o.edition) + '）' : '') +
@@ -311,10 +321,6 @@ function render(){
               }).join('、') + '</div>' : '') +
         '</div>' +
         '<button class="x" data-x="' + i + '">×</button>' +
-      '</div>' +
-      '<div class="f">' +
-        '<label>価格</label><input type="number" inputmode="numeric" data-k="price" data-i="' + i + '" value="' + esc(it.price) + '">' +
-        '<label>版・刷</label><input data-k="edition" data-i="' + i + '" value="' + esc(it.edition) + '">' +
       '</div>' +
       (it.found ? '' :
         '<div class="f">' +
@@ -325,18 +331,41 @@ function render(){
           '<label>出版社</label><input data-k="publisher" data-i="' + i + '" value="' + esc(it.publisher) + '">' +
         '</div>') +
       '<div class="f">' +
+        '<label>シリーズ</label><input data-k="series" data-i="' + i + '" value="' + esc(it.series) + '" placeholder="岩波文庫">' +
+        '<label>価格</label><input type="number" inputmode="numeric" data-k="price" data-i="' + i + '" value="' + esc(it.price) + '">' +
+      '</div>' +
+      '<div class="f">' +
+        '<label>初版</label><input data-k="firstDate" data-i="' + i + '" value="' + esc(it.firstDate) + '" placeholder="1967年9月12日">' +
+      '</div>' +
+      '<div class="f">' +
+        '<label>刷の日</label><input data-k="printDate" data-i="' + i + '" value="' + esc(it.printDate) + '" placeholder="1970年1月5日">' +
+        '<label>版・刷</label><input data-k="edition" data-i="' + i + '" value="' + esc(it.edition) + '" placeholder="4版">' +
+      '</div>' +
+      '<div class="f">' +
+        '<label>用途</label>' +
+        '<select data-k="use" data-i="' + i + '">' +
+          ['底本','販売','予備','処分'].map(function(v){
+            return '<option' + (it.use===v?' selected':'') + '>' + v + '</option>';
+          }).join('') +
+        '</select>' +
         '<label>状態</label>' +
         '<select data-k="condition" data-i="' + i + '">' +
           ['良','並','難あり'].map(function(v){
             return '<option' + (it.condition===v?' selected':'') + '>' + v + '</option>';
           }).join('') +
         '</select>' +
+      '</div>' +
+      '<div class="f">' +
         '<label>備考</label><input data-k="note" data-i="' + i + '" value="' + esc(it.note) + '">' +
       '</div>';
     el.appendChild(d);
   });
 
   el.querySelectorAll('[data-k]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      items[Number(inp.dataset.i)][inp.dataset.k] = inp.value;
+      save();
+    });
     inp.addEventListener('input', function(){
       items[Number(inp.dataset.i)][inp.dataset.k] = inp.value;
       if (inp.dataset.k === 'price') updateTotals();
