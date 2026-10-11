@@ -88,6 +88,8 @@ input,select{width:100%;padding:10px;font-size:16px;border:1px solid var(--line)
     <button class="btn sub" id="add" style="flex:0 0 72px">追加</button>
   </div>
   <p class="note">この欄にカーソルを置いたままリーダーで読み取ると、次々に追加されます。</p>
+  <button class="btn sub" id="noisbn" style="width:100%;margin-top:6px">ISBNのない本を手で追加</button>
+  <p class="note">1970年代以前の本や全集など、バーコードのないものはこちら。</p>
 
   <h2>今回の本</h2>
   <div id="list"></div>
@@ -99,6 +101,7 @@ input,select{width:100%;padding:10px;font-size:16px;border:1px solid var(--line)
 </div>
 
 <script>
+/* ← GASのデプロイURLに差し替えてください */
 var API_URL = 'https://script.google.com/macros/s/AKfycbzCBjOsSmp3uudKsZXY7fNrq0IDFjYWEHU507ZNwr7xMxGm_qCgg72J3hfHHWZH49_i7Q/exec';
 
 var KEYNAME = 'teihon_admin_key';
@@ -203,6 +206,18 @@ manualEl.addEventListener('blur', function(){
   }, 80);
 });
 
+document.getElementById('noisbn').addEventListener('click', function(){
+  items.push({
+    isbn: '', title: '', author: '', publisher: '', pubYear: '',
+    edition: '', price: '', condition: '並', note: '',
+    owned: [], found: false, manual: true
+  });
+  render(); save();
+  // 追加した行の書名欄にカーソルを置く
+  var inputs = document.querySelectorAll('[data-k="title"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
 var lastCode = '', lastAt = 0;
 function handle(code){
   var c = String(code).replace(/[^0-9X]/gi,'');
@@ -283,8 +298,9 @@ function render(){
     d.innerHTML =
       '<div style="display:flex;gap:8px">' +
         '<div style="flex:1">' +
-          '<div class="t">' + esc(it.title || '【書誌なし】手入力が必要です') + '</div>' +
-          '<div class="m">' + esc(it.isbn) +
+          '<div class="t">' + esc(it.title ||
+              (it.manual ? '【手入力】書名を入れてください' : '【書誌なし】手入力が必要です')) + '</div>' +
+          '<div class="m">' + (it.isbn ? esc(it.isbn) : 'ISBNなし') +
             (it.author ? ' / ' + esc(it.author) : '') +
             (it.publisher ? ' / ' + esc(it.publisher) : '') +
             (it.pubYear ? ' / ' + esc(it.pubYear) + '年' : '') + '</div>' +
@@ -298,7 +314,7 @@ function render(){
       '</div>' +
       '<div class="f">' +
         '<label>価格</label><input type="number" inputmode="numeric" data-k="price" data-i="' + i + '" value="' + esc(it.price) + '">' +
-        '<label>版・刷</label><input data-k="edition" data-i="' + i + '" value="' + esc(it.edition) + >' +
+        '<label>版・刷</label><input data-k="edition" data-i="' + i + '" value="' + esc(it.edition) + '">' +
       '</div>' +
       (it.found ? '' :
         '<div class="f">' +
@@ -326,6 +342,21 @@ function render(){
       if (inp.dataset.k === 'price') updateTotals();
       save();
     });
+    // ISBNのない本は書名で重複を見る。入力が終わってから1回だけ問い合わせる
+    if (inp.dataset.k === 'title') {
+      inp.addEventListener('blur', function(){
+        var i = Number(inp.dataset.i);
+        var it = items[i];
+        if (!it || it.isbn || !it.title) return;
+        if (it.checkedTitle === it.title) return;
+        it.checkedTitle = it.title;
+        api('checkTitle', { title: it.title }).then(function(r){
+          if (!r.ok) return;
+          items[i].owned = r.owned || [];
+          render(); save();
+        }).catch(function(){});
+      });
+    }
   });
   el.querySelectorAll('[data-x]').forEach(function(b){
     b.addEventListener('click', function(){
