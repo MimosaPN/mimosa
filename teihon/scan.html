@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>底本・蔵書の登録</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+:root{--cream:#FFFDF4;--green:#2D4A2D;--mimosa:#F5C842;--line:#DFD9C9;--terra:#C1683C;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:#23291F;
+  font-family:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans",sans-serif;font-size:16px}
+.wrap{max-width:680px;margin:0 auto;padding:14px 12px 150px}
+h1{font-family:"Zen Old Mincho",serif;font-size:20px;color:var(--green);
+  letter-spacing:.08em;margin:4px 0 14px}
+h2{font-size:12px;color:var(--green);margin:18px 0 6px;letter-spacing:.04em}
+input,select{width:100%;padding:10px;font-size:16px;border:1px solid var(--line);
+  border-radius:8px;background:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row>*{flex:1}
+.btn{padding:12px;font-size:15px;font-weight:700;border:0;border-radius:8px;
+  background:var(--green);color:var(--cream)}
+.btn.sub{background:#fff;color:var(--green);border:1px solid var(--green)}
+.btn:disabled{opacity:.45}
+#reader{border-radius:10px;overflow:hidden;margin:10px 0}
+.item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
+.item.dup{border-color:var(--terra);background:#fff8f4}
+.item.q{opacity:.5}
+.t{font-size:14px;font-weight:600;line-height:1.45}
+.m{font-size:11px;color:#777;margin-top:3px;line-height:1.6}
+.warn{font-size:12px;color:var(--terra);font-weight:700;margin-top:6px}
+.f{display:flex;gap:6px;margin-top:8px;align-items:center}
+.f label{flex:0 0 46px;font-size:11px;color:#777}
+.f input,.f select{padding:7px;font-size:14px}
+.x{flex:0 0 auto;background:none;border:0;color:#bbb;font-size:20px;padding:0 4px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--green);color:var(--cream);
+  padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar b{font-size:21px}
+.bar button{padding:11px 14px;font-size:14px;border:0;border-radius:8px;
+  background:var(--mimosa);color:var(--green);font-weight:700}
+.note{font-size:11px;color:#888;margin-top:4px;line-height:1.7}
+#gate{display:none;position:fixed;inset:0;background:var(--cream);
+  align-items:center;justify-content:center;padding:24px;z-index:50}
+#app{display:none}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div style="width:min(340px,100%);text-align:center">
+    <div style="font-family:'Zen Old Mincho',serif;font-size:19px;color:var(--green);
+      letter-spacing:.08em;margin-bottom:8px">底本・蔵書の登録</div>
+    <p id="gateMsg" style="font-size:13px;color:#777;margin:0 0 16px"></p>
+    <input id="gateInput" type="password" placeholder="合言葉">
+    <button onclick="unlock()" class="btn" style="width:100%;margin-top:10px">開く</button>
+  </div>
+</div>
+
+<div id="app"><div class="wrap">
+  <h1>底本・蔵書の登録</h1>
+
+  <h2>この注文について</h2>
+  <div class="grid">
+    <input id="orderId" placeholder="注文ID">
+    <input id="date" type="date">
+  </div>
+  <div class="grid" style="margin-top:8px">
+    <input id="source" placeholder="入手先（日本の古本屋 など）">
+    <input id="place" placeholder="保管場所（事務所 など）">
+  </div>
+  <div class="grid" style="margin-top:8px">
+    <input id="shipping" type="number" inputmode="numeric" placeholder="送料（注文全体で1回）">
+    <div></div>
+  </div>
+  <p class="note">送料はこの注文に1回だけ記録されます。1冊目の行に入ります。</p>
+
+  <h2>スキャン</h2>
+  <div class="row">
+    <button class="btn" id="scan">カメラを起動</button>
+    <button class="btn sub" id="stop">停止</button>
+  </div>
+  <div id="reader"></div>
+  <div class="row">
+    <input id="manual" inputmode="numeric" autocomplete="off" placeholder="バーコードリーダー / 手入力">
+    <button class="btn sub" id="add" style="flex:0 0 72px">追加</button>
+  </div>
+  <p class="note">この欄にカーソルを置いたままリーダーで読み取ると、次々に追加されます。</p>
+
+  <h2>今回の本</h2>
+  <div id="list"></div>
+</div></div>
+
+<div class="bar">
+  <div><span id="cnt">0</span>冊<br><b id="sum">0</b>円</div>
+  <button id="save">保存する</button>
+</div>
+
+<script>
+var API_URL = 'https://script.google.com/a/macros/mimosa-partners.com/s/AKfycbzCBjOsSmp3uudKsZXY7fNrq0IDFjYWEHU507ZNwr7xMxGm_qCgg72J3hfHHWZH49_i7Q/exec';
+
+var KEYNAME = 'teihon_admin_key';
+var BUF = 'teihon_buffer';
+var BATCH_SIZE = 8, BATCH_WAIT = 700;
+
+var items = [], queue = [], timer = null, inflight = false, scanner = null;
+
+function adminKey(){ return localStorage.getItem(KEYNAME) || ''; }
+function askKey(m){
+  document.getElementById('gate').style.display='flex';
+  document.getElementById('gateMsg').textContent = m || '';
+  document.getElementById('app').style.display='none';
+}
+function unlock(){
+  var v = document.getElementById('gateInput').value.trim();
+  if(!v) return;
+  localStorage.setItem(KEYNAME, v);
+  location.reload();
+}
+document.getElementById('gateInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') unlock();
+});
+
+function api(action, payload){
+  var body = Object.assign({ action: action, key: adminKey() }, payload || {});
+  return fetch(API_URL, { method:'POST', body: JSON.stringify(body) })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d && d.message === '合言葉が違います'){
+        localStorage.removeItem(KEYNAME);
+        askKey('合言葉が違います。もう一度入力してください。');
+        throw new Error('unauthorized');
+      }
+      return d;
+    });
+}
+
+if (!adminKey()) {
+  askKey('この画面は担当者専用です。');
+} else {
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  boot();
+}
+
+function boot(){
+  try {
+    var b = JSON.parse(localStorage.getItem(BUF) || 'null');
+    if (b) {
+      items = b.items || []; queue = b.queue || [];
+      ['orderId','date','source','place','shipping'].forEach(function(k){
+        if (b[k]) document.getElementById(k).value = b[k];
+      });
+      render();
+      if (queue.length) schedule(0);
+    }
+  } catch(e){}
+
+  api('init').then(function(d){
+    if (!d.ok) return;
+    if (!document.getElementById('orderId').value) document.getElementById('orderId').value = d.orderId;
+    if (!document.getElementById('date').value) document.getElementById('date').value = d.today;
+  });
+
+  ['orderId','date','source','place','shipping'].forEach(function(k){
+    document.getElementById(k).addEventListener('input', save);
+  });
+}
+
+/* --- スキャン --- */
+document.getElementById('scan').addEventListener('click', function(){
+  if (scanner) return;
+  scanner = new Html5Qrcode('reader');
+  scanner.start({ facingMode:'environment' },
+    { fps:10, qrbox:{width:260,height:140},
+      formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13] },
+    function(t){ handle(t); }, function(){}
+  ).catch(function(){
+    alert('カメラを起動できませんでした。バーコードリーダーをお使いの場合は、入力欄にカーソルを置いて読み取ってください。');
+    scanner = null;
+  });
+});
+document.getElementById('stop').addEventListener('click', function(){
+  if (scanner) scanner.stop().then(function(){ scanner.clear(); scanner=null; });
+});
+
+var manualEl = document.getElementById('manual');
+function submitManual(){
+  var v = manualEl.value.trim();
+  if (v) handle(v);
+  manualEl.value=''; manualEl.focus();
+}
+document.getElementById('add').addEventListener('click', submitManual);
+manualEl.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' || e.keyCode === 13){ e.preventDefault(); submitManual(); }
+});
+manualEl.addEventListener('blur', function(){
+  setTimeout(function(){
+    var a = document.activeElement;
+    if (!a || a.tagName === 'BODY') manualEl.focus();
+  }, 80);
+});
+
+var lastCode = '', lastAt = 0;
+function handle(code){
+  var c = String(code).replace(/[^0-9X]/gi,'');
+  if (!/^97[89]/.test(c)) return;              // 書籍JANの下段(192〜)は無視
+  var now = Date.now();
+  if (c === lastCode && now - lastAt < 2500) return;
+  lastCode = c; lastAt = now;
+  if (navigator.vibrate) navigator.vibrate(40);
+
+  queue.push(c);
+  render(); save();
+  schedule(queue.length >= BATCH_SIZE ? 0 : BATCH_WAIT);
+}
+
+function schedule(d){ if (timer) clearTimeout(timer); timer = setTimeout(flush, d); }
+
+function flush(){
+  if (inflight || !queue.length) return;
+  var batch = queue.splice(0, 50);
+  inflight = true; render(); save();
+
+  api('lookup', { isbns: batch })
+    .then(function(r){
+      inflight = false;
+      (r.results || []).forEach(function(x){
+        var b = x.book || {};
+        items.push({
+          isbn: x.isbn,
+          title: b.title || '',
+          author: b.author || '',
+          publisher: b.publisher || '',
+          pubYear: b.pubYear || '',
+          edition: '',
+          price: '',
+          condition: '並',
+          note: '',
+          owned: x.owned || [],
+          found: !!x.book
+        });
+      });
+      render(); save();
+      if (queue.length) schedule(0);
+    })
+    .catch(function(){
+      inflight = false;
+      queue = batch.concat(queue);
+      render(); save();
+    });
+}
+
+function save(){
+  try {
+    localStorage.setItem(BUF, JSON.stringify({
+      items: items, queue: queue,
+      orderId: val('orderId'), date: val('date'),
+      source: val('source'), place: val('place'), shipping: val('shipping')
+    }));
+  } catch(e){}
+}
+function val(id){ return document.getElementById(id).value; }
+
+function render(){
+  var el = document.getElementById('list');
+  el.innerHTML = '';
+  var sum = 0;
+
+  queue.forEach(function(q){
+    var d = document.createElement('div'); d.className='item q';
+    d.innerHTML = '<div class="t">取得中…</div><div class="m">' + esc(q) + '</div>';
+    el.appendChild(d);
+  });
+
+  items.forEach(function(it, i){
+    sum += Number(it.price) || 0;
+    var dup = it.owned && it.owned.length;
+    var d = document.createElement('div');
+    d.className = 'item' + (dup ? ' dup' : '');
+    d.innerHTML =
+      '<div style="display:flex;gap:8px">' +
+        '<div style="flex:1">' +
+          '<div class="t">' + esc(it.title || '【書誌なし】手入力が必要です') + '</div>' +
+          '<div class="m">' + esc(it.isbn) +
+            (it.author ? ' / ' + esc(it.author) : '') +
+            (it.publisher ? ' / ' + esc(it.publisher) : '') +
+            (it.pubYear ? ' / ' + esc(it.pubYear) + '年' : '') + '</div>' +
+          (dup ? '<div class="warn">すでに所持：' +
+              it.owned.map(function(o){
+                return esc(o.id) + (o.edition ? '（' + esc(o.edition) + '）' : '') +
+                       (o.place ? ' ' + esc(o.place) : '');
+              }).join('、') + '</div>' : '') +
+        '</div>' +
+        '<button class="x" data-x="' + i + '">×</button>' +
+      '</div>' +
+      '<div class="f">' +
+        '<label>価格</label><input type="number" inputmode="numeric" data-k="price" data-i="' + i + '" value="' + esc(it.price) + '">' +
+        '<label>版・刷</label><input data-k="edition" data-i="' + i + '" value="' + esc(it.edition) + '" placeholder="第3刷">' +
+      '</div>' +
+      (it.found ? '' :
+        '<div class="f">' +
+          '<label>書名</label><input data-k="title" data-i="' + i + '" value="' + esc(it.title) + '">' +
+        '</div>' +
+        '<div class="f">' +
+          '<label>著者</label><input data-k="author" data-i="' + i + '" value="' + esc(it.author) + '">' +
+          '<label>出版社</label><input data-k="publisher" data-i="' + i + '" value="' + esc(it.publisher) + '">' +
+        '</div>') +
+      '<div class="f">' +
+        '<label>状態</label>' +
+        '<select data-k="condition" data-i="' + i + '">' +
+          ['良','並','難あり'].map(function(v){
+            return '<option' + (it.condition===v?' selected':'') + '>' + v + '</option>';
+          }).join('') +
+        '</select>' +
+        '<label>備考</label><input data-k="note" data-i="' + i + '" value="' + esc(it.note) + '">' +
+      '</div>';
+    el.appendChild(d);
+  });
+
+  el.querySelectorAll('[data-k]').forEach(function(inp){
+    inp.addEventListener('input', function(){
+      items[Number(inp.dataset.i)][inp.dataset.k] = inp.value;
+      if (inp.dataset.k === 'price') updateTotals();
+      save();
+    });
+  });
+  el.querySelectorAll('[data-x]').forEach(function(b){
+    b.addEventListener('click', function(){
+      items.splice(Number(b.dataset.x), 1); render(); save();
+    });
+  });
+
+  updateTotals();
+}
+
+function updateTotals(){
+  var sum = items.reduce(function(a,b){ return a + (Number(b.price)||0); }, 0);
+  var ship = Number(val('shipping')) || 0;
+  document.getElementById('cnt').textContent = items.length;
+  document.getElementById('sum').textContent = (sum + ship).toLocaleString();
+}
+
+function esc(s){
+  return String(s==null?'':s).replace(/[<>&"]/g, function(m){
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[m];
+  });
+}
+
+/* --- 保存 --- */
+document.getElementById('save').addEventListener('click', function(){
+  if (queue.length){ alert('取得中が' + queue.length + '件あります。少し待ってください。'); return; }
+  if (!items.length){ alert('本がありません'); return; }
+  var noTitle = items.filter(function(i){ return !i.title; }).length;
+  if (noTitle){ alert('書名が空の本が' + noTitle + '冊あります。手入力してください。'); return; }
+
+  var self = this; self.disabled = true; self.textContent = '保存中';
+  api('save', {
+    orderId: val('orderId'),
+    common: { date: val('date'), source: val('source'),
+              place: val('place'), shipping: val('shipping') },
+    items: items
+  })
+  .then(function(r){
+    self.disabled = false; self.textContent = '保存する';
+    if (!r.ok){ alert(r.message || '保存できませんでした'); return; }
+    alert(r.count + '冊を登録しました（' + r.ids[0] + '〜' + r.ids[r.ids.length-1] + '）');
+    items = []; localStorage.removeItem(BUF);
+    document.getElementById('shipping').value = '';
+    render();
+    api('init').then(function(d){ if (d.ok) document.getElementById('orderId').value = d.orderId; });
+  })
+  .catch(function(){
+    self.disabled = false; self.textContent = '保存する';
+    alert('保存に失敗しました。入力内容は端末に残っています。');
+  });
+});
+</script>
+</body>
+</html>
