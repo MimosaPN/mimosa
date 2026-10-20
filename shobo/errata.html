@@ -75,18 +75,20 @@
   background: var(--border-soft);
   color: var(--muted);
   font-size: 10px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   font-weight: 500;
-  padding: 0.6rem 0.85rem;
+  padding: 0.55rem 1rem;
   text-align: left;
   border: 0.5px solid var(--border);
+  white-space: nowrap;
 }
 .errata-table td {
-  padding: 0.75rem 0.85rem;
+  padding: 0.7rem 1rem;
   border: 0.5px solid var(--border);
   color: var(--ink);
   line-height: 1.65;
   vertical-align: top;
+  white-space: normal;
 }
 .errata-table tr:nth-child(even) td {
   background: var(--cream);
@@ -101,6 +103,17 @@
 .errata-table .col-updated {
   color: var(--muted);
   font-size: 11px;
+  white-space: nowrap;
+}
+/* ページ列は幅固定・折り返しなし */
+.errata-table .col-page {
+  width: 60px;
+  white-space: nowrap;
+  text-align: center;
+}
+/* 場所列も折り返しなし */
+.errata-table .col-place {
+  width: 80px;
   white-space: nowrap;
 }
 
