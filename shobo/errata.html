@@ -197,7 +197,7 @@ const filterBookId = urlParams.get('id') || '';
 // ─── 書籍名マスタ（GASの書籍データと突合できるよう書籍IDをキーにする）
 // BOOKS_EMBEDDED は shobo/index.html で使っているのと同じ仕組みだが、
 // このページは軽量にしたいため、書籍名だけを別途引いている
-const BOOK_NAMES = /*__BOOK_NAMES_JSON_START__*/{}/*__BOOK_NAMES_JSON_END__*/;
+const BOOK_NAMES = /*__BOOK_NAMES_JSON_START__*/{"bk-002":"秋　月と夜長の文学","bk-040":"冬　雪と灯りの文学"}/*__BOOK_NAMES_JSON_END__*/;
 
 // ─── メイン処理
 async function loadErrata() {
