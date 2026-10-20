@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正誤表 | ミモザ書房</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/tokens.css">
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+/* ─── ページ固有スタイル ─── */
+.page-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.page-label {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--tan-muted);
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  margin-bottom: 1rem;
+}
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-strong);
+}
+.page-note {
+  margin-top: 1rem;
+  font-size: 12px;
+  color: var(--ink-light);
+  font-family: var(--font-sans);
+  line-height: 1.9;
+}
+
+/* ─── 書籍ブロック ─── */
+.book-section {
+  margin-bottom: 3.5rem;
+}
+.book-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-strong);
+  padding-bottom: 0.6rem;
+  border-bottom: 0.5px solid var(--border);
+  margin-bottom: 1.25rem;
+  font-family: var(--font-sans);
+}
+.book-section-title span {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 11px;
+  margin-left: 0.75rem;
+}
+
+/* ─── テーブル ─── */
+.errata-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.errata-table th {
+  background: var(--border-soft);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  border: 0.5px solid var(--border);
+}
+.errata-table td {
+  padding: 0.75rem 0.85rem;
+  border: 0.5px solid var(--border);
+  color: var(--ink);
+  line-height: 1.65;
+  vertical-align: top;
+}
+.errata-table tr:nth-child(even) td {
+  background: var(--cream);
+}
+.errata-table .col-wrong {
+  color: #b85050;
+}
+.errata-table .col-correct {
+  color: var(--green-leaf, #4a7c5a);
+  font-weight: 500;
+}
+.errata-table .col-updated {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ─── 空のとき ─── */
+.no-errata {
+  text-align: center;
+  padding: 2.5rem 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+
+/* ─── ローディング ─── */
+.loading {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+
+/* ─── モバイル ─── */
+@media (max-width: 600px) {
+  .page-wrap { padding: 2.5rem 1.25rem 4rem; }
+  .errata-table { font-size: 12px; }
+  .errata-table th,
+  .errata-table td { padding: 0.5rem 0.6rem; }
+  /* ページ・場所・備考は幅を抑える */
+  .col-page, .col-place { white-space: nowrap; }
+}
+
+/* ─── フッター ─── */
+.page-footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid var(--border);
+}
+.footer-back {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: var(--font-sans);
+}
+.footer-back:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- ナビゲーション（base.css の .nav を流用） -->
+<nav>
+  <a class="nav-logo" href="/">
+    <span class="ja">出版社ミモザ</span>
+    <span class="en">Mimosa Publishing</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/shobo/">ミモザ書房</a></li>
+    <li><a href="/shop/">ミモザ堂</a></li>
+    <li><a href="/#contact">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<main class="page-wrap">
+  <div class="page-header">
+    <p class="page-label">Errata</p>
+    <h1 class="page-title">正誤表</h1>
+    <p class="page-note">
+      弊社発行書籍において判明した誤りをお知らせします。<br>
+      読者のみなさまにご不便をおかけしますことをお詫び申し上げます。
+    </p>
+  </div>
+
+  <div id="errata-root">
+    <div class="loading">読み込み中…</div>
+  </div>
+</main>
+
+<footer class="page-footer">
+  <a class="footer-back" href="/shobo/">← ミモザ書房トップへ</a>
+</footer>
+
+<script src="/assets/config.js"></script>
+<script>
+// ─── GAS URL（config.js で window.MIMOSA.GAS_URL が設定されていない場合のフォールバック）
+const ERRATA_GAS_URL = (window.MIMOSA && window.MIMOSA.GAS_URL)
+  ? window.MIMOSA.GAS_URL
+  : 'https://script.google.com/macros/s/AKfycbws-OekNnVWaaDKjOgpFqf06RgB4mgE__zDD7jE1X4I7BBGktCVxO2tXjRMghLGLjP-UA/exec';
+
+// ─── URLパラメータから書籍IDを取得（?id=bk-002 で1冊に絞り込み）
+const urlParams = new URLSearchParams(location.search);
+const filterBookId = urlParams.get('id') || '';
+
+// ─── 書籍名マスタ（GASの書籍データと突合できるよう書籍IDをキーにする）
+// BOOKS_EMBEDDED は shobo/index.html で使っているのと同じ仕組みだが、
+// このページは軽量にしたいため、書籍名だけを別途引いている
+const BOOK_NAMES = /*__BOOK_NAMES_JSON_START__*/{}/*__BOOK_NAMES_JSON_END__*/;
+
+// ─── メイン処理
+async function loadErrata() {
+  const root = document.getElementById('errata-root');
+  try {
+    const url = filterBookId
+      ? `${ERRATA_GAS_URL}?type=errata&id=${encodeURIComponent(filterBookId)}`
+      : `${ERRATA_GAS_URL}?type=errata`;
+
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (!data.ok) throw new Error(data.error || '取得失敗');
+    renderErrata(root, data.errata || []);
+  } catch (err) {
+    console.error('正誤表の取得に失敗しました', err);
+    root.innerHTML = '<div class="no-errata">正誤表データを取得できませんでした。時間をおいて再度お試しください。</div>';
+  }
+}
+
+function renderErrata(root, errata) {
+  if (errata.length === 0) {
+    root.innerHTML = '<div class="no-errata">現在、正誤情報はありません。</div>';
+    return;
+  }
+
+  // 書籍IDごとにグループ化
+  const groups = {};
+  errata.forEach(row => {
+    if (!groups[row.bookId]) groups[row.bookId] = [];
+    groups[row.bookId].push(row);
+  });
+
+  root.innerHTML = Object.keys(groups).map(bookId => {
+    const rows     = groups[bookId];
+    const bookName = BOOK_NAMES[bookId] || bookId;
+    const rowsHtml = rows.map(r => `
+      <tr>
+        <td class="col-page">${escHtml(r.page)}</td>
+        <td class="col-place">${escHtml(r.place)}</td>
+        <td class="col-wrong">${escHtml(r.wrong)}</td>
+        <td class="col-correct">${escHtml(r.correct)}</td>
+        <td>${escHtml(r.note)}</td>
+        <td class="col-updated">${escHtml(r.updated)}</td>
+      </tr>`).join('');
+
+    return `
+      <section class="book-section">
+        <h2 class="book-section-title">
+          ${escHtml(bookName)}
+          <span>${bookId}</span>
+        </h2>
+        <table class="errata-table">
+          <thead>
+            <tr>
+              <th>ページ</th>
+              <th>場所</th>
+              <th>誤</th>
+              <th>正</th>
+              <th>備考</th>
+              <th>更新日</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </section>`;
+  }).join('');
+}
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+loadErrata();
+</script>
+</body>
+</html>
