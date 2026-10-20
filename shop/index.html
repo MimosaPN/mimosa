@@ -344,7 +344,7 @@ let PRODUCTS_GOODS    = [];
 // 雑貨は「種別」で分けるので、レーベルは書房・堂のどちらでも構わない。
 function assignProducts(all) {
   const list    = Array.isArray(all) ? all : [];
-  const isGoods = p => String(p.kind || '').trim() === '雑貨';
+  const isGoods = p => String(p.label || '').trim() === '雑貨';
   PRODUCTS_GOODS    = list.filter(isGoods);
   const books       = list.filter(p => !isGoods(p));
   PRODUCTS_MIMOSADO = books.filter(p => p.label === 'ミモザ堂');
@@ -413,7 +413,7 @@ async function loadProducts() {
     assignProducts(products);
   } else if (EMBEDDED_PRODUCTS) {
     // GASに繋がらないときだけ、HTMLに埋め込まれた内容を使う
-    assignProducts([...(EMBEDDED_PRODUCTS.sb || []), ...(EMBEDDED_PRODUCTS.md || [])]);
+    assignProducts([...(EMBEDDED_PRODUCTS.sb || []), ...(EMBEDDED_PRODUCTS.md || []), ...(EMBEDDED_PRODUCTS.gd || [])]);
   } else {
     assignProducts([]);
   }
@@ -502,7 +502,7 @@ function renderGrid() {
   grid.innerHTML = list.map(p => {
     const st      = saleState(p);
     const inCart  = cart[p.id] ? cart[p.id].q : 0;
-    const isGoods = String(p.kind || '').trim() === '雑貨';
+    const isGoods = String(p.label || '').trim() === '雑貨';
     const tagCls  = isGoods ? 'tag-goods'
                   : p.label === 'ミモザ堂' ? 'tag-mimosado' : 'tag-shobo';
     const tagText = p.label || '';
