@@ -296,10 +296,13 @@ function openModal(idx) {
   statusEl.className = 'modal-status ' + st.cls;
 
   const btnRow = document.getElementById('modal-btn-row');
+  const errataLink = `<a class="modal-btn modal-btn-secondary" href="/shobo/errata.html?id=${b.id}">正誤表</a>`;
   btnRow.innerHTML = b.status === '刊行済'
     ? `<a class="modal-btn modal-btn-primary" href="/shop/?id=${b.id}">購入する</a>
+       ${errataLink}
        <button class="modal-btn modal-btn-secondary" onclick="closeModal()">閉じる</button>`
-    : `<button class="modal-btn modal-btn-secondary" onclick="closeModal()">閉じる</button>`;
+    : `${errataLink}
+       <button class="modal-btn modal-btn-secondary" onclick="closeModal()">閉じる</button>`;
 
   document.getElementById('book-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
