@@ -68,7 +68,32 @@
   .submit-btn:hover { background: #a07800; }
   .submit-btn:disabled { opacity: 0.7; cursor: default; }
   .note { font-size: 12px; color: #bbb; text-align: center; }
-  @media (max-width: 480px) { .row, .option-grid { grid-template-columns: 1fr; } }
+   @media (max-width: 480px) {
+    body { padding: 1rem 0.75rem; }
+    h1 { font-size: 19px; }
+    .section, .estimate-card { padding: 1rem; }
+    .row, .option-grid { grid-template-columns: 1fr; }
+
+    /* プラン：縦積みにして「名前｜説明」を横並び */
+    .plan-tabs { grid-template-columns: 1fr; }
+    .plan-tab { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; padding: 12px 14px; }
+    .plan-tab-name { font-size: 14px; white-space: nowrap; }
+    .plan-tab-desc { font-size: 11px; margin-top: 0; text-align: right; }
+
+    /* iPhoneで入力欄タップ時に画面が拡大されるのを防ぐ（16px未満だと拡大される） */
+    .field input, .field select, .field textarea { font-size: 16px; }
+
+    /* タップしやすさ */
+    .genre-tag { padding: 8px 14px; }
+
+    /* 見積カード：長いラベルでも金額が折り返さない */
+    .estimate-row { gap: 12px; }
+    .estimate-row span:last-child { white-space: nowrap; }
+    .total-amount { font-size: 26px; }
+
+    /* ボタンは横幅いっぱい */
+    .submit-btn { width: 100%; min-width: 0; padding: 14px; }
+  }
 </style>
 </head>
 <body>
