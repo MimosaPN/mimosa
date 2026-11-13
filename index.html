@@ -270,7 +270,7 @@ footer{border-top:0.5px solid var(--border);padding:2rem 3rem;display:flex;justi
 </footer>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxiqPUs5C8kHmnw_vC2dMt2iiCkVde_1u2rndkraLawyQTgtD60mIie-Rp_gDk71OIeDA/exec';
+const GAS_URL = '【GASのウェブアプリURLをここに貼る】';
 
 async function submitForm() {
   const shopName  = document.getElementById('f-shopname').value.trim();
@@ -303,7 +303,7 @@ async function submitForm() {
     const res = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ type: 'contact', source: 'top', shopName, name, email, materials, message })
+      body: JSON.stringify({ type: 'contact', shopName, name, email, materials, message })
     });
     const data = await res.json();
     if (data.status === 'ok') {
