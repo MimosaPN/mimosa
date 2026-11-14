@@ -288,7 +288,7 @@ function openModal(idx) {
     ? `<img src="${b.image}" alt="${b.title}">`
     : `<div class="cover-title" style="font-size:14px;color:#fff;text-align:center;padding:1rem;">${b.title}</div>`;
 
-  document.getElementById('modal-genre').textContent = b.genre;
+  document.getElementById('modal-genre').textContent = b.cat;
   document.getElementById('modal-title-text').textContent = b.title;
   document.getElementById('modal-author').textContent = '著：' + b.author;
   document.getElementById('modal-desc').textContent = b.desc;
@@ -341,7 +341,7 @@ function renderBooks_(grid, books) {
           ${thumbHtml}
         </div>
         <div class="book-info">
-          <p class="book-genre">${b.genre}</p>
+          <p class="book-genre">${b.cat}</p>
           <p class="book-title">${b.title}</p>
           <p class="book-author">著：${b.author}</p>
           <p class="book-desc">${b.desc}</p>
