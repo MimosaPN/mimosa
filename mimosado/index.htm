@@ -37,17 +37,6 @@ section{padding:6rem 2rem;}
 .about-card{background:var(--cream);border-left:3px solid var(--yellow);padding:1.25rem 1.5rem;border-radius:0 8px 8px 0;}
 .about-card-num{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--yellow2);font-weight:300;line-height:1;}
 .about-card-text{font-size:14px;color:var(--mid);line-height:1.8;margin-top:6px;}
-.plans{background:var(--cream2);}
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
-.plan-card{background:var(--white);border-radius:4px;padding:2rem 1.5rem;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;border:0.5px solid rgba(200,160,0,0.15);}
-.plan-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(200,160,0,0.12);}
-.plan-card.featured{border-color:var(--gold);background:linear-gradient(160deg,var(--white) 0%,#fffaed 100%);}
-.plan-card.featured::before{content:'おすすめ';position:absolute;top:14px;right:-22px;background:var(--gold);color:var(--white);font-size:10px;letter-spacing:0.1em;padding:4px 32px;transform:rotate(45deg);}
-.plan-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--dark);margin-bottom:0.5rem;}
-.plan-sub{font-size:11px;color:var(--light);letter-spacing:0.05em;margin-bottom:1.5rem;line-height:1.8;}
-.plan-features{list-style:none;}
-.plan-features li{font-size:13px;color:var(--mid);padding:6px 0;border-bottom:0.5px solid rgba(200,160,0,0.1);display:flex;align-items:center;gap:8px;line-height:1.6;}
-.plan-features li::before{content:'✦';color:var(--yellow);font-size:8px;flex-shrink:0;}
 .flow{background:var(--white);}
 .flow-steps{display:flex;flex-direction:column;margin-top:3rem;position:relative;}
 .flow-steps::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--yellow),transparent);}
@@ -56,16 +45,14 @@ section{padding:6rem 2rem;}
 .flow-body{padding-top:12px;}
 .flow-title{font-size:16px;font-weight:500;color:var(--dark);margin-bottom:6px;}
 .flow-desc{font-size:13px;color:var(--mid);line-height:2;}
-.faq{background:var(--cream);}
-.faq-list{margin-top:3rem;display:flex;flex-direction:column;gap:1px;}
-.faq-item{background:var(--white);border:0.5px solid rgba(200,160,0,0.15);border-radius:4px;overflow:hidden;}
-.faq-q{padding:1.25rem 1.5rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:var(--dark);transition:background 0.2s;}
-.faq-q:hover{background:var(--cream);}
-.faq-icon{font-size:18px;color:var(--gold);transition:transform 0.3s;flex-shrink:0;margin-left:1rem;}
-.faq-item.open .faq-icon{transform:rotate(45deg);}
-.faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease;font-size:13px;color:var(--mid);line-height:2;}
-.faq-a-inner{padding:0 1.5rem 1.25rem;}
-.faq-item.open .faq-a{max-height:300px;}
+.hiraku-band{background:var(--dark);padding:4rem 2rem;}
+.hiraku-band .section-inner{max-width:720px;text-align:center;}
+.hiraku-band-label{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:0.3em;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:1rem;display:block;}
+.hiraku-band-title{font-family:'Zen Old Mincho',serif;font-size:clamp(20px,2.5vw,28px);font-weight:400;color:var(--white);line-height:1.6;margin-bottom:1rem;}
+.hiraku-band-title em{font-style:normal;color:var(--yellow);}
+.hiraku-band-desc{font-size:14px;color:rgba(255,255,255,0.6);line-height:2;margin-bottom:2rem;}
+.hiraku-band-btn{display:inline-block;padding:14px 40px;border:1px solid var(--yellow);color:var(--yellow);font-size:13px;letter-spacing:0.15em;text-decoration:none;border-radius:2px;transition:background 0.3s,color 0.3s;}
+.hiraku-band-btn:hover{background:var(--yellow);color:var(--dark);}
 .form-section{background:var(--cream2);padding:6rem 2rem;}
 .form-section .section-inner{max-width:560px;}
 .form-wrap{background:var(--white);border-radius:8px;box-shadow:0 4px 40px rgba(200,160,0,0.08);padding:2.5rem;}
@@ -88,18 +75,18 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
 .hero-content{text-align:center;}
 .mimosa-accent-wrap{display:flex;justify-content:center;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s ease 0.1s forwards;}
 .mimosa-accent{width:120px;height:80px;}
-@media(max-width:768px){nav{padding:1rem 1.25rem;}.nav-links{display:none;}.about-grid{grid-template-columns:1fr;gap:3rem;}.plans-grid{grid-template-columns:1fr;}.form-wrap{padding:1.75rem;}}
+@media(max-width:768px){nav{padding:1rem 1.25rem;}.nav-links{display:none;}.about-grid{grid-template-columns:1fr;gap:3rem;}.form-wrap{padding:1.75rem;}}
 </style>
 
-<meta name="description" content="ミモザ堂は、現役の書籍編集者が担当する自費出版・企業出版レーベルです。ビジネス書・自分史・社史を、取材・執筆から編集・デザイン・印刷・書店流通までワンストップでサポート。原稿がなくてもご相談いただけます。">
+<meta name="description" content="ミモザ堂は、現役の書籍編集者が担当するビジネス書・実用書・社史 出版レーベルです。企画から取材・編集・デザイン・印刷・書店流通までワンストップでサポート。原稿がなくてもご相談いただけます。">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Service",
-      "name": "ミモザ堂 自費出版・企業出版サポート",
-      "serviceType": "自費出版・企業出版・社史制作",
+      "name": "ミモザ堂 ビジネス書・実用書・社史 出版レーベル",
+      "serviceType": "企業出版・社史制作",
       "url": "https://mimosa.mimosa-partners.com/mimosado/",
       "description": "現役の書籍編集者が、企画・取材・執筆・編集・校正・デザイン・印刷・書店流通までワンストップで担当する出版サポート。個人・企業・団体に対応。",
       "areaServed": "JP",
@@ -107,65 +94,19 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
         "@type": "Organization",
         "name": "ミモザパートナーズ合同会社",
         "url": "https://mimosa.mimosa-partners.com/"
-      },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "プラン",
-        "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "スタートプラン", "description": "300〜1,000部。限定配布・関係者向け。編集・校正・デザイン込み。" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "スタンダードプラン", "description": "1,000〜3,000部。書店流通込み。編集・校正・デザイン込み。" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "プレミアムプラン", "description": "1,000〜3,000部。取材・ライティングから書店流通まで本格サポート。" } }
-        ]
       }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "原稿がなくても依頼できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "はい、大丈夫です。プレミアムプランでは取材・執筆からサポートします。スタート・スタンダードプランをご希望の場合は原稿をご執筆いただく必要がありますが、別途ライターの起用もご相談可能です。" }
-        },
-        {
-          "@type": "Question",
-          "name": "何部から印刷できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "スタートプランは300部から、スタンダード・プレミアムプランは1,000部からお選びいただけます（絵本は1,000部のみ）。詳しい部数はお問い合わせ・事前相談時にご相談ください。" }
-        },
-        {
-          "@type": "Question",
-          "name": "書店に並べることはできますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "スタンダード・プレミアムプランでは、ISBNコードの取得と書店流通のサポートを行います。Amazonや弊社SHOPでの販売も含みます。スタートプランで書店流通をご希望の方はお問い合わせください。" }
-        },
-        {
-          "@type": "Question",
-          "name": "完成までどのくらいかかりますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "内容や仕様によりますが、相談から完成まで3〜6ヶ月程度が目安です。" }
-        },
-        {
-          "@type": "Question",
-          "name": "個人でも企業・団体でも依頼できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "どちらでも対応可能です。個人の方の自著から、企業の社史・PR冊子まで幅広くサポートしています。複数人で1冊をつくることも可能です。" }
-        },
-        {
-          "@type": "Question",
-          "name": "費用はどのくらいかかりますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "プラン・仕様・部数によって異なります。印刷費・編集費・校正費・デザイン費・送料などを含めた概算を、お問い合わせ後に個別でご提案します。" }
-        }
-      ]
     }
   ]
 }
 </script>
-  
+
 </head>
 <body>
 <nav>
   <a class="nav-logo" href="#">ミモザ<span>堂</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#plans">プラン</a></li>
     <li><a href="#flow">流れ</a></li>
-    <li><a href="#faq">FAQ</a></li>
     <li><a href="#form">お問い合わせ</a></li>
   </ul>
   <a class="nav-cta" href="#form">お問い合わせ</a>
@@ -198,7 +139,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
       <circle cx="94" cy="14" r="4"   fill="#ffd700" opacity="0.9"/>
       <circle cx="87" cy="14" r="3.5" fill="#ffec80" opacity="0.9"/>
     </svg></div>
-    <p class="hero-label">ミモザ堂 — ビジネス書・社史 出版レーベル</p>
+    <p class="hero-label">ミモザ堂 — ビジネス書・実用書・社史 出版レーベル</p>
     <h1 class="hero-title">あなたの経験を、<br><em>１冊の本に。</em></h1>
     <p class="hero-sub">現役の書籍編集者が、あなたの知見や歩みに寄り添いながら、<br>１冊の本に仕上げます。企画から取材・編集・デザイン・<br>書店流通まで伴走します。</p>
     <a class="hero-btn" href="#form">お問い合わせはこちら →</a>
@@ -230,39 +171,8 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
   <h2 style="margin-bottom:2rem;">刊行予定</h2>
   <div style="border:0.5px solid #ccc;padding:2rem;text-align:left;">
     <p style="font-size:12px;opacity:.6;margin-bottom:.5rem;">2027年2月末 刊行予定 ／ 教育・子育て</p>
-    <p style="font-size:20px;font-weight:600;margin-bottom:1rem;">不登校の子どもを持つ親御さんへ（仮）</p>
+    <p style="font-size:20px;font-weight:600;margin-bottom:1rem;">今はずっと続かない〜不登校の子の親が「しなくていい」29のこと〜（仮）</p>
     <p style="font-size:14px;line-height:1.9;">不登校の子どもと向き合う親御さんに向けた１冊。詳細は決まり次第お知らせします。</p>
-  </div>
-</section>
-
-<section class="plans" id="plans">
-  <div class="section-inner">
-    <span class="section-label reveal">Plans</span>
-    <h2 class="section-title reveal">3つのプランから<br>お選びください。</h2>
-    <hr class="section-divider reveal">
-    <div class="plans-grid reveal">
-      <div class="plan-card">
-        <div class="plan-name">Start</div>
-        <div class="plan-sub">スタートプラン<br>300〜1,000部 / 限定配布・関係者向け</div>
-        <ul class="plan-features">
-          <li>編集・校正・デザイン込み</li><li>四六判モノクロ 無線綴じ</li><li>全冊数お届け</li><li>オプション：書店流通など</li>
-        </ul>
-      </div>
-      <div class="plan-card featured">
-        <div class="plan-name">Standard</div>
-        <div class="plan-sub">スタンダードプラン<br>1,000〜3,000部 / 書店流通・実績づくりに</div>
-        <ul class="plan-features">
-          <li>編集・校正・デザイン込み</li><li>書店流通込み*</li><li>100〜300冊お渡し</li><li>事前相談（1時間・有料）必須</li>
-        </ul>
-      </div>
-      <div class="plan-card">
-        <div class="plan-name">Premium</div>
-        <div class="plan-sub">プレミアムプラン<br>1,000〜3,000部 / 取材・執筆から本格サポート</div>
-        <ul class="plan-features">
-          <li>取材・ライティング込み</li><li>編集・校正・デザイン込み</li><li>書店流通込み*</li><li>200〜600冊お渡し</li><li>事前相談（1時間・有料）必須</li>
-        </ul>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -273,38 +183,31 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
     <hr class="section-divider reveal">
     <div class="flow-steps">
       <div class="flow-step reveal"><div class="flow-num">STEP<br>1</div><div class="flow-body"><div class="flow-title">お問い合わせ</div><div class="flow-desc">このページ下部のフォームから、ご相談内容をお送りください。担当者よりご連絡し、お見積をご提案します。</div></div></div>
-      <div class="flow-step reveal"><div class="flow-num">STEP<br>2</div><div class="flow-body"><div class="flow-title">事前相談（スタンダード・プレミアムプラン）</div><div class="flow-desc">出版したい理由や書籍のテーマなどをお伺いします（1時間）。</div></div></div>
-      <div class="flow-step reveal"><div class="flow-num">STEP<br>3</div><div class="flow-body"><div class="flow-title">ご契約・お申し込み</div><div class="flow-desc">お見積内容にご納得いただけましたら、契約書を締結し、正式にお申し込みとなります。</div></div></div>
-      <div class="flow-step reveal"><div class="flow-num">STEP<br>4</div><div class="flow-body"><div class="flow-title">企画・取材・執筆</div><div class="flow-desc">プランに応じて、企画立案・取材・ライティングを進めます。</div></div></div>
+      <div class="flow-step reveal"><div class="flow-num">STEP<br>2</div><div class="flow-body"><div class="flow-title">事前相談</div><div class="flow-desc">出版したい理由や書籍のテーマなどをお伺いします（1時間）。</div></div></div>
+      <div class="flow-step reveal"><div class="flow-num">STEP<br>3</div><div class="flow-body"><div class="flow-title">ご契約・お申し込み</div><div class="flow-desc">内容をご確認いただけましたら、契約書を締結し、正式にお申し込みとなります。</div></div></div>
+      <div class="flow-step reveal"><div class="flow-num">STEP<br>4</div><div class="flow-body"><div class="flow-title">企画・取材・執筆</div><div class="flow-desc">企画立案・取材・ライティングを進めます。</div></div></div>
       <div class="flow-step reveal"><div class="flow-num">STEP<br>5</div><div class="flow-body"><div class="flow-title">編集・校正・デザイン</div><div class="flow-desc">現役編集者が原稿を整え、プロのデザイナーが装丁・本文レイアウトを仕上げます。</div></div></div>
       <div class="flow-step reveal"><div class="flow-num">STEP<br>6</div><div class="flow-body"><div class="flow-title">印刷・製本</div><div class="flow-desc">完成した本は、ご指定の住所にお届けします。</div></div></div>
-      <div class="flow-step reveal"><div class="flow-num">STEP<br>7</div><div class="flow-body"><div class="flow-title">書店流通（スタンダード・プレミアムプラン）</div><div class="flow-desc">あなたの本が、全国の書店やオンラインショップに並びます。</div></div></div>
+      <div class="flow-step reveal"><div class="flow-num">STEP<br>7</div><div class="flow-body"><div class="flow-title">書店流通</div><div class="flow-desc">あなたの本が、全国の書店やオンラインショップに並びます。</div></div></div>
     </div>
   </div>
 </section>
 
-<section class="faq" id="faq">
+<div class="hiraku-band reveal">
   <div class="section-inner">
-    <span class="section-label reveal">FAQ</span>
-    <h2 class="section-title reveal">よくある質問</h2>
-    <hr class="section-divider reveal">
-    <div class="faq-list reveal">
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>原稿がなくても依頼できますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">はい、大丈夫です。プレミアムプランでは取材・執筆からサポートします。<br>スタート・スタンダードプランをご希望の場合は、原稿をご執筆いただく必要があります。別途、ライターさんの起用もご相談可能です。</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>何部から印刷できますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">スタートプランは300部〜、スタンダード・プレミアムプランは1,000部〜お選びいただけます（絵本は1,000部のみ）。詳しい部数は、お問い合わせ・事前相談時にご相談ください。</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>書店に並べることはできますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">スタンダード・プレミアムプランではISBNコードの取得と書店流通のサポートを行います。Amazonや弊社SHOPも含みます。スタートプランで書店流通をご希望の方は、お問い合わせくださいませ。</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>完成までどのくらいかかりますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">内容や仕様によりますが、相談から完成まで目安として3〜6ヶ月程度です。</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>個人でも企業・団体でも依頼できますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">どちらでも対応可能です。個人の方の自著から、企業の社史・PR冊子まで幅広くサポートしています。<br>複数人で１冊をつくるということも可能です。</div></div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span>費用はどのくらいかかりますか？</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">プラン・仕様・部数によって異なります。<br>印刷費・編集費・校正費・デザイン費・送料などを含めた概算を、お問い合わせ後に個別でご提案します。まずはお気軽にご相談ください。</div></div></div>
-    </div>
+    <span class="hiraku-band-label">Hiraku Publishing</span>
+    <h2 class="hiraku-band-title">費用・お申し込みの詳細は<br><em>ひらく出版</em> へ</h2>
+    <p class="hiraku-band-desc">出版にかかる費用やプランの詳細は、ミモザ堂の姉妹サービス「ひらく出版」でご案内しています。<br>まずはお気軽にご覧ください。</p>
+    <a class="hiraku-band-btn" href="https://mimosa.mimosa-partners.com/mimosado/hiraku" target="_blank" rel="noopener">ひらく出版を見る →</a>
   </div>
-</section>
+</div>
 
 <section class="form-section" id="form">
   <div class="section-inner">
     <span class="section-label reveal">Contact</span>
     <h2 class="section-title reveal">お問い合わせ</h2>
     <hr class="section-divider reveal">
-    <p class="reveal" style="font-size:14px;color:var(--mid);margin-bottom:2rem;line-height:2;">出版のご相談、お見積のご依頼など、お気軽にお問い合わせください。<br>内容を確認のうえ、担当者より2〜3営業日以内にご連絡いたします。</p>
+    <p class="reveal" style="font-size:14px;color:var(--mid);margin-bottom:2rem;line-height:2;">出版のご相談など、お気軽にお問い合わせください。<br>内容を確認のうえ、担当者より2〜3営業日以内にご連絡いたします。</p>
     <div class="form-wrap reveal">
       <div class="field">
         <label>お名前 <span style="color:var(--gold);">*</span></label>
@@ -316,7 +219,7 @@ footer{background:var(--dark);color:rgba(255,255,255,0.5);padding:3rem 2rem;text
       </div>
       <div class="field">
         <label>お問い合わせ内容</label>
-        <textarea id="customer-message" rows="6" placeholder="ご相談内容、ご希望のプランやおおよその部数、出版したい本のテーマなど、ご自由にお書きください。" style="resize:vertical;"></textarea>
+        <textarea id="customer-message" rows="6" placeholder="出版したい本のテーマや、お聞きしたいことなど、ご自由にお書きください。" style="resize:vertical;"></textarea>
       </div>
       <button class="submit-btn" onclick="submitForm()">お問い合わせを送信する</button>
       <p class="note">※ お名前とメールアドレスは必須です。</p>
@@ -375,7 +278,6 @@ function submitForm() {
   });
 }
 
-function toggleFaq(el){el.closest('.faq-item').classList.toggle('open');}
 const observer=new IntersectionObserver((e)=>{e.forEach(v=>{if(v.isIntersecting)v.target.classList.add('visible');});},{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 </script>
