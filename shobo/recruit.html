@@ -216,6 +216,28 @@ footer { border-top: 0.5px solid #d8d4c8; padding: 2rem 3rem; display: flex; jus
       </div>
     </div>
 
+    <!-- アンケート -->
+    <div class="form-section">
+      <p class="form-section-label">Survey — アンケート</p>
+
+      <div class="field">
+        <label>どこでミモザ書房を知りましたか？<span class="opt">任意</span></label>
+        <select name="source" id="source">
+          <option value="">選択してください</option>
+          <option value="ミモザ書房の本">ミモザ書房の本を読んで</option>
+          <option value="書店">書店で見かけて</option>
+          <option value="Instagram">Instagram</option>
+          <option value="X">X（旧Twitter）</option>
+          <option value="note">note</option>
+          <option value="ネット検索">ネット検索（Google など）</option>
+          <option value="イベント">文学フリマなどのイベント</option>
+          <option value="知人の紹介">知人・友人の紹介</option>
+          <option value="その他">その他</option>
+        </select>
+        <input type="text" id="source-other" placeholder="具体的にお書きください" style="display:none; margin-top:0.5rem;">
+      </div>
+    </div>
+
     <!-- 同意 -->
     <div class="agree-wrap">
       <label class="agree-label">
@@ -312,6 +334,15 @@ function validateForm() {
 
 agreeChk.addEventListener('change', validateForm);
 document.getElementById('recruit-form').addEventListener('input', validateForm);
+// ── 認知経路「その他」→ 自由記入欄を表示 ─────
+const sourceSel   = document.getElementById('source');
+const sourceOther = document.getElementById('source-other');
+sourceSel.addEventListener('change', () => {
+  const isOther = sourceSel.value === 'その他';
+  sourceOther.style.display = isOther ? 'block' : 'none';
+  if (!isOther) sourceOther.value = '';
+});
+
 
 // ── 送信 ─────────────────────────────────────
 document.getElementById('recruit-form').addEventListener('submit', async e => {
@@ -325,6 +356,8 @@ document.getElementById('recruit-form').addEventListener('submit', async e => {
   const synopsis = form.synopsis.value.trim();
   const profile  = form.profile.value.trim();
   const history  = form.history.value.trim();
+  const source          = sourceSel.value;
+  const sourceOtherText = sourceOther.value.trim();
 
   if (!name || !email || !genre || !synopsis || !selectedFile) {
     showError('必須項目を入力し、原稿ファイルを添付してください。');
@@ -356,6 +389,7 @@ document.getElementById('recruit-form').addEventListener('submit', async e => {
   const payload = {
     action:   'recruitForm',
     name, email, genre, synopsis, profile, history,
+    source, sourceOther: sourceOtherText,
     fileName: selectedFile.name,
     fileData,
     mimeType
